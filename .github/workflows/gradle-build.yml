@@ -26,17 +26,28 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
 
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build --build-cache --parallel
 
     - name: Collect and sanitize artifacts
       run: |
         mkdir -p release-artifacts
         
-        cp fabric/build/libs/*.jar release-artifacts/
-        cp forge/build/libs/*.jar release-artifacts/
-        cp neoforge/build/libs/*.jar release-artifacts/
+        VERSION=${GITHUB_REF#refs/tags/v}
         
-        rm -f release-artifacts/*-dev.jar release-artifacts/*-sources.jar release-artifacts/*-plain.jar  release-artifacts/*-javadoc.jar
+        copy_clean_jar() {
+          local folder=$1
+          local loader_name=$2
+          
+          for jar in $folder/build/libs/*.jar; do
+            if [[ -f "$jar" && ! "$jar" =~ -(dev|sources|plain|javadoc)\.jar$ ]]; then
+              cp "$jar" "release-artifacts/LucidAdvancements ${loader_name} ${VERSION}.jar"
+            fi
+          done
+        }
+        
+        copy_clean_jar "fabric" "Fabric"
+        copy_clean_jar "forge" "Forge"
+        copy_clean_jar "neoforge" "NeoForge"
         
         ls -lh release-artifacts/
 
