@@ -28,9 +28,21 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
+    - name: Collect and sanitize artifacts
+      run: |
+        mkdir -p release-artifacts
+        
+        cp fabric/build/libs/*.jar release-artifacts/
+        cp forge/build/libs/*.jar release-artifacts/
+        cp neoforge/build/libs/*.jar release-artifacts/
+        
+        rm -f release-artifacts/*-dev.jar release-artifacts/*-sources.jar release-artifacts/*-plain.jar  release-artifacts/*-javadoc.jar
+        
+        ls -lh release-artifacts/
+
     - name: Create Release and Upload Asset
       uses: softprops/action-gh-release@v2
       with:
-        files: build/libs/*.jar
+        files: release-artifacts/*.jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

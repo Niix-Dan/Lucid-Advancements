@@ -1,6 +1,6 @@
 # Lucid Advancements
 
-![Minecraft Version](https://img.shields.io/badge/Minecraft-1.21.1%2B-blue)
+![Minecraft Version](https://img.shields.io/badge/Minecraft-1.21%2B-blue)
 ![Side](https://img.shields.io/badge/Side-Client-green)
 
 **Lucid Advancements** replaces Minecraft's default Advancements screen with a clean, modern, and easier-to-use interface. 
