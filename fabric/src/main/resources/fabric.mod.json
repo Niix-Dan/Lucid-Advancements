@@ -17,6 +17,9 @@
   "entrypoints": {
     "main": [
       "com.niixlabs.lucidadvancements.LucidAdvancements"
+    ],
+    "client": [
+      "com.niixlabs.lucidadvancements.LucidAdvancementsClient"
     ]
   },
   "mixins": [

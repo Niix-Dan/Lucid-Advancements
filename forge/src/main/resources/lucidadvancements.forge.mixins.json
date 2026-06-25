@@ -3,7 +3,9 @@
   "minVersion": "0.8",
   "package": "com.niixlabs.lucidadvancements.mixin",
   "compatibilityLevel": "JAVA_18",
-  "mixins": [],
+  "mixins": [
+    "GuiMixin"
+  ],
   "client": [],
   "server": [],
   "injectors": {

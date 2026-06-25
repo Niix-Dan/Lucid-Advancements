@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class SidebarNodeCache {
-
     public final AdvancementNode node;
     public final ItemStack icon;
     public final String displayTitle;
