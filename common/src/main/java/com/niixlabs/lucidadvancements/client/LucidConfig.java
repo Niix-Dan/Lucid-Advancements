@@ -30,7 +30,7 @@ public class LucidConfig {
         String value();
     }
 
-    @ConfigOption(comment = "Interface scale behavior. 0 = Auto/Vanilla, 1-2 = Fixed Custom Scale Factor")
+    @ConfigOption(comment = "Interface scale behavior. 0 = Auto/Vanilla, 1-4 = Fixed Custom Scale Factor")
     public static int customGuiScale = 0;
 
     @ConfigSection("HUD OVERLAY CONFIGURATION")

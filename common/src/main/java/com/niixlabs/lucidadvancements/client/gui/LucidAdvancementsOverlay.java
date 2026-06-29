@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LucidAdvancementsOverlay {
+
     public static void render(GuiGraphics guiGraphics, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
 
@@ -24,7 +25,7 @@ public class LucidAdvancementsOverlay {
         if (mc.getConnection() == null || mc.getConnection().getAdvancements() == null) return;
 
         double vanillaScale = mc.getWindow().getGuiScale();
-        double targetScale = LucidConfig.customGuiScale == 0 ? Mth.clamp(vanillaScale, 1.0, 2.0) : LucidConfig.customGuiScale;
+        double targetScale = getTargetScale(mc);
 
         float scaleMod = (float) (targetScale / vanillaScale);
 
@@ -102,6 +103,26 @@ public class LucidAdvancementsOverlay {
         }
 
         guiGraphics.pose().popPose();
+    }
+
+    private static double getTargetScale(Minecraft mc) {
+        final double MIN_VIRTUAL_WIDTH = 550.0;
+        final double MIN_VIRTUAL_HEIGHT = 300.0;
+
+        double screenWidth = mc.getWindow().getScreenWidth();
+        double screenHeight = mc.getWindow().getScreenHeight();
+
+        double maxPossibleScaleX = screenWidth / MIN_VIRTUAL_WIDTH;
+        double maxPossibleScaleY = screenHeight / MIN_VIRTUAL_HEIGHT;
+
+        double maxSafeScale = Math.max(1.0, Math.floor(Math.min(maxPossibleScaleX, maxPossibleScaleY)));
+        double vanillaScale = mc.getWindow().getGuiScale();
+
+        if (LucidConfig.customGuiScale == 0) {
+            return Math.min(vanillaScale, maxSafeScale);
+        }
+
+        return Mth.clamp((double) LucidConfig.customGuiScale, 1.0, maxSafeScale);
     }
 
     private static String cleanCriteriaName(String raw) {

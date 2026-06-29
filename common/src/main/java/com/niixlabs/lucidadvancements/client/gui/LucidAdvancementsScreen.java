@@ -67,12 +67,23 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     private double getTargetScale() {
         if (this.minecraft == null) return 1.0;
 
+        final double MIN_VIRTUAL_WIDTH = 550.0;
+        final double MIN_VIRTUAL_HEIGHT = 300.0;
+
+        double screenWidth = this.minecraft.getWindow().getScreenWidth();
+        double screenHeight = this.minecraft.getWindow().getScreenHeight();
+
+        double maxPossibleScaleX = screenWidth / MIN_VIRTUAL_WIDTH;
+        double maxPossibleScaleY = screenHeight / MIN_VIRTUAL_HEIGHT;
+
+        double maxSafeScale = Math.max(1.0, Math.floor(Math.min(maxPossibleScaleX, maxPossibleScaleY)));
         double vanillaScale = this.minecraft.getWindow().getGuiScale();
+
         if (LucidConfig.customGuiScale == 0) {
-            return Mth.clamp(vanillaScale, 1.0, 2.0);
+            return Math.min(vanillaScale, maxSafeScale);
         }
 
-        return LucidConfig.customGuiScale;
+        return Mth.clamp((double) LucidConfig.customGuiScale, 1.0, maxSafeScale);
     }
 
     private double getScaleFactor() {
@@ -136,7 +147,7 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         int scaleWidth = 70;
         currentX -= (scaleWidth + 6);
         LucidButton scaleButton = new LucidButton(currentX, 16, scaleWidth, 16, Component.literal("Scale: " + (LucidConfig.customGuiScale == 0 ? "Auto" : LucidConfig.customGuiScale)), btn -> {
-            int nextScale = LucidConfig.customGuiScale >= 2 ? 0 : LucidConfig.customGuiScale + 1;
+            int nextScale = LucidConfig.customGuiScale >= 4 ? 0 : LucidConfig.customGuiScale + 1;
 
             LucidConfig.updateAndSave("customGuiScale", nextScale);
             btn.setMessage(Component.literal("Scale: " + (LucidConfig.customGuiScale == 0 ? "Auto" : LucidConfig.customGuiScale)));
