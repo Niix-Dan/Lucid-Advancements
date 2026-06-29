@@ -1,5 +1,6 @@
 package com.niixlabs.lucidadvancements.client.gui;
 
+import com.niixlabs.lucidadvancements.client.LucidConfig;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.AdvancementType;
@@ -98,10 +99,10 @@ public class AdvancementCard implements Comparable<AdvancementCard> {
     }
 
     public void renderBackgroundAndText(GuiGraphics guiGraphics, Font font, int x, int y, int width, int mouseX, int mouseY) {
-        int bgColor1 = 0xAA1A1A1A;
-        int bgColor2 = 0xAA121212;
-        int borderColor = 0x882A2A2A;
-        int titleColor = 0xFFFFFFFF;
+        int bgColor1 = LucidConfig.cardNormalBg1;
+        int bgColor2 = LucidConfig.cardNormalBg2;
+        int borderColor = LucidConfig.cardNormalBorder;
+        int titleColor = LucidConfig.cardNormalTitle;
         int trackedColor = this.isTracked ? 0xFF00FFAA : 0xFF555555;
         String trackedIcon = "✦";
         String statusIcon = "🔒";
@@ -110,23 +111,23 @@ public class AdvancementCard implements Comparable<AdvancementCard> {
         if (this.done) {
             statusIcon = "✔";
             if (this.rare) {
-                bgColor1 = 0xBB2D1438;
-                bgColor2 = 0xBB1E0C26;
-                borderColor = 0xAAAA00FF;
-                titleColor = 0xFFFF77FF;
-                statusColor = 0xFFAA00FF;
-                trackedColor = this.isTracked ? 0xFFAA00FF : 0xFF555555;
+                bgColor1 = LucidConfig.cardObtainedRareBg1;
+                bgColor2 = LucidConfig.cardObtainedRareBg2;
+                borderColor = LucidConfig.cardObtainedRareBorder;
+                titleColor = LucidConfig.cardObtainedRareTitle;
+                statusColor = LucidConfig.cardObtainedRareBorder;
+                trackedColor = this.isTracked ? LucidConfig.cardObtainedRareBorder : 0xFF555555;
             } else {
-                bgColor1 = 0xBB142E1F;
-                bgColor2 = 0xBB0C1E14;
-                borderColor = 0xAA00FFAA;
-                titleColor = 0xFF77FF77;
-                statusColor = 0xFF00FFAA;
+                bgColor1 = LucidConfig.cardObtainedBg1;
+                bgColor2 = LucidConfig.cardObtainedBg2;
+                borderColor = LucidConfig.cardObtainedBorder;
+                titleColor = LucidConfig.cardObtainedTitle;
+                statusColor = LucidConfig.cardObtainedBorder;
             }
         } else if (this.rare) {
-            borderColor = 0xAA42245A;
-            titleColor = 0xFFB388CC;
-            trackedColor = this.isTracked ? 0xFFAA00FF : 0xFF555555;
+            borderColor = LucidConfig.cardRareBorder;
+            titleColor = LucidConfig.cardRareTitle;
+            trackedColor = this.isTracked ? LucidConfig.cardRareBorder : 0xFF555555;
         }
 
         guiGraphics.fillGradient(x, y, x + width, y + this.totalHeight, bgColor1, bgColor2);

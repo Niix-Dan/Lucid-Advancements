@@ -1,6 +1,6 @@
 package com.niixlabs.lucidadvancements.client.gui;
 
-
+import com.niixlabs.lucidadvancements.client.LucidConfig;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
@@ -16,6 +16,7 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientAdvancements;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,9 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     private SortMode currentSort = SortMode.ALL;
     private AdvancementNode expandedNode = null;
 
+    public static ResourceLocation advancementToFocusOnOpen = null;
     public static final Set<String> TRACKED_ADVANCEMENTS = new HashSet<>();
+    private static boolean configLoaded = false;
 
     private AdvancementNode selectedRoot = null;
     private double scrollOffset = 0;
@@ -55,6 +58,30 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     public LucidAdvancementsScreen(ClientAdvancements clientAdvancements) {
         super(Component.literal("Lucid Advancements"));
         this.clientAdvancements = clientAdvancements;
+        if (!configLoaded) {
+            LucidConfig.load();
+            configLoaded = true;
+        }
+    }
+
+    private double getTargetScale() {
+        if (this.minecraft == null) return 1.0;
+
+        double vanillaScale = this.minecraft.getWindow().getGuiScale();
+        if (LucidConfig.customGuiScale == 0) {
+            return Mth.clamp(vanillaScale, 1.0, 2.0);
+        }
+
+        return LucidConfig.customGuiScale;
+    }
+
+    private double getScaleFactor() {
+        if (this.minecraft == null) return 1.0;
+
+        double vanillaScale = this.minecraft.getWindow().getGuiScale();
+        double targetScale = this.getTargetScale();
+
+        return vanillaScale / targetScale;
     }
 
     @Override
@@ -65,6 +92,13 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
 
     @Override
     protected void init() {
+        if (this.minecraft != null) {
+            double targetScale = this.getTargetScale();
+
+            this.width = (int) (this.minecraft.getWindow().getScreenWidth() / targetScale);
+            this.height = (int) (this.minecraft.getWindow().getScreenHeight() / targetScale);
+        }
+
         super.init();
         this.customRenderables.clear();
         this.rootNodes.clear();
@@ -99,9 +133,92 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         });
         this.addRenderableWidget(clearTrackedButton);
 
+        int scaleWidth = 70;
+        currentX -= (scaleWidth + 6);
+        LucidButton scaleButton = new LucidButton(currentX, 16, scaleWidth, 16, Component.literal("Scale: " + (LucidConfig.customGuiScale == 0 ? "Auto" : LucidConfig.customGuiScale)), btn -> {
+            int nextScale = LucidConfig.customGuiScale >= 2 ? 0 : LucidConfig.customGuiScale + 1;
+
+            LucidConfig.updateAndSave("customGuiScale", nextScale);
+            btn.setMessage(Component.literal("Scale: " + (LucidConfig.customGuiScale == 0 ? "Auto" : LucidConfig.customGuiScale)));
+
+            if (this.minecraft != null) {
+                this.init(this.minecraft, this.minecraft.getWindow().getGuiScaledWidth(), this.minecraft.getWindow().getGuiScaledHeight());
+            }
+        });
+        this.addRenderableWidget(scaleButton);
+
         this.clientAdvancements.setListener(this);
         this.needsRecalculation = true;
         this.rebuildSidebarCache();
+
+        this.checkFocus();
+    }
+
+    private void checkFocus() {
+        if (advancementToFocusOnOpen != null) {
+            ResourceLocation targetId = advancementToFocusOnOpen;
+            advancementToFocusOnOpen = null;
+
+            AdvancementNode targetNode = null;
+            AdvancementNode targetRoot = null;
+
+            for (AdvancementNode root : this.rootNodes) {
+                if (root.holder().id().equals(targetId)) {
+                    targetNode = root;
+                    targetRoot = root;
+                    break;
+                }
+                for (AdvancementNode node : this.collectTasks(root)) {
+                    if (node.holder().id().equals(targetId)) {
+                        targetNode = node;
+                        targetRoot = root;
+                        break;
+                    }
+                }
+                if (targetNode != null) break;
+            }
+
+            if (targetNode != null) {
+                this.searchBox.setValue("");
+                this.currentSort = SortMode.ALL;
+                this.clientAdvancements.setSelectedTab(targetRoot.holder(), true);
+                this.selectedRoot = targetRoot;
+                this.expandedNode = targetNode;
+
+                this.recalculateCards();
+
+                if (targetNode != targetRoot) {
+                    int yOffset = 0;
+                    for (AdvancementCard card : this.cachedCards) {
+                        if (card.getNode() == targetNode) {
+                            int topBarHeight = 48;
+                            int viewportY = topBarHeight + 52;
+                            int viewportHeight = this.height - viewportY - 18;
+
+                            int halfCard = card.getHeight() / 2;
+                            int halfViewport = viewportHeight / 2;
+
+                            this.scrollOffset = Mth.clamp(yOffset + halfCard - halfViewport, 0, this.maxScroll);
+                            break;
+                        }
+                        yOffset += card.getHeight() + 8;
+                    }
+                } else {
+                    this.scrollOffset = 0;
+                }
+
+                int rootIndex = this.rootNodes.indexOf(this.selectedRoot);
+                if (rootIndex != -1) {
+                    int sidebarViewport = this.height - SIDEBAR_PROGRESS_HEIGHT - 24;
+                    int rootItemHeight = 42;
+
+                    this.maxSidebarScroll = Math.max(0, (this.cachedSidebarNodes.size() * rootItemHeight) - sidebarViewport);
+
+                    int targetSidebarScroll = (rootIndex * rootItemHeight) + (rootItemHeight / 2) - (sidebarViewport / 2);
+                    this.sidebarScroll = Mth.clamp(targetSidebarScroll, 0, this.maxSidebarScroll);
+                }
+            }
+        }
     }
 
     private void rebuildSidebarCache() {
@@ -267,6 +384,17 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        double scaleFactor = getScaleFactor();
+        int scaledMouseX = (int) (mouseX * scaleFactor);
+        int scaledMouseY = (int) (mouseY * scaleFactor);
+
+        guiGraphics.pose().pushPose();
+
+        if (scaleFactor != 1.0) {
+            float invScale = (float) (1.0 / scaleFactor);
+            guiGraphics.pose().scale(invScale, invScale, 1.0f);
+        }
+
         guiGraphics.fill(0, 0, this.width, this.height, 0xD0101010);
 
         if (this.needsRecalculation) {
@@ -274,7 +402,7 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         }
 
         for (Renderable renderable : this.customRenderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.render(guiGraphics, scaledMouseX, scaledMouseY, partialTick);
         }
 
         int sidebarWidth = 100;
@@ -295,7 +423,10 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         this.maxSidebarScroll = Math.max(0, (this.cachedSidebarNodes.size() * rootItemHeight) - (this.height - SIDEBAR_PROGRESS_HEIGHT - 24));
         this.sidebarScroll = Mth.clamp(this.sidebarScroll, 0, this.maxSidebarScroll);
 
-        guiGraphics.enableScissor(0, 0, sidebarWidth, this.height - SIDEBAR_PROGRESS_HEIGHT);
+        int sidebarScissorX2 = (int) Math.round(sidebarWidth / scaleFactor);
+        int sidebarScissorY2 = (int) Math.round((this.height - SIDEBAR_PROGRESS_HEIGHT) / scaleFactor);
+
+        guiGraphics.enableScissor(0, 0, sidebarScissorX2, sidebarScissorY2);
         int sY = 12 - (int) this.sidebarScroll;
 
         for (SidebarNodeCache cache : this.cachedSidebarNodes) {
@@ -304,7 +435,7 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
             if (isSelected) {
                 guiGraphics.fill(4, sY, sidebarWidth - 4, sY + 34, 0xAA252525);
                 guiGraphics.fill(4, sY, 6, sY + 34, 0xFF00FFAA);
-            } else if (mouseX >= 4 && mouseX <= sidebarWidth - 4 && mouseY >= sY && mouseY <= sY + 34) {
+            } else if (scaledMouseX >= 4 && scaledMouseX <= sidebarWidth - 4 && scaledMouseY >= sY && scaledMouseY <= sY + 34) {
                 guiGraphics.fill(4, sY, sidebarWidth - 4, sY + 34, 0x881C1C1C);
             }
 
@@ -367,12 +498,17 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
                 guiGraphics.fill(contentX, topBarHeight + 44, this.width - 18, topBarHeight + 45, 0x88303030);
             }
 
-            guiGraphics.enableScissor(contentX, viewportY, this.width - 18, viewportY + viewportHeight);
+            int mainScissorX1 = (int) Math.round(contentX / scaleFactor);
+            int mainScissorY1 = (int) Math.round(viewportY / scaleFactor);
+            int mainScissorX2 = (int) Math.round((this.width - 18) / scaleFactor);
+            int mainScissorY2 = (int) Math.round((viewportY + viewportHeight) / scaleFactor);
+
+            guiGraphics.enableScissor(mainScissorX1, mainScissorY1, mainScissorX2, mainScissorY2);
 
             int cardYOffset = viewportY - (int) this.scrollOffset;
             for (AdvancementCard card : this.cachedCards) {
                 if (cardYOffset + card.getHeight() > viewportY && cardYOffset < viewportY + viewportHeight) {
-                    card.renderBackgroundAndText(guiGraphics, this.font, contentX, cardYOffset, contentWidth, mouseX, mouseY);
+                    card.renderBackgroundAndText(guiGraphics, this.font, contentX, cardYOffset, contentWidth, scaledMouseX, scaledMouseY);
                 }
                 cardYOffset += card.getHeight() + 8;
             }
@@ -382,12 +518,12 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
                 if (cardYOffset + card.getHeight() > viewportY && cardYOffset < viewportY + viewportHeight) {
                     card.renderIcon(guiGraphics, contentX, cardYOffset);
 
-                    ItemStack possibleHover = card.getHoveredIcon(mouseX, mouseY, contentX, cardYOffset, viewportY, viewportHeight);
+                    ItemStack possibleHover = card.getHoveredIcon(scaledMouseX, scaledMouseY, contentX, cardYOffset, viewportY, viewportHeight);
                     if (possibleHover != null) {
                         hoveredTooltipIcon = possibleHover;
                     }
 
-                    String possibleTag = card.getHoveredCriterionTag(this.font, mouseX, mouseY, contentX, cardYOffset, viewportY, viewportHeight);
+                    String possibleTag = card.getHoveredCriterionTag(this.font, scaledMouseX, scaledMouseY, contentX, cardYOffset, viewportY, viewportHeight);
                     if (possibleTag != null) {
                         hoveredCriterionTag = possibleTag;
                     }
@@ -409,10 +545,12 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         }
 
         if (hoveredTooltipIcon != null) {
-            guiGraphics.renderTooltip(this.font, hoveredTooltipIcon, mouseX, mouseY);
+            guiGraphics.renderTooltip(this.font, hoveredTooltipIcon, scaledMouseX, scaledMouseY);
         } else if (hoveredCriterionTag != null) {
-            guiGraphics.renderTooltip(this.font, Component.literal(hoveredCriterionTag), mouseX, mouseY);
+            guiGraphics.renderTooltip(this.font, Component.literal(hoveredCriterionTag), scaledMouseX, scaledMouseY);
         }
+
+        guiGraphics.pose().popPose();
     }
 
     private void recalculateGlobalStats() {
@@ -448,6 +586,10 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        double scaleFactor = getScaleFactor();
+        mouseX *= scaleFactor;
+        mouseY *= scaleFactor;
+
         if (button == 0) {
             if (mouseX <= 100) {
                 int sY = 12 - (int) this.sidebarScroll;
@@ -534,6 +676,12 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        double scaleFactor = getScaleFactor();
+        mouseX *= scaleFactor;
+        mouseY *= scaleFactor;
+        dragX *= scaleFactor;
+        dragY *= scaleFactor;
+
         if (this.draggingMainScrollbar && this.maxScroll > 0) {
             int topBarHeight = 48;
             boolean isSearching = !this.searchBox.getValue().isEmpty();
@@ -557,6 +705,10 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        double scaleFactor = getScaleFactor();
+        mouseX *= scaleFactor;
+        mouseY *= scaleFactor;
+
         if (button == 0) {
             this.draggingMainScrollbar = false;
         }
@@ -565,6 +717,10 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        double scaleFactor = getScaleFactor();
+        mouseX *= scaleFactor;
+        mouseY *= scaleFactor;
+
         if (mouseX <= 100) {
             this.sidebarScroll = Mth.clamp(this.sidebarScroll - (scrollY * 20), 0.0, this.maxSidebarScroll);
             return true;
@@ -579,7 +735,6 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     public boolean isPauseScreen() {
         return false;
     }
-
 
     private static class LucidButton extends Button {
         public LucidButton(int x, int y, int width, int height, Component message, OnPress onPress) {

@@ -12,7 +12,6 @@ import java.util.Map;
 
 @Mixin(ClientAdvancements.class)
 public class ClientAdvancementsMixin implements AdvancementProgressAccess {
-
     @Shadow @Final private Map<AdvancementHolder, AdvancementProgress> progress;
 
     @Override

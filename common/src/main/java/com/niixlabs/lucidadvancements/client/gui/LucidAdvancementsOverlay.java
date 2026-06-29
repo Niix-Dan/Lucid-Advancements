@@ -1,5 +1,6 @@
 package com.niixlabs.lucidadvancements.client.gui;
 
+import com.niixlabs.lucidadvancements.client.LucidConfig;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -15,23 +17,33 @@ import java.util.List;
 import java.util.Map;
 
 public class LucidAdvancementsOverlay {
-
     public static void render(GuiGraphics guiGraphics, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
 
         if (mc.options.hideGui || mc.player == null || LucidAdvancementsScreen.TRACKED_ADVANCEMENTS.isEmpty()) return;
         if (mc.getConnection() == null || mc.getConnection().getAdvancements() == null) return;
 
-        Font font = mc.font;
-        int screenWidth = mc.getWindow().getGuiScaledWidth();
-        int screenHeight = mc.getWindow().getGuiScaledHeight();
+        double vanillaScale = mc.getWindow().getGuiScale();
+        double targetScale = LucidConfig.customGuiScale == 0 ? Mth.clamp(vanillaScale, 1.0, 2.0) : LucidConfig.customGuiScale;
 
+        float scaleMod = (float) (targetScale / vanillaScale);
+
+        int screenWidth = (int) (mc.getWindow().getScreenWidth() / targetScale);
+        int screenHeight = (int) (mc.getWindow().getScreenHeight() / targetScale);
+
+        Font font = mc.font;
         int boxWidth = 135;
         int startX = screenWidth - boxWidth - 8;
         int startY = 55;
         int spacing = 5;
 
         Map<AdvancementHolder, AdvancementProgress> vanillaProgressMap = ((AdvancementProgressAccess) mc.getConnection().getAdvancements()).lucid$getProgressMap();
+
+        guiGraphics.pose().pushPose();
+
+        if (scaleMod != 1.0f) {
+            guiGraphics.pose().scale(scaleMod, scaleMod, 1.0f);
+        }
 
         for (String idStr : LucidAdvancementsScreen.TRACKED_ADVANCEMENTS) {
             ResourceLocation loc = ResourceLocation.tryParse(idStr);
@@ -54,10 +66,10 @@ public class LucidAdvancementsOverlay {
             int boxHeight = 24 + ((remainingCriteria.size() > 3 ? maxVisibleCriteria + 1 : maxVisibleCriteria) * 10);
             if (maxVisibleCriteria > 0) boxHeight += 2;
 
-            guiGraphics.fill(startX, startY, startX + boxWidth, startY + boxHeight, 0x880A0A0A);
+            guiGraphics.fill(startX, startY, startX + boxWidth, startY + boxHeight, LucidConfig.overlayBgColor);
 
             boolean isChallenge = display.getType() == net.minecraft.advancements.AdvancementType.CHALLENGE;
-            int accentColor = isChallenge ? 0xFFAA00FF : 0xFF00FFAA;
+            int accentColor = isChallenge ? LucidConfig.overlayChallengeAccent : LucidConfig.overlayNormalAccent;
             guiGraphics.fill(startX, startY, startX + 2, startY + boxHeight, accentColor);
 
             ItemStack iconStack = display.getIcon();
@@ -66,7 +78,7 @@ public class LucidAdvancementsOverlay {
             guiGraphics.pose().popPose();
 
             String titleText = font.plainSubstrByWidth(display.getTitle().getString(), boxWidth - 32);
-            int titleColor = isChallenge ? 0xFFFF77FF : 0xFFFFFFFF;
+            int titleColor = isChallenge ? LucidConfig.overlayChallengeTitleColor : LucidConfig.overlayTitleColor;
             guiGraphics.drawString(font, titleText, startX + 26, startY + 5, titleColor, true);
 
             int textY = startY + 22;
@@ -88,6 +100,8 @@ public class LucidAdvancementsOverlay {
                 break;
             }
         }
+
+        guiGraphics.pose().popPose();
     }
 
     private static String cleanCriteriaName(String raw) {

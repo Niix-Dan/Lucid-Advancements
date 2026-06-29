@@ -12,11 +12,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AdvancementsScreen.class)
 public abstract class AdvancementsScreenMixin {
 
+
     @Inject(method = "init", at = @At("HEAD"), cancellable = true)
     private void redirect(CallbackInfo ci) {
         Minecraft mc = Minecraft.getInstance();
         if (!(mc.screen instanceof LucidAdvancementsScreen)) {
-            mc.setScreen(new LucidAdvancementsScreen(mc.player.connection.getAdvancements()));
+            LucidAdvancementsScreen customScreen = new LucidAdvancementsScreen(mc.player.connection.getAdvancements());
+            mc.setScreen(customScreen);
+
+            if (LucidAdvancementsScreen.advancementToFocusOnOpen != null) {
+                ((ILucidAdvancementsFocus) customScreen).lucid$focusAdvancement(LucidAdvancementsScreen.advancementToFocusOnOpen);
+                LucidAdvancementsScreen.advancementToFocusOnOpen = null;
+            }
+
             ci.cancel();
         }
     }
