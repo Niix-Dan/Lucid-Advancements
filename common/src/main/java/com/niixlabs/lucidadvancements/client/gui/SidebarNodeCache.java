@@ -14,15 +14,21 @@ public class SidebarNodeCache {
 
     public SidebarNodeCache(AdvancementNode node, Font font, int maxTextWidth) {
         this.node = node;
-        this.icon = node.holder().value().display().map(DisplayInfo::getIcon).orElse(new ItemStack(Items.BOOK));
 
-        Component categoryTitle = node.holder().value().display().map(DisplayInfo::getTitle).orElse(Component.literal("?"));
-        String rawTitle = categoryTitle.getString();
-
-        if (font.width(rawTitle) > maxTextWidth) {
-            this.displayTitle = font.plainSubstrByWidth(rawTitle, maxTextWidth - font.width("...")) + "...";
+        if (node == null) {
+            String fullText = Component.translatable("lucidadvancements.gui.global_category.tab_name").getString();
+            this.displayTitle = font.plainSubstrByWidth(fullText, maxTextWidth);
+            this.icon = new ItemStack(Items.LECTERN);
         } else {
-            this.displayTitle = rawTitle;
+            this.icon = node.holder().value().display().map(DisplayInfo::getIcon).orElse(new ItemStack(Items.BOOK));
+            Component categoryTitle = node.holder().value().display().map(DisplayInfo::getTitle).orElse(Component.literal("?"));
+            String rawTitle = categoryTitle.getString();
+
+            if (font.width(rawTitle) > maxTextWidth) {
+                this.displayTitle = font.plainSubstrByWidth(rawTitle, maxTextWidth - font.width("...")) + "...";
+            } else {
+                this.displayTitle = rawTitle;
+            }
         }
     }
 }

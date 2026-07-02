@@ -2,7 +2,6 @@ package com.niixlabs.lucidadvancements.client.gui;
 
 import com.niixlabs.lucidadvancements.Constants;
 import com.niixlabs.lucidadvancements.utils.LucidConfig;
-import com.niixlabs.lucidadvancements.utils.TranslationExporter;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
@@ -37,7 +36,8 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     private SortMode currentSort = SortMode.ALL;
     private AdvancementNode expandedNode = null;
 
-    public static ResourceLocation advancementToFocusOnOpen = null;
+    public static @Nullable ResourceLocation advancementToFocusOnOpen = null;
+    public static @Nullable ResourceLocation lastSelectedTabId = null;
     public static final Set<String> TRACKED_ADVANCEMENTS = new HashSet<>();
     private static boolean configLoaded = false;
 
@@ -164,7 +164,9 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         });
         this.addRenderableWidget(scaleButton);
 
+        ResourceLocation savedTab = lastSelectedTabId;
         this.clientAdvancements.setListener(this);
+        lastSelectedTabId = savedTab;
         this.needsRecalculation = true;
         this.rebuildSidebarCache();
 
@@ -201,6 +203,7 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
                 this.clientAdvancements.setSelectedTab(targetRoot.holder(), true);
                 this.selectedRoot = targetRoot;
                 this.expandedNode = targetNode;
+                lastSelectedTabId = targetRoot.holder().id();
 
                 this.recalculateCards();
 
@@ -235,6 +238,19 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
                     this.sidebarScroll = Mth.clamp(targetSidebarScroll, 0, this.maxSidebarScroll);
                 }
             }
+        } else {
+            if (lastSelectedTabId == null) {
+                this.selectedRoot = null;
+            } else {
+                this.selectedRoot = null;
+                for (AdvancementNode root : this.rootNodes) {
+                    if (root.holder().id().equals(lastSelectedTabId)) {
+                        this.selectedRoot = root;
+                        this.clientAdvancements.setSelectedTab(root.holder(), true);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -242,6 +258,9 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         this.cachedSidebarNodes.clear();
         if (this.font == null) return;
         int maxTextWidth = (int) ((100 - 32) / 0.85f);
+
+        this.cachedSidebarNodes.add(new SidebarNodeCache(null, this.font, maxTextWidth));
+
         for (AdvancementNode root : this.rootNodes) {
             this.cachedSidebarNodes.add(new SidebarNodeCache(root, this.font, maxTextWidth));
         }
@@ -257,9 +276,9 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     public void onAddAdvancementRoot(AdvancementNode node) {
         if (node.root() == node && node.holder().value().display().isPresent() && !this.rootNodes.contains(node)) {
             this.rootNodes.add(node);
-            if (this.selectedRoot == null) {
-                this.selectedRoot = node;
-            }
+            //if (this.selectedRoot == null) {
+            //    this.selectedRoot = node;
+            //}
             this.recalculateGlobalStats();
             this.rebuildSidebarCache();
         }
@@ -269,7 +288,8 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     public void onRemoveAdvancementRoot(AdvancementNode node) {
         this.rootNodes.remove(node);
         if (this.selectedRoot == node) {
-            this.selectedRoot = this.rootNodes.isEmpty() ? null : this.rootNodes.get(0);
+            this.selectedRoot = null;
+            //this.selectedRoot = this.rootNodes.isEmpty() ? null : this.rootNodes.get(0);
         }
         this.recalculateGlobalStats();
         this.rebuildSidebarCache();
@@ -306,10 +326,12 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     public void onSelectedTabChanged(@Nullable AdvancementHolder holder) {
         if (holder == null) {
             this.selectedRoot = null;
+            lastSelectedTabId = null;
         } else {
             for (AdvancementNode node : this.rootNodes) {
                 if (node.holder().equals(holder)) {
                     this.selectedRoot = node;
+                    lastSelectedTabId = node.holder().id();
                     break;
                 }
             }
@@ -322,7 +344,7 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     private void recalculateCards() {
         this.cachedCards.clear();
 
-        if (this.selectedRoot == null && this.searchBox.getValue().isEmpty()) {
+        if (this.rootNodes.isEmpty()) {
             this.maxScroll = 0;
             this.needsRecalculation = false;
             return;
@@ -337,7 +359,7 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
 
         List<AdvancementNode> nodesToDisplay = new ArrayList<>();
 
-        if (isSearching) {
+        if (isSearching || this.selectedRoot == null) {
             for (AdvancementNode root : this.rootNodes) {
                 nodesToDisplay.addAll(this.collectTasks(root));
             }
@@ -500,65 +522,73 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         String hoveredCriterionTag = null;
         boolean isSearching = !this.searchBox.getValue().isEmpty();
 
-        if (this.selectedRoot != null || isSearching) {
-            int viewportY = isSearching ? topBarHeight + 10 : topBarHeight + 52;
-            int viewportHeight = this.height - viewportY - 18;
 
-            if (!isSearching && this.selectedRoot != null && this.selectedRoot.holder().value().display().isPresent()) {
-                DisplayInfo rootDisplay = this.selectedRoot.holder().value().display().get();
-                guiGraphics.pose().pushPose();
-                guiGraphics.pose().scale(1.2f, 1.2f, 1.2f);
-                guiGraphics.drawString(this.font, rootDisplay.getTitle(), (int) (contentX / 1.2f), (int) ((topBarHeight + 10) / 1.2f), 0xFFFFFFFF, true);
-                guiGraphics.pose().popPose();
+        int viewportY = isSearching ? topBarHeight + 10 : topBarHeight + 52;
+        int viewportHeight = this.height - viewportY - 18;
 
-                guiGraphics.drawString(this.font, rootDisplay.getDescription(), contentX, topBarHeight + 28, 0xFFAAAAAA, true);
-                guiGraphics.fill(contentX, topBarHeight + 44, this.width - 18, topBarHeight + 45, 0x88303030);
+        if (!isSearching && this.selectedRoot != null && this.selectedRoot.holder().value().display().isPresent()) {
+            DisplayInfo rootDisplay = this.selectedRoot.holder().value().display().get();
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().scale(1.2f, 1.2f, 1.2f);
+            guiGraphics.drawString(this.font, rootDisplay.getTitle(), (int) (contentX / 1.2f), (int) ((topBarHeight + 10) / 1.2f), 0xFFFFFFFF, true);
+            guiGraphics.pose().popPose();
+
+            guiGraphics.drawString(this.font, rootDisplay.getDescription(), contentX, topBarHeight + 28, 0xFFAAAAAA, true);
+            guiGraphics.fill(contentX, topBarHeight + 44, this.width - 18, topBarHeight + 45, 0x88303030);
+        } else if (!isSearching && this.selectedRoot == null) {
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().scale(1.2f, 1.2f, 1.2f);
+
+            guiGraphics.drawString(this.font, Component.translatable(Constants.MOD_ID + ".gui.global_category.title"), (int) (contentX / 1.2f), (int) ((topBarHeight + 10) / 1.2f), 0xFFFFFFFF, true);
+            guiGraphics.pose().popPose();
+
+            guiGraphics.drawString(this.font, Component.translatable(Constants.MOD_ID + ".gui.global_category.desc"), contentX, topBarHeight + 28, 0xFFAAAAAA, true);
+            guiGraphics.fill(contentX, topBarHeight + 44, this.width - 18, topBarHeight + 45, 0x88303030);
+        }
+
+        int mainScissorX1 = (int) Math.round(contentX / scaleFactor);
+        int mainScissorY1 = (int) Math.round(viewportY / scaleFactor);
+        int mainScissorX2 = (int) Math.round((this.width - 18) / scaleFactor);
+        int mainScissorY2 = (int) Math.round((viewportY + viewportHeight) / scaleFactor);
+
+        guiGraphics.enableScissor(mainScissorX1, mainScissorY1, mainScissorX2, mainScissorY2);
+
+        int cardYOffset = viewportY - (int) this.scrollOffset;
+        for (AdvancementCard card : this.cachedCards) {
+            if (cardYOffset + card.getHeight() > viewportY && cardYOffset < viewportY + viewportHeight) {
+                card.renderBackgroundAndText(guiGraphics, this.font, contentX, cardYOffset, contentWidth, scaledMouseX, scaledMouseY);
             }
+            cardYOffset += card.getHeight() + 8;
+        }
 
-            int mainScissorX1 = (int) Math.round(contentX / scaleFactor);
-            int mainScissorY1 = (int) Math.round(viewportY / scaleFactor);
-            int mainScissorX2 = (int) Math.round((this.width - 18) / scaleFactor);
-            int mainScissorY2 = (int) Math.round((viewportY + viewportHeight) / scaleFactor);
+        cardYOffset = viewportY - (int) this.scrollOffset;
+        for (AdvancementCard card : this.cachedCards) {
+            if (cardYOffset + card.getHeight() > viewportY && cardYOffset < viewportY + viewportHeight) {
+                card.renderIcon(guiGraphics, contentX, cardYOffset);
 
-            guiGraphics.enableScissor(mainScissorX1, mainScissorY1, mainScissorX2, mainScissorY2);
-
-            int cardYOffset = viewportY - (int) this.scrollOffset;
-            for (AdvancementCard card : this.cachedCards) {
-                if (cardYOffset + card.getHeight() > viewportY && cardYOffset < viewportY + viewportHeight) {
-                    card.renderBackgroundAndText(guiGraphics, this.font, contentX, cardYOffset, contentWidth, scaledMouseX, scaledMouseY);
+                ItemStack possibleHover = card.getHoveredIcon(scaledMouseX, scaledMouseY, contentX, cardYOffset, viewportY, viewportHeight);
+                if (possibleHover != null) {
+                    hoveredTooltipIcon = possibleHover;
                 }
-                cardYOffset += card.getHeight() + 8;
-            }
 
-            cardYOffset = viewportY - (int) this.scrollOffset;
-            for (AdvancementCard card : this.cachedCards) {
-                if (cardYOffset + card.getHeight() > viewportY && cardYOffset < viewportY + viewportHeight) {
-                    card.renderIcon(guiGraphics, contentX, cardYOffset);
-
-                    ItemStack possibleHover = card.getHoveredIcon(scaledMouseX, scaledMouseY, contentX, cardYOffset, viewportY, viewportHeight);
-                    if (possibleHover != null) {
-                        hoveredTooltipIcon = possibleHover;
-                    }
-
-                    String possibleTag = card.getHoveredCriterionTag(this.font, scaledMouseX, scaledMouseY, contentX, cardYOffset, viewportY, viewportHeight);
-                    if (possibleTag != null) {
-                        hoveredCriterionTag = possibleTag;
-                    }
+                String possibleTag = card.getHoveredCriterionTag(this.font, scaledMouseX, scaledMouseY, contentX, cardYOffset, viewportY, viewportHeight);
+                if (possibleTag != null) {
+                    hoveredCriterionTag = possibleTag;
                 }
-                cardYOffset += card.getHeight() + 8;
             }
-            guiGraphics.disableScissor();
+            cardYOffset += card.getHeight() + 8;
+        }
+        guiGraphics.disableScissor();
 
-            if (this.maxScroll > 0) {
-                int scrollbarX = this.width - 12;
-                int thumbHeight = Math.max(24, (int) ((viewportHeight / (float) (viewportHeight + this.maxScroll)) * viewportHeight));
-                int thumbY = viewportY + (int) ((this.scrollOffset / this.maxScroll) * (viewportHeight - thumbHeight));
+        if (this.maxScroll > 0) {
+            int scrollbarX = this.width - 12;
+            int thumbHeight = Math.max(24, (int) ((viewportHeight / (float) (viewportHeight + this.maxScroll)) * viewportHeight));
+            int thumbY = viewportY + (int) ((this.scrollOffset / this.maxScroll) * (viewportHeight - thumbHeight));
 
-                guiGraphics.fill(scrollbarX, viewportY, scrollbarX + 3, viewportY + viewportHeight, 0xAA1A1A1A);
+            guiGraphics.fill(scrollbarX, viewportY, scrollbarX + 3, viewportY + viewportHeight, 0xAA1A1A1A);
 
-                int thumbColor = this.draggingMainScrollbar ? 0xFF00FFAA : 0xAA00FFAA;
-                guiGraphics.fill(scrollbarX, thumbY, scrollbarX + 3, thumbY + thumbHeight, thumbColor);
-            }
+            int thumbColor = this.draggingMainScrollbar ? 0xFF00FFAA : 0xAA00FFAA;
+            guiGraphics.fill(scrollbarX, thumbY, scrollbarX + 3, thumbY + thumbHeight, thumbColor);
         }
 
         if (hoveredTooltipIcon != null) {
@@ -612,9 +642,16 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
                 int sY = 12 - (int) this.sidebarScroll;
                 for (SidebarNodeCache cache : this.cachedSidebarNodes) {
                     if (mouseY >= sY && mouseY <= sY + 34) {
-                        this.clientAdvancements.setSelectedTab(cache.node.holder(), true);
+                        if (cache.node == null) {
+                            this.clientAdvancements.setSelectedTab(null, true);
+                            lastSelectedTabId = null;
+                            this.selectedRoot = null;
+                        } else {
+                            this.clientAdvancements.setSelectedTab(cache.node.holder(), true);
+                            this.selectedRoot = cache.node;
+                            lastSelectedTabId = cache.node.holder().id();
+                        }
 
-                        this.selectedRoot = cache.node;
                         this.scrollOffset = 0;
                         this.needsRecalculation = true;
 

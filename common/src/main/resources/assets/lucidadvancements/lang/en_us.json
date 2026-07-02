@@ -1,6 +1,10 @@
 {
   "lucidadvancements.gui.title": "Advancements",
 
+  "lucidadvancements.gui.global_category.tab_name": "Overview",
+  "lucidadvancements.gui.global_category.title": "Global Overview",
+  "lucidadvancements.gui.global_category.desc": "Track your progress across every mod and category.",
+
   "lucidadvancements.gui.search.placeholder": "Search...",
 
   "lucidadvancements.gui.clear_tracked.label": "Clear Tracked",
