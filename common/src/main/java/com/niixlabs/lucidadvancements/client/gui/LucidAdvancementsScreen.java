@@ -288,9 +288,6 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
     public void onAddAdvancementRoot(AdvancementNode node) {
         if (node.root() == node && node.holder().value().display().isPresent() && !this.rootNodes.contains(node)) {
             this.rootNodes.add(node);
-            //if (this.selectedRoot == null) {
-            //    this.selectedRoot = node;
-            //}
             this.recalculateGlobalStats();
             this.rebuildSidebarCache();
         }
@@ -301,7 +298,6 @@ public class LucidAdvancementsScreen extends Screen implements ClientAdvancement
         this.rootNodes.remove(node);
         if (this.selectedRoot == node) {
             this.selectedRoot = null;
-            //this.selectedRoot = this.rootNodes.isEmpty() ? null : this.rootNodes.get(0);
         }
         this.recalculateGlobalStats();
         this.rebuildSidebarCache();
