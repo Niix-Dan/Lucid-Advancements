@@ -1,6 +1,10 @@
 {
   "lucidadvancements.gui.title": "Conquistas",
 
+  "lucidadvancements.gui.global_category.tab_name": "Geral",
+  "lucidadvancements.gui.global_category.title": "Visão Geral",
+  "lucidadvancements.gui.global_category.desc": "Veja todas as conquistas adicionadas ao jogo.",
+
   "lucidadvancements.gui.search.placeholder": "Buscar...",
 
   "lucidadvancements.gui.clear_tracked.label": "Desmarcar",
