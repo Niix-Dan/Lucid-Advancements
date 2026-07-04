@@ -1,6 +1,6 @@
 package com.niixlabs.lucidadvancements.mixin;
 
-import com.niixlabs.lucidadvancements.client.gui.LucidAdvancementsOverlay;
+import com.niixlabs.lucidadvancements.client.gui.overlay.LucidAdvancementsOverlay;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.DeltaTracker;

@@ -1,4 +1,4 @@
-package com.niixlabs.lucidadvancements.client.gui;
+package com.niixlabs.lucidadvancements.client.gui.card;
 
 public enum AdvancementState {
     OBTAINED_RARE,

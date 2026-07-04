@@ -1,6 +1,6 @@
 package com.niixlabs.lucidadvancements;
 
-import com.niixlabs.lucidadvancements.client.gui.LucidAdvancementsOverlay;
+import com.niixlabs.lucidadvancements.client.gui.overlay.LucidAdvancementsOverlay;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

@@ -1,7 +1,7 @@
 package com.niixlabs.lucidadvancements.mixin;
 
-import com.niixlabs.lucidadvancements.client.gui.AdvancementProgressAccess;
-import com.niixlabs.lucidadvancements.client.gui.LucidAdvancementsScreen;
+import com.niixlabs.lucidadvancements.client.gui.access.AdvancementProgressAccess;
+import com.niixlabs.lucidadvancements.client.gui.screen.LucidAdvancementsScreen;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;

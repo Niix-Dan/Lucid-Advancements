@@ -1,9 +1,9 @@
 package com.niixlabs.lucidadvancements.mixin;
 
+import com.niixlabs.lucidadvancements.client.gui.access.AdvancementProgressAccess;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.multiplayer.ClientAdvancements;
-import com.niixlabs.lucidadvancements.client.gui.AdvancementProgressAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

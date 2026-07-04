@@ -9,11 +9,12 @@
 
   "lucidadvancements.gui.clear_tracked.label": "Desmarcar",
 
-  "lucidadvancements.gui.sort.label": "Ordem: %s",
-  "lucidadvancements.gui.sort.mode.all": "Todos",
-  "lucidadvancements.gui.sort.mode.completed": "Concluídos",
-  "lucidadvancements.gui.sort.mode.incomplete": "Incompletos",
-  "lucidadvancements.gui.sort.mode.challenges": "Desafios",
+  "lucidadvancements.gui.filter.all": "Filtro: Todos",
+  "lucidadvancements.gui.filter.completed": "Filtro: Concluídos",
+  "lucidadvancements.gui.filter.incomplete": "Filtro: Incompletos",
+  "lucidadvancements.gui.filter.challenges": "Filtro: Desafios",
+  "lucidadvancements.gui.filter.partial": "Filtro: Parcial",
+
 
   "lucidadvancements.gui.scale.label": "Escala: %s",
   "lucidadvancements.gui.scale.mode.vanilla": "Auto",
