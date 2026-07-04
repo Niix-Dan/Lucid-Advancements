@@ -9,11 +9,11 @@
 
     "lucidadvancements.gui.clear_tracked.label": "Rimuovi Tracciati",
 
-    "lucidadvancements.gui.sort.label": "Ordina: %s",
-    "lucidadvancements.gui.sort.mode.all": "Tutti",
-    "lucidadvancements.gui.sort.mode.completed": "Completati",
-    "lucidadvancements.gui.sort.mode.incomplete": "Incompleti",
-    "lucidadvancements.gui.sort.mode.challenges": "Sfide",
+    "lucidadvancements.gui.filter.all": "Filtro: Tutti",
+    "lucidadvancements.gui.filter.completed": "Filtro: Completati",
+    "lucidadvancements.gui.filter.incomplete": "Filtro: Incompleti",
+    "lucidadvancements.gui.filter.challenges": "Filtro: Sfide",
+    "lucidadvancements.gui.filter.partial": "Filtro: Parziale",
 
     "lucidadvancements.gui.scale.label": "Scala: %s",
     "lucidadvancements.gui.scale.mode.vanilla": "Auto",
