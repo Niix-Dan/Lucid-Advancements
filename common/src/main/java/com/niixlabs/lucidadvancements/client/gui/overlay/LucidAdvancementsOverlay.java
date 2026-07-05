@@ -14,6 +14,7 @@ import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -51,7 +52,7 @@ public final class LucidAdvancementsOverlay {
     private static final int COLOR_HIDDEN_COUNT_TEXT = 0xFF555555;
 
     private static final Map<String, CachedOverlayBox> OVERLAY_CACHE = new HashMap<>();
-    private static String lastLang = "";
+    private static Language lastLangInstance = null;
 
     private LucidAdvancementsOverlay() {}
 
@@ -61,10 +62,10 @@ public final class LucidAdvancementsOverlay {
         if (mc.options.hideGui || mc.player == null || LucidAdvancementsScreen.TRACKED_ADVANCEMENTS.isEmpty()) return;
         if (mc.getConnection() == null || mc.getConnection().getAdvancements() == null) return;
 
-        String currentLang = mc.getLanguageManager().getSelected();
-        if (!currentLang.equals(lastLang)) {
+        Language currentLangInstance = Language.getInstance();
+        if (currentLangInstance != lastLangInstance) {
             OVERLAY_CACHE.clear();
-            lastLang = currentLang;
+            lastLangInstance = currentLangInstance;
         }
 
         double targetScale = GuiScale.targetScale(mc);

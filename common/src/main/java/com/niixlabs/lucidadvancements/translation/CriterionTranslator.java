@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 
@@ -21,17 +22,18 @@ public final class CriterionTranslator {
 
     private static final Map<String, Map<String, String>> MOD_TRANSLATIONS = new HashMap<>();
     private static final Map<String, String> RESOLVED_CRITERIA = new HashMap<>();
-    private static String lastLanguage = "";
+    private static Language lastLanguageInstance = null;
 
     private CriterionTranslator() {}
 
     public static String resolve(ResourceLocation advancementId, String rawCriterion) {
-        String currentLanguage = Minecraft.getInstance().getLanguageManager().getSelected();
-        if (!currentLanguage.equals(lastLanguage)) {
+        Language currentLanguageInstance = Language.getInstance();
+        if (currentLanguageInstance != lastLanguageInstance) {
             clearCache();
-            lastLanguage = currentLanguage;
+            lastLanguageInstance = currentLanguageInstance;
         }
 
+        String currentLanguage = Minecraft.getInstance().getLanguageManager().getSelected();
         String cacheKey = advancementId + "|" + rawCriterion;
         return RESOLVED_CRITERIA.computeIfAbsent(cacheKey, key -> resolveUncached(advancementId, rawCriterion, currentLanguage));
     }
