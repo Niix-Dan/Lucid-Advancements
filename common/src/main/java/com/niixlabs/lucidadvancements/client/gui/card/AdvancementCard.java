@@ -60,6 +60,10 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
     private final int totalHeight;
     private final Component title;
 
+    public final String cachedSearchTitle;
+    public final String cachedSearchDesc;
+    public final String cachedSearchCategory;
+
     public AdvancementCard(AdvancementNode node, DisplayInfo display, @Nullable AdvancementProgress progress,
                            boolean expanded, boolean tracked, Font font, int maxWidth) {
         this.node = node;
@@ -74,6 +78,16 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
 
         this.title = this.hidden ? Component.literal(HIDDEN_LABEL) : display.getTitle();
         Component description = this.hidden ? Component.literal(HIDDEN_LABEL) : display.getDescription();
+
+        this.cachedSearchTitle = this.hidden ? "" : display.getTitle().getString().toLowerCase();
+        this.cachedSearchDesc = this.hidden ? "" : display.getDescription().getString().toLowerCase();
+
+        String catStr = "";
+        if (node.root() != null && node.root().holder().value().display().isPresent()) {
+            catStr = node.root().holder().value().display().get().getTitle().getString().toLowerCase();
+        }
+        this.cachedSearchCategory = catStr;
+
         this.wrappedDescription = font.split(description, maxWidth - 60);
         this.baseHeight = Math.max(BASE_HEIGHT_MIN, BASE_HEIGHT_PADDING + this.wrappedDescription.size() * LINE_HEIGHT);
 

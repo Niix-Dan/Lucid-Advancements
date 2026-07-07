@@ -60,6 +60,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     private final List<SidebarNodeCache> cachedSidebarNodes = new ArrayList<>();
     private final List<Renderable> customRenderables = new ArrayList<>();
     private final List<AdvancementCard> cachedCards = new ArrayList<>();
+    private final Map<AdvancementNode, List<AdvancementNode>> flattenedTasksCache = new HashMap<>();
 
     public static @Nullable ResourceLocation advancementToFocusOnOpen = null;
     public static @Nullable ResourceLocation lastSelectedTabId = null;
@@ -81,6 +82,8 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private int totalAdvancements = 0;
     private int completedAdvancements = 0;
+    private int currentTabTotal = 0;
+    private int currentTabCompleted = 0;
 
     private boolean draggingMainScrollbar = false;
     private boolean needsRecalculation = true;
@@ -373,6 +376,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         completedAdvancements = 0;
         needsRecalculation = true;
         rebuildSidebarCache();
+        flattenedTasksCache.clear();
     }
 
     @Override
@@ -419,10 +423,12 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     }
 
     private List<AdvancementNode> collectTasks(AdvancementNode root) {
-        List<AdvancementNode> list = new ArrayList<>();
-        collect(root, list);
-        list.remove(root);
-        return list;
+        return flattenedTasksCache.computeIfAbsent(root, r -> {
+            List<AdvancementNode> list = new ArrayList<>();
+            collect(r, list);
+            list.remove(r);
+            return list;
+        });
     }
 
     private void collect(AdvancementNode node, List<AdvancementNode> list) {
@@ -470,13 +476,15 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
                 continue;
             }
 
-            if (searching && !matchesSearch(child, display, modIdFilter, textFilter)) {
+            boolean expanded = expandedNode == child;
+            boolean tracked = TRACKED_ADVANCEMENTS.contains(child.holder().id().toString());
+            AdvancementCard card = new AdvancementCard(child, display, progress, expanded, tracked, font, contentWidth);
+
+            if (searching && !matchesSearch(child, card, modIdFilter, textFilter)) {
                 continue;
             }
 
-            boolean expanded = expandedNode == child;
-            boolean tracked = TRACKED_ADVANCEMENTS.contains(child.holder().id().toString());
-            cachedCards.add(new AdvancementCard(child, display, progress, expanded, tracked, font, contentWidth));
+            cachedCards.add(card);
         }
 
         if (currentFilter == FilterMode.PARTIAL) {
@@ -493,6 +501,21 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         int viewportY = ScreenMetrics.viewportY(searching);
         maxScroll = Math.max(0, totalCardsHeight - viewportHeight(viewportY));
         scrollOffset = Mth.clamp(scrollOffset, 0, maxScroll);
+
+        this.currentTabTotal = 0;
+        this.currentTabCompleted = 0;
+        if (selectedRoot != null) {
+            for (AdvancementNode node : collectTasks(selectedRoot)) {
+                if (node.holder().value().display().isPresent()) {
+                    this.currentTabTotal++;
+                    AdvancementProgress progress = progressMap.get(node);
+                    if (progress != null && progress.isDone()) {
+                        this.currentTabCompleted++;
+                    }
+                }
+            }
+        }
+
         needsRecalculation = false;
     }
 
@@ -518,7 +541,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         };
     }
 
-    private boolean matchesSearch(AdvancementNode child, DisplayInfo display, @Nullable String modIdFilter, String textFilter) {
+    private boolean matchesSearch(AdvancementNode child, AdvancementCard card, @Nullable String modIdFilter, String textFilter) {
         if (modIdFilter != null && !child.holder().id().getNamespace().toLowerCase().contains(modIdFilter)) {
             return false;
         }
@@ -526,13 +549,9 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return true;
         }
 
-        String title = display.getTitle().getString().toLowerCase();
-        String description = display.getDescription().getString().toLowerCase();
-        String category = child.root() != null && child.root().holder().value().display().isPresent()
-                ? child.root().holder().value().display().get().getTitle().getString().toLowerCase()
-                : "";
-
-        return title.contains(textFilter) || description.contains(textFilter) || category.contains(textFilter);
+        return card.cachedSearchTitle.contains(textFilter)
+                || card.cachedSearchDesc.contains(textFilter)
+                || card.cachedSearchCategory.contains(textFilter);
     }
 
     @Override
@@ -571,11 +590,12 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
         HoverResult hover = renderCardList(guiGraphics, scaleFactor, contentX, contentWidth, viewportY, viewportHeight, scaledMouseX, scaledMouseY);
         renderMainScrollbar(guiGraphics, viewportY, viewportHeight);
-        renderHoverTooltip(guiGraphics, hover, scaledMouseX, scaledMouseY);
 
         filterDropdown.renderOptions(guiGraphics, scaledMouseX, scaledMouseY);
 
         guiGraphics.pose().popPose();
+
+        renderHoverTooltip(guiGraphics, hover, mouseX, mouseY);
     }
 
     private void renderTopBar(GuiGraphics guiGraphics) {
@@ -599,9 +619,10 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         int scissorY2 = (int) Math.round((height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT) / scaleFactor);
         guiGraphics.enableScissor(0, 0, scissorX2, scissorY2);
 
+        int sidebarViewportBottom = height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT;
         int rowY = ScreenMetrics.SIDEBAR_TOP_PADDING - (int) sidebarScroll;
         for (SidebarNodeCache cache : cachedSidebarNodes) {
-            renderSidebarRow(guiGraphics, cache, rowY, sidebarWidth, scaledMouseX, scaledMouseY);
+            renderSidebarRow(guiGraphics, cache, rowY, sidebarWidth, scaledMouseX, scaledMouseY, sidebarViewportBottom);
             rowY += ScreenMetrics.SIDEBAR_ROW_HEIGHT;
         }
 
@@ -614,13 +635,14 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         guiGraphics.disableScissor();
     }
 
-    private void renderSidebarRow(GuiGraphics guiGraphics, SidebarNodeCache cache, int rowY, int sidebarWidth, int scaledMouseX, int scaledMouseY) {
+    private void renderSidebarRow(GuiGraphics guiGraphics, SidebarNodeCache cache, int rowY, int sidebarWidth, int scaledMouseX, int scaledMouseY, int sidebarViewportBottom) {
         boolean selected = cache.node == selectedRoot;
 
         if (selected) {
             guiGraphics.fill(4, rowY, sidebarWidth - 4, rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT, SIDEBAR_SELECTED_FILL);
             guiGraphics.fill(4, rowY, 6, rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT, SIDEBAR_SELECTED_ACCENT);
-        } else if (scaledMouseX >= 4 && scaledMouseX <= sidebarWidth - 4 && scaledMouseY >= rowY && scaledMouseY <= rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT) {
+        } else if (scaledMouseY <= sidebarViewportBottom && scaledMouseX >= 4 && scaledMouseX <= sidebarWidth - 4
+                && scaledMouseY >= rowY && scaledMouseY <= rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT) {
             guiGraphics.fill(4, rowY, sidebarWidth - 4, rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT, SIDEBAR_HOVER_FILL);
         }
 
@@ -680,17 +702,8 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             headerTitle = rootDisplay.getTitle();
             headerDescription = rootDisplay.getDescription();
 
-            total = 0;
-            completed = 0;
-            for (AdvancementNode node : collectTasks(selectedRoot)) {
-                if (node.holder().value().display().isPresent()) {
-                    total++;
-                    AdvancementProgress progress = progressMap.get(node);
-                    if (progress != null && progress.isDone()) {
-                        completed++;
-                    }
-                }
-            }
+            total = currentTabTotal;
+            completed = currentTabCompleted;
         } else if (selectedRoot == null) {
             headerTitle = Component.translatable(Constants.MOD_ID + ".gui.global_category.title");
             headerDescription = Component.translatable(Constants.MOD_ID + ".gui.global_category.desc");
@@ -796,11 +809,11 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         guiGraphics.fill(scrollbarX, thumbY, scrollbarX + ScreenMetrics.SCROLLBAR_WIDTH, thumbY + thumbHeight, thumbColor);
     }
 
-    private void renderHoverTooltip(GuiGraphics guiGraphics, HoverResult hover, int scaledMouseX, int scaledMouseY) {
+    private void renderHoverTooltip(GuiGraphics guiGraphics, HoverResult hover, int mouseX, int mouseY) {
         if (hover.icon() != null) {
-            guiGraphics.renderTooltip(font, hover.icon(), scaledMouseX, scaledMouseY);
+            guiGraphics.renderTooltip(font, hover.icon(), mouseX, mouseY);
         } else if (hover.criterionTag() != null) {
-            guiGraphics.renderTooltip(font, Component.literal(hover.criterionTag()), scaledMouseX, scaledMouseY);
+            guiGraphics.renderTooltip(font, Component.literal(hover.criterionTag()), mouseX, mouseY);
         }
     }
 
@@ -831,6 +844,11 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     }
 
     private boolean handleSidebarClick(double mouseX, double mouseY) {
+        int sidebarViewportBottom = height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT;
+        if (mouseY > sidebarViewportBottom) {
+            return false;
+        }
+
         int rowY = ScreenMetrics.SIDEBAR_TOP_PADDING - (int) sidebarScroll;
         for (SidebarNodeCache cache : cachedSidebarNodes) {
             if (mouseY >= rowY && mouseY <= rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT) {
