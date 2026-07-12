@@ -26,38 +26,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public final class LucidAdvancementsScreen extends Screen implements ClientAdvancements.Listener {
-    private static final int BACKDROP_COLOR = 0xD0101010;
-    private static final int TOP_BAR_GRADIENT_START = 0xCC161616;
-    private static final int TOP_BAR_GRADIENT_END = 0xCC121212;
-    private static final int TOP_BAR_BORDER = 0xAA2A2A2A;
-    private static final int SIDEBAR_GRADIENT_START = 0xCC111111;
-    private static final int SIDEBAR_GRADIENT_END = 0xCC0A0A0A;
-    private static final int SIDEBAR_BORDER = 0xAA2A2A2A;
-    private static final int SIDEBAR_SELECTED_FILL = 0xAA252525;
-    private static final int SIDEBAR_SELECTED_ACCENT = 0xFF00FFAA;
-    private static final int SIDEBAR_HOVER_FILL = 0x881C1C1C;
-    private static final int SIDEBAR_TEXT_SELECTED = 0xFF00FFAA;
-    private static final int SIDEBAR_TEXT_IDLE = 0xFFAAAAAA;
-    private static final int PROGRESS_BAR_GRADIENT_START = 0xFF141414;
-    private static final int PROGRESS_BAR_GRADIENT_END = 0xFF0D0D0D;
-    private static final int PROGRESS_BAR_TOP_BORDER = 0x22FFFFFF;
-    private static final int PROGRESS_TRACK_BORDER = 0xAA333333;
-    private static final int PROGRESS_TRACK_FILL = 0xAA1A1A1A;
-    private static final int PROGRESS_FILL_START = 0xAA00FFAA;
-    private static final int PROGRESS_FILL_END = 0xAA00CC88;
-    private static final int PROGRESS_TEXT_COLOR = 0xFFE0E0E0;
-    private static final int TRACKED_FILL_START = 0xAAAF45EE;
-    private static final int TRACKED_FILL_END = 0xAA7A28CB;
-    private static final int TRACKED_PERCENTAGE_COLOR = 0xFFAF45EE;
-    private static final int HEADER_TITLE_COLOR = 0xFFFFFFFF;
-    private static final int HEADER_DESCRIPTION_COLOR = 0xFFAAAAAA;
-    private static final int HEADER_DIVIDER_COLOR = 0x88303030;
-    private static final int HEADER_PERCENTAGE_COLOR = 0xFF00FFAA;
-    private static final int SCROLLBAR_TRACK_COLOR = 0xAA1A1A1A;
-    private static final int SCROLLBAR_THUMB_ACTIVE = 0xFF00FFAA;
-    private static final int SCROLLBAR_THUMB_IDLE = 0xAA00FFAA;
-
-
     private final ClientAdvancements clientAdvancements;
     private final List<AdvancementNode> rootNodes = new ArrayList<>();
     private final Map<AdvancementNode, AdvancementProgress> progressMap = new HashMap<>();
@@ -112,11 +80,11 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     }
 
     private int viewportHeight(int viewportY) {
-        return height - viewportY - ScreenMetrics.VIEWPORT_BOTTOM_MARGIN;
+        return height - viewportY - ScreenMetrics.viewportBottomMargin();
     }
 
     private int scrollThumbHeight(int viewportHeight) {
-        return Math.max(ScreenMetrics.MIN_SCROLL_THUMB_HEIGHT,
+        return Math.max(ScreenMetrics.minScrollThumbHeight(),
                 (int) ((viewportHeight / (float) (viewportHeight + maxScroll)) * viewportHeight));
     }
 
@@ -155,7 +123,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     }
 
     private void initTopBarWidgets() {
-        int currentX = width - ScreenMetrics.CONTENT_MARGIN;
+        int currentX = width - ScreenMetrics.contentMargin();
 
         int searchWidth = 120;
         currentX -= searchWidth;
@@ -287,7 +255,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
                 scrollOffset = Mth.clamp(yOffset + halfCard - halfViewport, 0, maxScroll);
                 return;
             }
-            yOffset += card.getHeight() + ScreenMetrics.CARD_SPACING;
+            yOffset += card.getHeight() + ScreenMetrics.cardSpacing();
         }
     }
 
@@ -297,10 +265,10 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return;
         }
 
-        int sidebarViewport = height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT - 24;
-        maxSidebarScroll = Math.max(0, (cachedSidebarNodes.size() * ScreenMetrics.SIDEBAR_ROW_HEIGHT) - sidebarViewport);
+        int sidebarViewport = height - ScreenMetrics.sidebarProgressHeight() - 24;
+        maxSidebarScroll = Math.max(0, (cachedSidebarNodes.size() * ScreenMetrics.sidebarRowHeight()) - sidebarViewport);
 
-        int targetScroll = (rootIndex * ScreenMetrics.SIDEBAR_ROW_HEIGHT) + (ScreenMetrics.SIDEBAR_ROW_HEIGHT / 2) - (sidebarViewport / 2);
+        int targetScroll = (rootIndex * ScreenMetrics.sidebarRowHeight()) + (ScreenMetrics.sidebarRowHeight() / 2) - (sidebarViewport / 2);
         sidebarScroll = Mth.clamp(targetScroll, 0, maxSidebarScroll);
     }
 
@@ -310,7 +278,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return;
         }
 
-        int maxTextWidth = (int) ((ScreenMetrics.SIDEBAR_WIDTH - 32) / 0.85f);
+        int maxTextWidth = (int) ((ScreenMetrics.sidebarWidth() - 32) / 0.85f);
 
         rootNodes.sort((a, b) -> {
             String namespaceA = a.holder().id().getNamespace();
@@ -512,7 +480,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
         int totalCardsHeight = 0;
         for (AdvancementCard card : cachedCards) {
-            totalCardsHeight += card.getHeight() + ScreenMetrics.CARD_SPACING;
+            totalCardsHeight += card.getHeight() + ScreenMetrics.cardSpacing();
         }
 
         int viewportY = ScreenMetrics.viewportY(searching);
@@ -570,7 +538,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             guiGraphics.pose().scale(invScale, invScale, 1.0f);
         }
 
-        guiGraphics.fill(0, 0, width, height, BACKDROP_COLOR);
+        guiGraphics.fill(0, 0, width, height, LucidConfig.screenBackdropColor);
 
         if (needsRecalculation) {
             recalculateCards();
@@ -604,36 +572,36 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private void renderTopBar(GuiGraphics guiGraphics) {
         int contentX = ScreenMetrics.contentX();
-        guiGraphics.fillGradient(ScreenMetrics.SIDEBAR_WIDTH, 0, width, ScreenMetrics.TOP_BAR_HEIGHT, TOP_BAR_GRADIENT_START, TOP_BAR_GRADIENT_END);
-        guiGraphics.fill(ScreenMetrics.SIDEBAR_WIDTH, ScreenMetrics.TOP_BAR_HEIGHT - 1, width, ScreenMetrics.TOP_BAR_HEIGHT, TOP_BAR_BORDER);
-        guiGraphics.drawString(font, Component.translatable("key.advancements"), contentX, 20, SIDEBAR_TEXT_SELECTED, true);
+        guiGraphics.fillGradient(ScreenMetrics.sidebarWidth(), 0, width, ScreenMetrics.topBarHeight(), LucidConfig.screenTopBarGradientStart, LucidConfig.screenTopBarGradientEnd);
+        guiGraphics.fill(ScreenMetrics.sidebarWidth(), ScreenMetrics.topBarHeight() - 1, width, ScreenMetrics.topBarHeight(), LucidConfig.screenTopBarBorder);
+        guiGraphics.drawString(font, Component.translatable("key.advancements"), contentX, 20, LucidConfig.screenSidebarTextSelected, true);
     }
 
     private void renderSidebar(GuiGraphics guiGraphics, double scaleFactor, int scaledMouseX, int scaledMouseY) {
-        int sidebarWidth = ScreenMetrics.SIDEBAR_WIDTH;
+        int sidebarWidth = ScreenMetrics.sidebarWidth();
 
-        guiGraphics.fillGradient(0, 0, sidebarWidth, height, SIDEBAR_GRADIENT_START, SIDEBAR_GRADIENT_END);
-        guiGraphics.fill(sidebarWidth - 1, 0, sidebarWidth, height, SIDEBAR_BORDER);
+        guiGraphics.fillGradient(0, 0, sidebarWidth, height, LucidConfig.screenSidebarGradientStart, LucidConfig.screenSidebarGradientEnd);
+        guiGraphics.fill(sidebarWidth - 1, 0, sidebarWidth, height, LucidConfig.screenSidebarBorder);
 
-        maxSidebarScroll = Math.max(0, (cachedSidebarNodes.size() * ScreenMetrics.SIDEBAR_ROW_HEIGHT)
-                - (height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT - 24));
+        maxSidebarScroll = Math.max(0, (cachedSidebarNodes.size() * ScreenMetrics.sidebarRowHeight())
+                - (height - ScreenMetrics.sidebarProgressHeight() - 24));
         sidebarScroll = Mth.clamp(sidebarScroll, 0, maxSidebarScroll);
 
         int scissorX2 = (int) Math.round(sidebarWidth / scaleFactor);
-        int scissorY2 = (int) Math.round((height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT) / scaleFactor);
+        int scissorY2 = (int) Math.round((height - ScreenMetrics.sidebarProgressHeight()) / scaleFactor);
         guiGraphics.enableScissor(0, 0, scissorX2, scissorY2);
 
-        int sidebarViewportBottom = height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT;
-        int rowY = ScreenMetrics.SIDEBAR_TOP_PADDING - (int) sidebarScroll;
+        int sidebarViewportBottom = height - ScreenMetrics.sidebarProgressHeight();
+        int rowY = ScreenMetrics.sidebarTopPadding() - (int) sidebarScroll;
         for (SidebarNodeCache cache : cachedSidebarNodes) {
             renderSidebarRow(guiGraphics, cache, rowY, sidebarWidth, scaledMouseX, scaledMouseY, sidebarViewportBottom);
-            rowY += ScreenMetrics.SIDEBAR_ROW_HEIGHT;
+            rowY += ScreenMetrics.sidebarRowHeight();
         }
 
-        rowY = ScreenMetrics.SIDEBAR_TOP_PADDING - (int) sidebarScroll;
+        rowY = ScreenMetrics.sidebarTopPadding() - (int) sidebarScroll;
         for (SidebarNodeCache cache : cachedSidebarNodes) {
             guiGraphics.renderItem(cache.icon, 8, rowY + 9);
-            rowY += ScreenMetrics.SIDEBAR_ROW_HEIGHT;
+            rowY += ScreenMetrics.sidebarRowHeight();
         }
 
         guiGraphics.disableScissor();
@@ -643,27 +611,27 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         boolean selected = cache.node == selectedRoot;
 
         if (selected) {
-            guiGraphics.fill(4, rowY, sidebarWidth - 4, rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT, SIDEBAR_SELECTED_FILL);
-            guiGraphics.fill(4, rowY, 6, rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT, SIDEBAR_SELECTED_ACCENT);
+            guiGraphics.fill(4, rowY, sidebarWidth - 4, rowY + ScreenMetrics.sidebarItemHeight(), LucidConfig.screenSidebarSelectedFill);
+            guiGraphics.fill(4, rowY, 6, rowY + ScreenMetrics.sidebarItemHeight(), LucidConfig.screenSidebarSelectedAccent);
         } else if (scaledMouseY <= sidebarViewportBottom && scaledMouseX >= 4 && scaledMouseX <= sidebarWidth - 4
-                && scaledMouseY >= rowY && scaledMouseY <= rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT) {
-            guiGraphics.fill(4, rowY, sidebarWidth - 4, rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT, SIDEBAR_HOVER_FILL);
+                && scaledMouseY >= rowY && scaledMouseY <= rowY + ScreenMetrics.sidebarItemHeight()) {
+            guiGraphics.fill(4, rowY, sidebarWidth - 4, rowY + ScreenMetrics.sidebarItemHeight(), LucidConfig.screenSidebarHoverFill);
         }
 
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(28, rowY + 14, 0);
         guiGraphics.pose().scale(0.85f, 0.85f, 1.0f);
-        guiGraphics.drawString(font, cache.displayTitle, 0, 0, selected ? SIDEBAR_TEXT_SELECTED : SIDEBAR_TEXT_IDLE, true);
+        guiGraphics.drawString(font, cache.displayTitle, 0, 0, selected ? LucidConfig.screenSidebarTextSelected : LucidConfig.screenSidebarTextIdle, true);
         guiGraphics.pose().popPose();
     }
 
 
     private void renderProgressBar(GuiGraphics guiGraphics) {
-        int sidebarWidth = ScreenMetrics.SIDEBAR_WIDTH;
-        int progressAreaY = height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT;
+        int sidebarWidth = ScreenMetrics.sidebarWidth();
+        int progressAreaY = height - ScreenMetrics.sidebarProgressHeight();
 
-        guiGraphics.fillGradient(0, progressAreaY, sidebarWidth - 1, height, PROGRESS_BAR_GRADIENT_START, PROGRESS_BAR_GRADIENT_END);
-        guiGraphics.fill(0, progressAreaY, sidebarWidth - 1, progressAreaY + 1, PROGRESS_BAR_TOP_BORDER);
+        guiGraphics.fillGradient(0, progressAreaY, sidebarWidth - 1, height, LucidConfig.screenProgressBarGradientStart, LucidConfig.screenProgressBarGradientEnd);
+        guiGraphics.fill(0, progressAreaY, sidebarWidth - 1, progressAreaY + 1, LucidConfig.screenProgressBarTopBorder);
 
         if (totalAdvancements <= 0) {
             return;
@@ -674,15 +642,15 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         int barX = 8;
         int barY = height - 14;
 
-        guiGraphics.fill(barX - 1, barY - 1, barX + barWidth + 1, barY + 7, PROGRESS_TRACK_BORDER);
-        guiGraphics.fill(barX, barY, barX + barWidth, barY + 6, PROGRESS_TRACK_FILL);
-        guiGraphics.fillGradient(barX, barY, barX + (int) (barWidth * percentage), barY + 6, PROGRESS_FILL_START, PROGRESS_FILL_END);
+        guiGraphics.fill(barX - 1, barY - 1, barX + barWidth + 1, barY + 7, LucidConfig.screenProgressTrackBorder);
+        guiGraphics.fill(barX, barY, barX + barWidth, barY + 6, LucidConfig.screenProgressTrackFill);
+        guiGraphics.fillGradient(barX, barY, barX + (int) (barWidth * percentage), barY + 6, LucidConfig.screenProgressFillStart, LucidConfig.screenProgressFillEnd);
 
         String progressText = Component.translatable(Constants.MOD_ID + ".gui.progress_text", completedAdvancements, totalAdvancements).getString();
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(sidebarWidth / 2f, barY - 11, 0);
         guiGraphics.pose().scale(0.82f, 0.82f, 1.0f);
-        guiGraphics.drawCenteredString(font, Component.literal(progressText), 0, 0, PROGRESS_TEXT_COLOR);
+        guiGraphics.drawCenteredString(font, Component.literal(progressText), 0, 0, LucidConfig.screenProgressTextColor);
         guiGraphics.pose().popPose();
     }
 
@@ -717,11 +685,11 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
         guiGraphics.pose().pushPose();
         guiGraphics.pose().scale(1.2f, 1.2f, 1.2f);
-        guiGraphics.drawString(font, headerTitle, (int) (contentX / 1.2f), (int) ((ScreenMetrics.TOP_BAR_HEIGHT + 10) / 1.2f), HEADER_TITLE_COLOR, true);
+        guiGraphics.drawString(font, headerTitle, (int) (contentX / 1.2f), (int) ((ScreenMetrics.topBarHeight() + 10) / 1.2f), LucidConfig.screenHeaderTitleColor, true);
         guiGraphics.pose().popPose();
 
-        int barY = ScreenMetrics.TOP_BAR_HEIGHT + 18;
-        int currentRightX = width - ScreenMetrics.CONTENT_MARGIN;
+        int barY = ScreenMetrics.topBarHeight() + 18;
+        int currentRightX = width - ScreenMetrics.contentMargin();
 
         if (total > 0) {
             currentRightX = renderHeaderProgressBar(guiGraphics, completed, total, currentRightX, barY, false);
@@ -734,8 +702,8 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             renderHeaderProgressBar(guiGraphics, trackedCompleted, trackedTotal, currentRightX, barY, true);
         }
 
-        guiGraphics.drawString(font, headerDescription, contentX, ScreenMetrics.TOP_BAR_HEIGHT + 28, HEADER_DESCRIPTION_COLOR, true);
-        guiGraphics.fill(contentX, ScreenMetrics.TOP_BAR_HEIGHT + 44, width - ScreenMetrics.CONTENT_MARGIN, ScreenMetrics.TOP_BAR_HEIGHT + 45, HEADER_DIVIDER_COLOR);
+        guiGraphics.drawString(font, headerDescription, contentX, ScreenMetrics.topBarHeight() + 28, LucidConfig.screenHeaderDescriptionColor, true);
+        guiGraphics.fill(contentX, ScreenMetrics.topBarHeight() + 44, width - ScreenMetrics.contentMargin(), ScreenMetrics.topBarHeight() + 45, LucidConfig.screenHeaderDividerColor);
     }
 
     private int renderHeaderProgressBar(GuiGraphics guiGraphics, int completed, int total, int rightX, int barY, boolean isTracked) {
@@ -757,13 +725,13 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         int textX = barX + barWidth - textWidth;
         int textY = barY - 2 - barHeight;
 
-        int percentColor = isTracked ? TRACKED_PERCENTAGE_COLOR : HEADER_PERCENTAGE_COLOR;
-        int fillStart = isTracked ? TRACKED_FILL_START : PROGRESS_FILL_START;
-        int fillEnd = isTracked ? TRACKED_FILL_END : PROGRESS_FILL_END;
+        int percentColor = isTracked ? LucidConfig.screenTrackedPercentageColor : LucidConfig.screenHeaderPercentageColor;
+        int fillStart = isTracked ? LucidConfig.screenTrackedFillStart : LucidConfig.screenProgressFillStart;
+        int fillEnd = isTracked ? LucidConfig.screenTrackedFillEnd : LucidConfig.screenProgressFillEnd;
 
         guiGraphics.drawString(font, progressText, textX, textY, percentColor, true);
-        guiGraphics.fill(barX - 1, barY - 1, barX + barWidth + 1, barY + barHeight + 1, PROGRESS_TRACK_BORDER);
-        guiGraphics.fill(barX, barY, barX + barWidth, barY + barHeight, PROGRESS_TRACK_FILL);
+        guiGraphics.fill(barX - 1, barY - 1, barX + barWidth + 1, barY + barHeight + 1, LucidConfig.screenProgressTrackBorder);
+        guiGraphics.fill(barX, barY, barX + barWidth, barY + barHeight, LucidConfig.screenProgressTrackFill);
 
         if (completed > 0) {
             int fillWidth = (int) (barWidth * percentage);
@@ -777,7 +745,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
                                        int viewportY, int viewportHeight, int scaledMouseX, int scaledMouseY) {
         int scissorX1 = (int) Math.round(contentX / scaleFactor);
         int scissorY1 = (int) Math.round(viewportY / scaleFactor);
-        int scissorX2 = (int) Math.round((width - ScreenMetrics.CONTENT_MARGIN) / scaleFactor);
+        int scissorX2 = (int) Math.round((width - ScreenMetrics.contentMargin()) / scaleFactor);
         int scissorY2 = (int) Math.round((viewportY + viewportHeight) / scaleFactor);
         guiGraphics.enableScissor(scissorX1, scissorY1, scissorX2, scissorY2);
 
@@ -786,7 +754,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             if (isCardVisible(cardY, card, viewportY, viewportHeight)) {
                 card.renderBackgroundAndText(guiGraphics, font, contentX, cardY, contentWidth, scaledMouseX, scaledMouseY, viewportY, viewportHeight, filterDropdown.isOpen());
             }
-            cardY += card.getHeight() + ScreenMetrics.CARD_SPACING;
+            cardY += card.getHeight() + ScreenMetrics.cardSpacing();
         }
 
         ItemStack hoveredIcon = null;
@@ -807,7 +775,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
                     hoveredCriterionTag = possibleTag;
                 }
             }
-            cardY += card.getHeight() + ScreenMetrics.CARD_SPACING;
+            cardY += card.getHeight() + ScreenMetrics.cardSpacing();
         }
 
         guiGraphics.disableScissor();
@@ -823,13 +791,13 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return;
         }
 
-        int scrollbarX = width - ScreenMetrics.SCROLLBAR_RIGHT_MARGIN;
+        int scrollbarX = width - ScreenMetrics.scrollbarRightMargin();
         int thumbHeight = scrollThumbHeight(viewportHeight);
         int thumbY = scrollThumbY(viewportY, viewportHeight, thumbHeight);
 
-        guiGraphics.fill(scrollbarX, viewportY, scrollbarX + ScreenMetrics.SCROLLBAR_WIDTH, viewportY + viewportHeight, SCROLLBAR_TRACK_COLOR);
-        int thumbColor = draggingMainScrollbar ? SCROLLBAR_THUMB_ACTIVE : SCROLLBAR_THUMB_IDLE;
-        guiGraphics.fill(scrollbarX, thumbY, scrollbarX + ScreenMetrics.SCROLLBAR_WIDTH, thumbY + thumbHeight, thumbColor);
+        guiGraphics.fill(scrollbarX, viewportY, scrollbarX + ScreenMetrics.scrollbarWidth(), viewportY + viewportHeight, LucidConfig.screenScrollbarTrackColor);
+        int thumbColor = draggingMainScrollbar ? LucidConfig.screenScrollbarThumbActive : LucidConfig.screenScrollbarThumbIdle;
+        guiGraphics.fill(scrollbarX, thumbY, scrollbarX + ScreenMetrics.scrollbarWidth(), thumbY + thumbHeight, thumbColor);
     }
 
     private void renderHoverTooltip(GuiGraphics guiGraphics, HoverResult hover, int mouseX, int mouseY) {
@@ -855,7 +823,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return true;
         }
 
-        if (mouseX <= ScreenMetrics.SIDEBAR_WIDTH) {
+        if (mouseX <= ScreenMetrics.sidebarWidth()) {
             if (handleSidebarClick(mouseX, mouseY)) {
                 return true;
             }
@@ -867,18 +835,18 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     }
 
     private boolean handleSidebarClick(double mouseX, double mouseY) {
-        int sidebarViewportBottom = height - ScreenMetrics.SIDEBAR_PROGRESS_HEIGHT;
+        int sidebarViewportBottom = height - ScreenMetrics.sidebarProgressHeight();
         if (mouseY > sidebarViewportBottom) {
             return false;
         }
 
-        int rowY = ScreenMetrics.SIDEBAR_TOP_PADDING - (int) sidebarScroll;
+        int rowY = ScreenMetrics.sidebarTopPadding() - (int) sidebarScroll;
         for (SidebarNodeCache cache : cachedSidebarNodes) {
-            if (mouseY >= rowY && mouseY <= rowY + ScreenMetrics.SIDEBAR_ITEM_HEIGHT) {
+            if (mouseY >= rowY && mouseY <= rowY + ScreenMetrics.sidebarItemHeight()) {
                 selectSidebarNode(cache);
                 return true;
             }
-            rowY += ScreenMetrics.SIDEBAR_ROW_HEIGHT;
+            rowY += ScreenMetrics.sidebarRowHeight();
         }
         return false;
     }
@@ -919,7 +887,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             if (mouseY >= cardY && mouseY <= cardY + card.getHeight()) {
                 return handleCardInteraction(card, mouseX, mouseY, contentX, contentWidth, cardY, viewportY, viewportHeight);
             }
-            cardY += card.getHeight() + ScreenMetrics.CARD_SPACING;
+            cardY += card.getHeight() + ScreenMetrics.cardSpacing();
         }
         return false;
     }
@@ -958,7 +926,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return false;
         }
 
-        int scrollbarX = width - ScreenMetrics.SCROLLBAR_RIGHT_MARGIN;
+        int scrollbarX = width - ScreenMetrics.scrollbarRightMargin();
         if (mouseX < scrollbarX - 2 || mouseX > scrollbarX + 5) {
             return false;
         }
@@ -1015,7 +983,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return true;
         }
 
-        if (mouseX <= ScreenMetrics.SIDEBAR_WIDTH) {
+        if (mouseX <= ScreenMetrics.sidebarWidth()) {
             sidebarScroll = Mth.clamp(sidebarScroll - (scrollY * 20), 0.0, maxSidebarScroll);
             return true;
         }

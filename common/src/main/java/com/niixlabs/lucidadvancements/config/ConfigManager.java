@@ -68,6 +68,8 @@ public final class ConfigManager {
     private static void applyValue(Field field, ConfigOption option, String rawValue) throws IllegalAccessException {
         if (field.getType() == int.class) {
             field.setInt(null, option.hex() ? parseHex(rawValue) : Integer.parseInt(rawValue));
+        } else if (field.getType() == double.class) {
+            field.setDouble(null, Double.parseDouble(rawValue));
         } else if (field.getType() == boolean.class) {
             field.setBoolean(null, Boolean.parseBoolean(rawValue));
         } else if (field.getType() == String.class) {

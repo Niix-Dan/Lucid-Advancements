@@ -19,31 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class AdvancementCard implements Comparable<AdvancementCard> {
-    private static final String ICON_LOCKED = "🔒";
-    private static final String ICON_DONE = "✔";
-    private static final String ICON_TRACKED = "✦";
-    private static final String HIDDEN_LABEL = "???";
-
-    private static final int COLOR_TRACKED_ACTIVE = 0xFF00FFAA;
-    private static final int COLOR_INACTIVE = 0xFF555555;
-    private static final int COLOR_HIDDEN_MARK = 0xFF666666;
-    private static final int COLOR_DESCRIPTION = 0xFFAAAAAA;
-    private static final int COLOR_REQUIREMENTS_LABEL = 0xFF888888;
-    private static final int COLOR_CRITERION_DONE = 0xFF00CC88;
-    private static final int COLOR_CRITERION_PENDING = 0xFF777777;
-    private static final int COLOR_DIVIDER = 0x44FFFFFF;
-    private static final int COLOR_HOVER_OVERLAY = 0x20FFFFFF;
-
-    private static final int BASE_HEIGHT_MIN = 46;
-    private static final int BASE_HEIGHT_PADDING = 28;
-    private static final int LINE_HEIGHT = 10;
-    private static final int EXPANDED_HEADER_HEIGHT = 20;
-    private static final int CRITERIA_SECTION_PADDING = 12;
-    private static final int TEXT_X_OFFSET = 40;
-    private static final int ICON_X_OFFSET = 12;
-    private static final int TRACK_ICON_X_OFFSET = 20;
-    private static final int STATUS_ICON_X_OFFSET = 30;
-
     private final AdvancementNode node;
     private final DisplayInfo display;
     private final boolean done;
@@ -70,14 +45,14 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
         this.display = display;
         this.expanded = expanded;
         this.done = progress != null && progress.isDone();
-        this.tracked = tracked && !this.done;
+        this.tracked = tracked;
         this.hidden = display.isHidden() && !this.done;
         this.rare = display.getType() == AdvancementType.CHALLENGE;
         this.state = resolveState(this.done, this.rare);
         this.progressRatio = progress != null ? progress.getPercent() : 0f;
 
-        this.title = this.hidden ? Component.literal(HIDDEN_LABEL) : display.getTitle();
-        Component description = this.hidden ? Component.literal(HIDDEN_LABEL) : display.getDescription();
+        this.title = this.hidden ? Component.literal(LucidConfig.cardHiddenLabel) : display.getTitle();
+        Component description = this.hidden ? Component.literal(LucidConfig.cardHiddenLabel) : display.getDescription();
 
         this.cachedSearchTitle = this.hidden ? "" : display.getTitle().getString().toLowerCase();
         this.cachedSearchDesc = this.hidden ? "" : display.getDescription().getString().toLowerCase();
@@ -89,7 +64,7 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
         this.cachedSearchCategory = catStr;
 
         this.wrappedDescription = font.split(description, maxWidth - 60);
-        this.baseHeight = Math.max(BASE_HEIGHT_MIN, BASE_HEIGHT_PADDING + this.wrappedDescription.size() * LINE_HEIGHT);
+        this.baseHeight = Math.max(LucidConfig.cardBaseHeightMin, LucidConfig.cardBaseHeightPadding + this.wrappedDescription.size() * LucidConfig.cardLineHeight);
 
         if (expanded && progress != null && !this.hidden) {
             populateCriteria(node.holder().id(), progress);
@@ -108,11 +83,11 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
     private void populateCriteria(ResourceLocation advancementId, AdvancementProgress progress) {
         for (String criterion : progress.getCompletedCriteria()) {
             String label = CriterionTranslator.resolve(advancementId, criterion);
-            criteria.add(new CriterionEntry(criterion, ICON_DONE + " " + label, true));
+            criteria.add(new CriterionEntry(criterion, LucidConfig.cardIconDone + " " + label, true));
         }
         for (String criterion : progress.getRemainingCriteria()) {
             String label = CriterionTranslator.resolve(advancementId, criterion);
-            criteria.add(new CriterionEntry(criterion, ICON_LOCKED + " " + label, false));
+            criteria.add(new CriterionEntry(criterion, LucidConfig.cardIconLocked + " " + label, false));
         }
     }
 
@@ -121,9 +96,9 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
             return baseHeight;
         }
         int criteriaHeight = criteria.isEmpty()
-                ? CRITERIA_SECTION_PADDING
-                : CRITERIA_SECTION_PADDING + criteria.size() * LINE_HEIGHT;
-        return baseHeight + EXPANDED_HEADER_HEIGHT + criteriaHeight;
+                ? LucidConfig.cardCriteriaSectionPadding
+                : LucidConfig.cardCriteriaSectionPadding + criteria.size() * LucidConfig.cardLineHeight;
+        return baseHeight + LucidConfig.cardExpandedHeaderHeight + criteriaHeight;
     }
 
     public int getHeight() {
@@ -153,7 +128,7 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
         guiGraphics.fill(x + width - 1, y, x + width, y + totalHeight, palette.border());
 
         if (!isBlocked && isHovered(mouseX, mouseY, x, y, width, viewportY, viewportHeight)) {
-            guiGraphics.fill(x, y, x + width, y + totalHeight, COLOR_HOVER_OVERLAY);
+            guiGraphics.fill(x, y, x + width, y + totalHeight, LucidConfig.cardHoverOverlayColor);
         }
 
         guiGraphics.pose().pushPose();
@@ -161,22 +136,22 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
 
         if (hidden) {
             int iconY = y + (baseHeight / 2) - 8;
-            guiGraphics.drawCenteredString(font, "?", x + 20, iconY + 4, COLOR_HIDDEN_MARK);
+            guiGraphics.drawCenteredString(font, "?", x + 20, iconY + 4, LucidConfig.cardHiddenMarkColor);
         }
 
-        guiGraphics.drawString(font, title, x + TEXT_X_OFFSET, y + 8, palette.title(), true);
+        guiGraphics.drawString(font, title, x + LucidConfig.cardTextXOffset, y + 8, palette.title(), true);
 
         int descriptionY = y + 22;
         for (FormattedCharSequence line : wrappedDescription) {
-            guiGraphics.drawString(font, line, x + TEXT_X_OFFSET, descriptionY, COLOR_DESCRIPTION, true);
-            descriptionY += LINE_HEIGHT;
+            guiGraphics.drawString(font, line, x + LucidConfig.cardTextXOffset, descriptionY, LucidConfig.cardDescriptionColor, true);
+            descriptionY += LucidConfig.cardLineHeight;
         }
 
-        guiGraphics.drawString(font, done ? ICON_DONE : ICON_LOCKED, x + width - STATUS_ICON_X_OFFSET,
+        guiGraphics.drawString(font, done ? LucidConfig.cardIconDone : LucidConfig.cardIconLocked, x + width - LucidConfig.cardStatusIconXOffset,
                 y + (baseHeight / 2) - 4, palette.status(), true);
 
         if (!hidden) {
-            guiGraphics.drawString(font, ICON_TRACKED, x + width - TRACK_ICON_X_OFFSET,
+            guiGraphics.drawString(font, LucidConfig.cardIconTracked, x + width - LucidConfig.cardTrackIconXOffset,
                     y + (baseHeight / 2) - 4, palette.tracked(), true);
         }
 
@@ -188,23 +163,23 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
     }
 
     private void renderCriteriaSection(GuiGraphics guiGraphics, Font font, int x, int y, int width) {
-        guiGraphics.fill(x + 12, y + baseHeight - 5, x + width - 12, y + baseHeight - 4, COLOR_DIVIDER);
+        guiGraphics.fill(x + 12, y + baseHeight - 5, x + width - 12, y + baseHeight - 4, LucidConfig.cardDividerColor);
 
         int lineY = y + baseHeight + 3;
         guiGraphics.drawString(font, Component.translatable(Constants.MOD_ID + ".gui.card.requirements"),
-                x + TEXT_X_OFFSET, lineY, COLOR_REQUIREMENTS_LABEL, true);
+                x + LucidConfig.cardTextXOffset, lineY, LucidConfig.cardRequirementsLabelColor, true);
         lineY += 11;
 
         if (criteria.isEmpty()) {
             guiGraphics.drawString(font, Component.translatable(Constants.MOD_ID + ".gui.card.no_requirements"),
-                    x + 48, lineY, COLOR_INACTIVE, true);
+                    x + 48, lineY, LucidConfig.cardInactiveColor, true);
             return;
         }
 
         for (CriterionEntry entry : criteria) {
-            int color = entry.completed() ? COLOR_CRITERION_DONE : COLOR_CRITERION_PENDING;
+            int color = entry.completed() ? LucidConfig.cardCriterionDoneColor : LucidConfig.cardCriterionPendingColor;
             guiGraphics.drawString(font, entry.formattedLabel(), x + 48, lineY, color, true);
-            lineY += LINE_HEIGHT;
+            lineY += LucidConfig.cardLineHeight;
         }
     }
 
@@ -213,19 +188,19 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
             return rare
                     ? new CardPalette(LucidConfig.cardObtainedRareBg1, LucidConfig.cardObtainedRareBg2,
                     LucidConfig.cardObtainedRareBorder, LucidConfig.cardObtainedRareTitle,
-                    LucidConfig.cardObtainedRareBorder, tracked ? LucidConfig.cardObtainedRareBorder : COLOR_INACTIVE)
+                    LucidConfig.cardObtainedRareBorder, tracked ? LucidConfig.cardTrackedActiveColor : LucidConfig.cardInactiveColor)
                     : new CardPalette(LucidConfig.cardObtainedBg1, LucidConfig.cardObtainedBg2,
                     LucidConfig.cardObtainedBorder, LucidConfig.cardObtainedTitle,
-                    LucidConfig.cardObtainedBorder, COLOR_INACTIVE);
+                    LucidConfig.cardObtainedBorder, tracked ? LucidConfig.cardTrackedActiveColor : LucidConfig.cardInactiveColor);
         }
         if (rare) {
             return new CardPalette(LucidConfig.cardNormalBg1, LucidConfig.cardNormalBg2,
                     LucidConfig.cardRareBorder, LucidConfig.cardRareTitle,
-                    COLOR_INACTIVE, tracked ? LucidConfig.cardRareBorder : COLOR_INACTIVE);
+                    LucidConfig.cardInactiveColor, tracked ? LucidConfig.cardTrackedActiveColor : LucidConfig.cardInactiveColor);
         }
         return new CardPalette(LucidConfig.cardNormalBg1, LucidConfig.cardNormalBg2,
                 LucidConfig.cardNormalBorder, LucidConfig.cardNormalTitle,
-                COLOR_INACTIVE, tracked ? COLOR_TRACKED_ACTIVE : COLOR_INACTIVE);
+                LucidConfig.cardInactiveColor, tracked ? LucidConfig.cardTrackedActiveColor : LucidConfig.cardInactiveColor);
     }
 
     private boolean isHovered(int mouseX, int mouseY, int x, int y, int width, int viewportY, int viewportHeight) {
@@ -250,7 +225,7 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
             if (mouseX >= x + 48 && mouseX <= x + 48 + textWidth && mouseY >= lineY && mouseY <= lineY + 9) {
                 return entry.rawId();
             }
-            lineY += LINE_HEIGHT;
+            lineY += LucidConfig.cardLineHeight;
         }
         return null;
     }
@@ -266,7 +241,7 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
         int iconY = y + (baseHeight / 2) - 8;
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(0, 0, 50);
-        guiGraphics.renderItem(display.getIcon(), x + ICON_X_OFFSET, iconY);
+        guiGraphics.renderItem(display.getIcon(), x + LucidConfig.cardIconXOffset, iconY);
         guiGraphics.pose().popPose();
     }
 
@@ -278,7 +253,7 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
             return false;
         }
 
-        int iconX = x + width - TRACK_ICON_X_OFFSET;
+        int iconX = x + width - LucidConfig.cardTrackIconXOffset;
         int iconY = y + (baseHeight / 2) - 4;
 
         return mouseX >= iconX - 4 && mouseX <= iconX + 12 && mouseY >= iconY - 4 && mouseY <= iconY + 10;
@@ -290,7 +265,7 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
             return null;
         }
         int iconY = y + (baseHeight / 2) - 8;
-        boolean withinIcon = mouseX >= x + ICON_X_OFFSET && mouseX <= x + 28 && mouseY >= iconY && mouseY <= iconY + 16;
+        boolean withinIcon = mouseX >= x + LucidConfig.cardIconXOffset && mouseX <= x + 28 && mouseY >= iconY && mouseY <= iconY + 16;
         boolean withinViewport = mouseY >= viewportY && mouseY <= viewportY + viewportHeight;
         return (withinIcon && withinViewport) ? display.getIcon() : null;
     }

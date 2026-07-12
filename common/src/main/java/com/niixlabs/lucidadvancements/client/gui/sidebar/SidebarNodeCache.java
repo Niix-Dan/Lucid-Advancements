@@ -1,6 +1,7 @@
 package com.niixlabs.lucidadvancements.client.gui.sidebar;
 
 import com.niixlabs.lucidadvancements.Constants;
+import com.niixlabs.lucidadvancements.config.LucidConfig;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.client.gui.Font;
@@ -10,8 +11,6 @@ import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 public final class SidebarNodeCache {
-    private static final String ELLIPSIS = "...";
-
     public final AdvancementNode node;
     public final ItemStack icon;
     public final String displayTitle;
@@ -40,6 +39,6 @@ public final class SidebarNodeCache {
         if (font.width(rawTitle) <= maxTextWidth) {
             return rawTitle;
         }
-        return font.plainSubstrByWidth(rawTitle, maxTextWidth - font.width(ELLIPSIS)) + ELLIPSIS;
+        return font.plainSubstrByWidth(rawTitle, maxTextWidth - font.width(LucidConfig.sidebarTruncationEllipsis)) + LucidConfig.sidebarTruncationEllipsis;
     }
 }

@@ -1,5 +1,6 @@
 package com.niixlabs.lucidadvancements.client.gui.screen;
 
+import com.niixlabs.lucidadvancements.config.LucidConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -7,12 +8,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
 final class LucidButton extends Button {
-    private static final int COLOR_BACKGROUND_HOVERED = 0xEE1E1E1E;
-    private static final int COLOR_BACKGROUND_IDLE = 0xEE121212;
-    private static final int COLOR_BORDER_HOVERED = 0xFF00FFAA;
-    private static final int COLOR_BORDER_IDLE = 0x33FFFFFF;
-    private static final int COLOR_TEXT_HOVERED = 0xFF00FFAA;
-    private static final int COLOR_TEXT_IDLE = 0xFFE0E0E0;
 
     LucidButton(int x, int y, int width, int height, Component message, OnPress onPress) {
         super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
@@ -25,9 +20,9 @@ final class LucidButton extends Button {
         }
 
         boolean hovered = isHovered();
-        int backgroundColor = hovered ? COLOR_BACKGROUND_HOVERED : COLOR_BACKGROUND_IDLE;
-        int borderColor = hovered ? COLOR_BORDER_HOVERED : COLOR_BORDER_IDLE;
-        int textColor = hovered ? COLOR_TEXT_HOVERED : COLOR_TEXT_IDLE;
+        int backgroundColor = hovered ? LucidConfig.widgetBackgroundHovered : LucidConfig.widgetBackgroundIdle;
+        int borderColor = hovered ? LucidConfig.widgetBorderHovered : LucidConfig.widgetBorderIdle;
+        int textColor = hovered ? LucidConfig.widgetTextHovered : LucidConfig.widgetTextIdle;
 
         int x1 = getX();
         int y1 = getY();
