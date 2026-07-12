@@ -388,4 +388,8 @@ public final class LucidConfig {
     public static void updateAndSave(String fieldName, Object value) {
         ConfigManager.updateAndSave(LucidConfig.class, fieldName, value);
     }
+
+    public static void startWatcher() {
+        ConfigManager.startWatcher(LucidConfig.class);
+    }
 }
