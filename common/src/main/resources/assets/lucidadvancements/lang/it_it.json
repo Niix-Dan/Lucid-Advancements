@@ -14,6 +14,7 @@
     "lucidadvancements.gui.filter.incomplete": "Filtro: Incompleti",
     "lucidadvancements.gui.filter.challenges": "Filtro: Sfide",
     "lucidadvancements.gui.filter.partial": "Filtro: Parziale",
+    "lucidadvancements.gui.filter.tracked": "Filtro: Tracked",
 
     "lucidadvancements.gui.scale.label": "Scala: %s",
     "lucidadvancements.gui.scale.mode.vanilla": "Auto",

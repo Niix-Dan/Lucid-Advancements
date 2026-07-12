@@ -472,7 +472,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             AdvancementProgress progress = progressMap.get(child);
             boolean done = progress != null && progress.isDone();
 
-            if (!matchesFilterMode(done, display, progress)) {
+            if (!matchesFilterMode(child, done, display, progress)) {
                 continue;
             }
 
@@ -531,12 +531,13 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         return nodes;
     }
 
-    private boolean matchesFilterMode(boolean done, DisplayInfo display, @Nullable AdvancementProgress progress) {
+    private boolean matchesFilterMode(AdvancementNode node, boolean done, DisplayInfo display, @Nullable AdvancementProgress progress) {
         return switch (currentFilter) {
             case COMPLETED -> done;
             case INCOMPLETE -> !done;
             case CHALLENGES -> display.getType() == AdvancementType.CHALLENGE;
             case PARTIAL -> !done && progress != null && progress.getPercent() > 0f;
+            case TRACKED -> TRACKED_ADVANCEMENTS.contains(node.holder().id().toString());
             case ALL -> true;
         };
     }
