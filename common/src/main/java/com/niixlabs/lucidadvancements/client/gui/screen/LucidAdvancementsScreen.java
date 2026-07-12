@@ -46,6 +46,9 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     private static final int PROGRESS_FILL_START = 0xAA00FFAA;
     private static final int PROGRESS_FILL_END = 0xAA00CC88;
     private static final int PROGRESS_TEXT_COLOR = 0xFFE0E0E0;
+    private static final int TRACKED_FILL_START = 0xAAAF45EE;
+    private static final int TRACKED_FILL_END = 0xAA7A28CB;
+    private static final int TRACKED_PERCENTAGE_COLOR = 0xFFAF45EE;
     private static final int HEADER_TITLE_COLOR = 0xFFFFFFFF;
     private static final int HEADER_DESCRIPTION_COLOR = 0xFFAAAAAA;
     private static final int HEADER_DIVIDER_COLOR = 0x88303030;
@@ -53,6 +56,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     private static final int SCROLLBAR_TRACK_COLOR = 0xAA1A1A1A;
     private static final int SCROLLBAR_THUMB_ACTIVE = 0xFF00FFAA;
     private static final int SCROLLBAR_THUMB_IDLE = 0xAA00FFAA;
+
 
     private final ClientAdvancements clientAdvancements;
     private final List<AdvancementNode> rootNodes = new ArrayList<>();
@@ -82,8 +86,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private int totalAdvancements = 0;
     private int completedAdvancements = 0;
-    //private int currentTabTotal = 0;
-    //private int currentTabCompleted = 0;
 
     private boolean draggingMainScrollbar = false;
     private boolean needsRecalculation = true;
@@ -405,6 +407,21 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         needsRecalculation = true;
     }
 
+    private int calculateTrackedCompleted() {
+        int completed = 0;
+        for (AdvancementNode root : rootNodes) {
+            for (AdvancementNode node : collectTasks(root)) {
+                if (TRACKED_ADVANCEMENTS.contains(node.holder().id().toString())) {
+                    AdvancementProgress progress = progressMap.get(node);
+                    if (progress != null && progress.isDone()) {
+                        completed++;
+                    }
+                }
+            }
+        }
+        return completed;
+    }
+
     private void recalculateGlobalStats() {
         totalAdvancements = 0;
         completedAdvancements = 0;
@@ -675,10 +692,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     }
 
     private void renderContentHeader(GuiGraphics guiGraphics, int contentX, boolean searching) {
-        //if (searching) {
-        //    return;
-        //}
-
         Component headerTitle;
         Component headerDescription;
 
@@ -707,36 +720,57 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         guiGraphics.drawString(font, headerTitle, (int) (contentX / 1.2f), (int) ((ScreenMetrics.TOP_BAR_HEIGHT + 10) / 1.2f), HEADER_TITLE_COLOR, true);
         guiGraphics.pose().popPose();
 
+        int barY = ScreenMetrics.TOP_BAR_HEIGHT + 18;
+        int currentRightX = width - ScreenMetrics.CONTENT_MARGIN;
+
         if (total > 0) {
-            renderHeaderProgressBar(guiGraphics, completed, total);
+            currentRightX = renderHeaderProgressBar(guiGraphics, completed, total, currentRightX, barY, false);
+        }
+
+        int trackedTotal = TRACKED_ADVANCEMENTS.size();
+        if (trackedTotal >= 2) {
+            int trackedCompleted = calculateTrackedCompleted();
+            if (total > 0) currentRightX -= 24;
+            renderHeaderProgressBar(guiGraphics, trackedCompleted, trackedTotal, currentRightX, barY, true);
         }
 
         guiGraphics.drawString(font, headerDescription, contentX, ScreenMetrics.TOP_BAR_HEIGHT + 28, HEADER_DESCRIPTION_COLOR, true);
         guiGraphics.fill(contentX, ScreenMetrics.TOP_BAR_HEIGHT + 44, width - ScreenMetrics.CONTENT_MARGIN, ScreenMetrics.TOP_BAR_HEIGHT + 45, HEADER_DIVIDER_COLOR);
     }
 
-    private void renderHeaderProgressBar(GuiGraphics guiGraphics, int completed, int total) {
+    private int renderHeaderProgressBar(GuiGraphics guiGraphics, int completed, int total, int rightX, int barY, boolean isTracked) {
         float percentage = total > 0 ? (float) completed / total : 0f;
 
         int barWidth = 80;
         int barHeight = 7;
-        int barX = width - ScreenMetrics.CONTENT_MARGIN - barWidth;
-        int barY = ScreenMetrics.TOP_BAR_HEIGHT + 18;
+        int barX = rightX - barWidth;
 
-        String progressText = formatProgress(completed, total);
+        String progressText;
+        if (isTracked) {
+            String prefix = Component.translatable(Constants.MOD_ID + ".gui.progressbar.tracked.prefix").getString();
+            progressText = prefix + formatProgress(completed, total);
+        } else {
+            progressText = formatProgress(completed, total);
+        }
+
         int textWidth = font.width(progressText);
-
         int textX = barX + barWidth - textWidth;
         int textY = barY - 2 - barHeight;
 
-        guiGraphics.drawString(font, progressText, textX, textY, HEADER_PERCENTAGE_COLOR, true);
+        int percentColor = isTracked ? TRACKED_PERCENTAGE_COLOR : HEADER_PERCENTAGE_COLOR;
+        int fillStart = isTracked ? TRACKED_FILL_START : PROGRESS_FILL_START;
+        int fillEnd = isTracked ? TRACKED_FILL_END : PROGRESS_FILL_END;
+
+        guiGraphics.drawString(font, progressText, textX, textY, percentColor, true);
         guiGraphics.fill(barX - 1, barY - 1, barX + barWidth + 1, barY + barHeight + 1, PROGRESS_TRACK_BORDER);
         guiGraphics.fill(barX, barY, barX + barWidth, barY + barHeight, PROGRESS_TRACK_FILL);
 
         if (completed > 0) {
             int fillWidth = (int) (barWidth * percentage);
-            guiGraphics.fillGradient(barX, barY, barX + fillWidth, barY + barHeight, PROGRESS_FILL_START, PROGRESS_FILL_END);
+            guiGraphics.fillGradient(barX, barY, barX + fillWidth, barY + barHeight, fillStart, fillEnd);
         }
+
+        return barX;
     }
 
     private HoverResult renderCardList(GuiGraphics guiGraphics, double scaleFactor, int contentX, int contentWidth,

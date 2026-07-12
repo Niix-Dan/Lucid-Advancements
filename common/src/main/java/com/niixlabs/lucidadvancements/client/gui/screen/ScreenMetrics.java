@@ -11,7 +11,6 @@ public final class ScreenMetrics {
     public static final int CARD_SPACING = 8;
     public static final int VIEWPORT_BOTTOM_MARGIN = 18;
     public static final int HEADER_HEIGHT_WITH_DESCRIPTION = 52;
-    public static final int HEADER_HEIGHT_SEARCH = 10;
     public static final int MIN_SCROLL_THUMB_HEIGHT = 24;
     public static final int SCROLLBAR_WIDTH = 3;
     public static final int SCROLLBAR_RIGHT_MARGIN = 12;

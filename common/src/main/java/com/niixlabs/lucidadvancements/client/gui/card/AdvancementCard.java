@@ -175,7 +175,7 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
         guiGraphics.drawString(font, done ? ICON_DONE : ICON_LOCKED, x + width - STATUS_ICON_X_OFFSET,
                 y + (baseHeight / 2) - 4, palette.status(), true);
 
-        if (!done) {
+        if (!hidden) {
             guiGraphics.drawString(font, ICON_TRACKED, x + width - TRACK_ICON_X_OFFSET,
                     y + (baseHeight / 2) - 4, palette.tracked(), true);
         }
@@ -271,7 +271,7 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
     }
 
     public boolean isTrackIconHovered(double mouseX, double mouseY, int x, int y, int width, int viewportY, int viewportHeight, boolean isBlocked) {
-        if (isBlocked || hidden || done) {
+        if (isBlocked || hidden) {
             return false;
         }
         if (mouseY < viewportY || mouseY > viewportY + viewportHeight) {

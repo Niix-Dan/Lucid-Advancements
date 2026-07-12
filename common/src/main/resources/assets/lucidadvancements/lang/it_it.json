@@ -21,6 +21,7 @@
     "lucidadvancements.gui.scale.mode.custom": "%s",
 
     "lucidadvancements.gui.progress_text": "%s / %s",
+    "lucidadvancements.gui.progressbar.tracked.prefix": "Tracked: ",
 
     "lucidadvancements.gui.card.requirements": "Requisiti:",
     "lucidadvancements.gui.card.no_requirements": "• Nessun requisito visibile...",
