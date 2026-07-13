@@ -5,17 +5,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 
 public final class GuiScale {
-    private static final double MIN_VIRTUAL_WIDTH = 550.0;
-    private static final double MIN_VIRTUAL_HEIGHT = 300.0;
-
     private GuiScale() {}
 
     public static double targetScale(Minecraft minecraft) {
         double screenWidth = minecraft.getWindow().getScreenWidth();
         double screenHeight = minecraft.getWindow().getScreenHeight();
 
-        double maxScaleX = screenWidth / MIN_VIRTUAL_WIDTH;
-        double maxScaleY = screenHeight / MIN_VIRTUAL_HEIGHT;
+        double maxScaleX = screenWidth / LucidConfig.scaleMinVirtualWidth;
+        double maxScaleY = screenHeight / LucidConfig.scaleMinVirtualHeight;
         double maxSafeScale = Math.max(1.0, Math.floor(Math.min(maxScaleX, maxScaleY)));
         double vanillaScale = minecraft.getWindow().getGuiScale();
 

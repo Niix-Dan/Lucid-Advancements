@@ -14,6 +14,7 @@
   "lucidadvancements.gui.filter.incomplete": "Filtro: Incompletos",
   "lucidadvancements.gui.filter.challenges": "Filtro: Desafios",
   "lucidadvancements.gui.filter.partial": "Filtro: Parcial",
+  "lucidadvancements.gui.filter.tracked": "Filtro: Marcados",
 
 
   "lucidadvancements.gui.scale.label": "Escala: %s",
@@ -21,6 +22,7 @@
   "lucidadvancements.gui.scale.mode.custom": "%s",
 
   "lucidadvancements.gui.progress_text": "%s / %s",
+  "lucidadvancements.gui.progressbar.tracked.prefix": "Tracked: ",
 
   "lucidadvancements.gui.card.requirements": "Requisitos:",
   "lucidadvancements.gui.card.no_requirements": "• Nenhum requisito visível...",

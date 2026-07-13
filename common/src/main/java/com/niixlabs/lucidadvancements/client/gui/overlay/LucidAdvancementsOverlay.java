@@ -1,6 +1,7 @@
 package com.niixlabs.lucidadvancements.client.gui.overlay;
 
 import com.niixlabs.lucidadvancements.Constants;
+import com.niixlabs.lucidadvancements.client.cache.TrackedAdvancementsCache;
 import com.niixlabs.lucidadvancements.client.gui.access.AdvancementProgressAccess;
 import com.niixlabs.lucidadvancements.client.gui.screen.GuiScale;
 import com.niixlabs.lucidadvancements.client.gui.screen.LucidAdvancementsScreen;
@@ -25,32 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class LucidAdvancementsOverlay {
-    private static final String ICON_LOCKED = "🔒";
-
-    private static final int BOX_WIDTH = 135;
-    private static final int RIGHT_MARGIN = 8;
-    private static final int START_Y = 55;
-    private static final int BOX_SPACING = 5;
-    private static final int BOTTOM_SCREEN_MARGIN = 35;
-
-    private static final int BASE_BOX_HEIGHT = 24;
-    private static final int LINE_HEIGHT = 10;
-    private static final int OVERFLOW_LINE_PADDING = 2;
-    private static final int MAX_VISIBLE_CRITERIA = 3;
-
-    private static final int ACCENT_WIDTH = 2;
-    private static final int ICON_X_OFFSET = 6;
-    private static final int ICON_Y_OFFSET = 4;
-    private static final int TITLE_X_OFFSET = 26;
-    private static final int TITLE_Y_OFFSET = 5;
-    private static final int TITLE_MAX_WIDTH_PADDING = 32;
-    private static final int CRITERIA_START_Y_OFFSET = 22;
-    private static final int CRITERION_X_OFFSET = 8;
-    private static final int CRITERION_MAX_WIDTH_PADDING = 10;
-
-    private static final int COLOR_CRITERION_TEXT = 0xFFAAAAAA;
-    private static final int COLOR_HIDDEN_COUNT_TEXT = 0xFF555555;
-
     private static final Map<String, CachedOverlayBox> OVERLAY_CACHE = new HashMap<>();
     private static Language lastLangInstance = null;
 
@@ -58,6 +33,7 @@ public final class LucidAdvancementsOverlay {
 
     public static void render(GuiGraphics guiGraphics, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
+        TrackedAdvancementsCache.syncIfNeeded(mc);
 
         if (mc.options.hideGui || mc.player == null || LucidAdvancementsScreen.TRACKED_ADVANCEMENTS.isEmpty()) return;
         if (mc.getConnection() == null || mc.getConnection().getAdvancements() == null) return;
@@ -75,8 +51,8 @@ public final class LucidAdvancementsOverlay {
         int screenHeight = (int) (mc.getWindow().getScreenHeight() / targetScale);
 
         Font font = mc.font;
-        int startX = screenWidth - BOX_WIDTH - RIGHT_MARGIN;
-        int startY = START_Y;
+        int startX = screenWidth - LucidConfig.overlayBoxWidth - LucidConfig.overlayRightMargin;
+        int startY = LucidConfig.overlayStartY;
 
         Map<AdvancementHolder, AdvancementProgress> vanillaProgressMap = ((AdvancementProgressAccess) mc.getConnection().getAdvancements()).lucid$getProgressMap();
 
@@ -110,9 +86,9 @@ public final class LucidAdvancementsOverlay {
 
             renderBox(guiGraphics, font, display, cachedBox, rawRemaining, startX, startY);
 
-            startY += cachedBox.boxHeight() + BOX_SPACING;
+            startY += cachedBox.boxHeight() + LucidConfig.overlayBoxSpacing;
 
-            if (startY > screenHeight - BOTTOM_SCREEN_MARGIN) {
+            if (startY > screenHeight - LucidConfig.overlayBottomScreenMargin) {
                 break;
             }
         }
@@ -123,46 +99,46 @@ public final class LucidAdvancementsOverlay {
     private static CachedOverlayBox buildOverlayBox(Font font, ResourceLocation loc, DisplayInfo display, List<String> rawRemaining) {
         boolean isChallenge = display.getType() == AdvancementType.CHALLENGE;
         int titleColor = isChallenge ? LucidConfig.overlayChallengeTitleColor : LucidConfig.overlayTitleColor;
-        String titleText = font.plainSubstrByWidth(display.getTitle().getString(), BOX_WIDTH - TITLE_MAX_WIDTH_PADDING);
+        String titleText = font.plainSubstrByWidth(display.getTitle().getString(), LucidConfig.overlayBoxWidth - LucidConfig.overlayTitleMaxWidthPadding);
 
         List<String> critLines = new ArrayList<>();
-        int maxVisibleCriteria = Math.min(MAX_VISIBLE_CRITERIA, rawRemaining.size());
+        int maxVisibleCriteria = Math.min(LucidConfig.overlayMaxVisibleCriteria, rawRemaining.size());
 
         for (int i = 0; i < maxVisibleCriteria; i++) {
             String resolved = CriterionTranslator.resolve(loc, rawRemaining.get(i));
-            String critLine = font.plainSubstrByWidth(ICON_LOCKED + " " + resolved, BOX_WIDTH - CRITERION_MAX_WIDTH_PADDING);
+            String critLine = font.plainSubstrByWidth(LucidConfig.overlayIconLocked + " " + resolved, LucidConfig.overlayBoxWidth - LucidConfig.overlayCriterionMaxWidthPadding);
             critLines.add(critLine);
         }
 
-        int boxHeight = BASE_BOX_HEIGHT + ((rawRemaining.size() > MAX_VISIBLE_CRITERIA ? maxVisibleCriteria + 1 : maxVisibleCriteria) * LINE_HEIGHT);
-        if (maxVisibleCriteria > 0) boxHeight += OVERFLOW_LINE_PADDING;
+        int boxHeight = LucidConfig.overlayBaseBoxHeight + ((rawRemaining.size() > LucidConfig.overlayMaxVisibleCriteria ? maxVisibleCriteria + 1 : maxVisibleCriteria) * LucidConfig.overlayLineHeight);
+        if (maxVisibleCriteria > 0) boxHeight += LucidConfig.overlayOverflowLinePadding;
 
         return new CachedOverlayBox(new ArrayList<>(rawRemaining), titleText, critLines, boxHeight, titleColor);
     }
 
     private static void renderBox(GuiGraphics guiGraphics, Font font, DisplayInfo display, CachedOverlayBox cachedBox, List<String> rawRemaining, int startX, int startY) {
-        guiGraphics.fill(startX, startY, startX + BOX_WIDTH, startY + cachedBox.boxHeight(), LucidConfig.overlayBgColor);
+        guiGraphics.fill(startX, startY, startX + LucidConfig.overlayBoxWidth, startY + cachedBox.boxHeight(), LucidConfig.overlayBgColor);
 
         boolean isChallenge = display.getType() == AdvancementType.CHALLENGE;
         int accentColor = isChallenge ? LucidConfig.overlayChallengeAccent : LucidConfig.overlayNormalAccent;
-        guiGraphics.fill(startX, startY, startX + ACCENT_WIDTH, startY + cachedBox.boxHeight(), accentColor);
+        guiGraphics.fill(startX, startY, startX + LucidConfig.overlayAccentWidth, startY + cachedBox.boxHeight(), accentColor);
 
         ItemStack iconStack = display.getIcon();
         guiGraphics.pose().pushPose();
-        guiGraphics.renderItem(iconStack, startX + ICON_X_OFFSET, startY + ICON_Y_OFFSET);
+        guiGraphics.renderItem(iconStack, startX + LucidConfig.overlayIconXOffset, startY + LucidConfig.overlayIconYOffset);
         guiGraphics.pose().popPose();
 
-        guiGraphics.drawString(font, cachedBox.titleText(), startX + TITLE_X_OFFSET, startY + TITLE_Y_OFFSET, cachedBox.titleColor(), true);
+        guiGraphics.drawString(font, cachedBox.titleText(), startX + LucidConfig.overlayTitleXOffset, startY + LucidConfig.overlayTitleYOffset, cachedBox.titleColor(), true);
 
-        int textY = startY + CRITERIA_START_Y_OFFSET;
+        int textY = startY + LucidConfig.overlayCriteriaStartYOffset;
         for (String line : cachedBox.critLines()) {
-            guiGraphics.drawString(font, line, startX + CRITERION_X_OFFSET, textY, COLOR_CRITERION_TEXT, true);
-            textY += LINE_HEIGHT;
+            guiGraphics.drawString(font, line, startX + LucidConfig.overlayCriterionXOffset, textY, LucidConfig.overlayCriterionTextColor, true);
+            textY += LucidConfig.overlayLineHeight;
         }
 
-        if (rawRemaining.size() > MAX_VISIBLE_CRITERIA) {
-            int hiddenCount = rawRemaining.size() - MAX_VISIBLE_CRITERIA;
-            guiGraphics.drawString(font, Component.translatable(Constants.MOD_ID + ".overlay.hidden_count", hiddenCount), startX + CRITERION_X_OFFSET, textY, COLOR_HIDDEN_COUNT_TEXT, true);
+        if (rawRemaining.size() > LucidConfig.overlayMaxVisibleCriteria) {
+            int hiddenCount = rawRemaining.size() - LucidConfig.overlayMaxVisibleCriteria;
+            guiGraphics.drawString(font, Component.translatable(Constants.MOD_ID + ".overlay.hidden_count", hiddenCount), startX + LucidConfig.overlayCriterionXOffset, textY, LucidConfig.overlayHiddenCountTextColor, true);
         }
     }
 }

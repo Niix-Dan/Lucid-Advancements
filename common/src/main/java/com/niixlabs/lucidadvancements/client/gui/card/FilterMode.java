@@ -8,7 +8,8 @@ public enum FilterMode {
     COMPLETED(Constants.MOD_ID + ".gui.filter.completed"),
     INCOMPLETE(Constants.MOD_ID + ".gui.filter.incomplete"),
     CHALLENGES(Constants.MOD_ID + ".gui.filter.challenges"),
-    PARTIAL(Constants.MOD_ID + ".gui.filter.partial");
+    PARTIAL(Constants.MOD_ID + ".gui.filter.partial"),
+    TRACKED(Constants.MOD_ID + ".gui.filter.tracked");
 
     private final String translationKey;
 

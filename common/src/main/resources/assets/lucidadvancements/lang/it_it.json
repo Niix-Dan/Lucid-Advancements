@@ -14,12 +14,14 @@
     "lucidadvancements.gui.filter.incomplete": "Filtro: Incompleti",
     "lucidadvancements.gui.filter.challenges": "Filtro: Sfide",
     "lucidadvancements.gui.filter.partial": "Filtro: Parziale",
+    "lucidadvancements.gui.filter.tracked": "Filtro: Tracked",
 
     "lucidadvancements.gui.scale.label": "Scala: %s",
     "lucidadvancements.gui.scale.mode.vanilla": "Auto",
     "lucidadvancements.gui.scale.mode.custom": "%s",
 
     "lucidadvancements.gui.progress_text": "%s / %s",
+    "lucidadvancements.gui.progressbar.tracked.prefix": "Tracked: ",
 
     "lucidadvancements.gui.card.requirements": "Requisiti:",
     "lucidadvancements.gui.card.no_requirements": "• Nessun requisito visibile...",
