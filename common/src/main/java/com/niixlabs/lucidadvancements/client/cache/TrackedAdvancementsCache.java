@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 public final class TrackedAdvancementsCache {
-    private static final String FILE_NAME = "config/lucidadvancements_tracked.dat";
+    private static final String FILE_NAME = "config/lucidadvancements.dat";
     private static final Map<String, Set<String>> CACHE = new HashMap<>();
 
     private static boolean loaded = false;
