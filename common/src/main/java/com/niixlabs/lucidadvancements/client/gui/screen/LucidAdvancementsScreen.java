@@ -444,15 +444,18 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         String query = searchBox.getValue().toLowerCase();
         boolean searching = !query.isEmpty();
 
-        String modIdFilter = null;
-        String textFilter = query;
+        Set<String> modIdFilters = new HashSet<>();
+        StringBuilder textFilterBuilder = new StringBuilder();
 
-        if (query.startsWith("@")) {
-            String rest = query.substring(1);
-            int spaceIndex = rest.indexOf(' ');
-            modIdFilter = spaceIndex == -1 ? rest : rest.substring(0, spaceIndex);
-            textFilter = spaceIndex == -1 ? "" : rest.substring(spaceIndex + 1).trim();
+        for (String token : query.split(" ")) {
+            if (token.startsWith("@") && token.length() > 1) {
+                modIdFilters.add(token.substring(1));
+            } else if (!token.isEmpty()) {
+                textFilterBuilder.append(token).append(' ');
+            }
         }
+
+        String textFilter = textFilterBuilder.toString().trim();
 
         List<AdvancementNode> nodesToDisplay = collectNodesToDisplay(searching);
 
@@ -472,7 +475,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             boolean tracked = TRACKED_ADVANCEMENTS.contains(child.holder().id().toString());
             AdvancementCard card = new AdvancementCard(child, display, progress, expanded, tracked, font, contentWidth);
 
-            if (searching && !matchesSearch(child, card, modIdFilter, textFilter)) {
+            if (searching && !matchesSearch(child, card, modIdFilters, textFilter)) {
                 continue;
             }
 
@@ -520,10 +523,16 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         };
     }
 
-    private boolean matchesSearch(AdvancementNode child, AdvancementCard card, @Nullable String modIdFilter, String textFilter) {
-        if (modIdFilter != null && !child.holder().id().getNamespace().toLowerCase().contains(modIdFilter)) {
-            return false;
+
+    private boolean matchesSearch(AdvancementNode child, AdvancementCard card, Set<String> modIdFilters, String textFilter) {
+        if (!modIdFilters.isEmpty()) {
+            String namespace = child.holder().id().getNamespace().toLowerCase();
+            boolean matchesAnyMod = modIdFilters.stream().anyMatch(namespace::contains);
+            if (!matchesAnyMod) {
+                return false;
+            }
         }
+
         if (textFilter.isEmpty()) {
             return true;
         }
