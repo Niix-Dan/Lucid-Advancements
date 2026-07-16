@@ -61,8 +61,8 @@ Keep your current goals in sight at all times. Lucid Advancements features a hig
 
 *   **Hot-Reloadable Configuration:** Everything can be customized to your liking via the new `lucidadvancements.properties` config file. Best of all, it supports an **hot-reload system**—changes apply instantly without needing to restart the game!
 *   **Performance Optimized:** Enjoy buttery-smooth UI navigation. The GUI rendering has been highly optimized with reduced GC allocations.
-*   **Requirement Localization:** Native translations are actively being implemented for advancement requirements! Currently supports English (`en_us`), Brazilian Portuguese (`pt_br`), and Italian (`it_it`), making complex goals much easier to understand.
-*   **Dynamic GUI Scale:** A dedicated button allows you to adjust the interface scale on the fly to perfectly fit your monitor setup. Supports: `Auto`, `1` - `4`.
+*   **Requirement Localization:** Native translations are actively being implemented for advancement requirements! Currently supports English (`en_us`), Brazilian Portuguese (`pt_br`), and Italian (`it_it` - WIP), making complex goals much easier to understand.
+*   **Dynamic GUI Scale:** A dedicated dropdown allows you to adjust the interface scale on the fly to perfectly fit your monitor setup. Supports: `Auto`, `1` - `8`.
 *   **Contextual Progress Bars:** Keep track of your overarching goals with a Global Progress bar at the bottom left, alongside specific **per-category progress bars** inside individual tabs.
 *   **Intuitive Tooltips:** Hover over any advancement icon to view standard item tooltips (now with perfectly scaled mouse coordinates!).
 
