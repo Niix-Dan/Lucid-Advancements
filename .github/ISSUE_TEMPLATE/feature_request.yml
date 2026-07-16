@@ -1,0 +1,42 @@
+name: 💡 Feature Request
+description: Suggest an idea or enhancement for this mod
+title: '[SUGGESTION] '
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an idea for Lucid Advancements! 
+        Please provide as much detail as possible so we can understand your request.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem is. (e.g., "Pages are too cramped? Sorting could be better?")
+    validations:
+      required: false
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen or what feature you want added.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've thought of.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add any other context, mockups, or screenshots about the feature request here.
+    validations:
+      required: false

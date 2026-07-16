@@ -1,0 +1,105 @@
+name: 🐛 Bug Report
+description: Create a report to help us improve Lucid Advancements
+title: '[BUG] '
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! 
+        Before submitting, please make sure you are using the latest version of the mod and check if this issue hasn't been reported already.
+
+  - type: dropdown
+    id: bug_type
+    attributes:
+      label: Bug Type
+      options:
+        - Game Crash
+        - Visual Bug
+        - Compatibility Issue
+        - General Bug
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: e.g., "The semi-transparent blur isn't present, I can see right through the screen"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior.
+      value: |
+        1. Open the game.
+        2. Press 'L' (or your advancement key bind).
+        3. Look at the background/UI.
+        4. See error.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: loader
+    attributes:
+      label: Mod Loader
+      options:
+        - Fabric/Quilt
+        - Forge
+        - NeoForge
+    validations:
+      required: true
+
+  - type: input
+    id: mc_version
+    attributes:
+      label: Minecraft Version
+      placeholder: "e.g., 1.21.1"
+    validations:
+      required: true
+
+  - type: input
+    id: mod_version
+    attributes:
+      label: Mod Version
+      placeholder: "e.g., 1.0.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: other_mods
+    attributes:
+      label: Other relevant mods installed
+      description: Please list any other mods that might be interfering (e.g., Sodium, Iris Shaders, Optifine, etc.)
+    validations:
+      required: false
+
+  - type: textarea
+    id: context_and_logs
+    attributes:
+      label: Additional context / Logs / Screenshots
+      description: Add any other context about the problem, paste relevant parts of your `latest.log` (use a site like mclo.gs), or drop screenshots/videos here.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I have checked existing issues to ensure this hasn't been reported already.
+          required: true
+        - label: I am using the latest version of the mod.
+          required: true
