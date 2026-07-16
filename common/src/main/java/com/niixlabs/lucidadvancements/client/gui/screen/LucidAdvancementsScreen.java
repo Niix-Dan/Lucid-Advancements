@@ -43,6 +43,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     private EditBox searchBox;
     private FilterMode currentFilter = FilterMode.ALL;
     private LucidDropdown<FilterMode> filterDropdown;
+    private LucidDropdown<Integer> scaleDropdown;
 
     private AdvancementNode expandedNode = null;
     private AdvancementNode selectedRoot = null;
@@ -91,6 +92,10 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private int scrollThumbY(int viewportY, int viewportHeight, int thumbHeight) {
         return viewportY + (int) ((scrollOffset / maxScroll) * (viewportHeight - thumbHeight));
+    }
+
+    private boolean isDropdownOpen() {
+        return filterDropdown.isOpen() || scaleDropdown.isOpen();
     }
 
     @Override
@@ -156,19 +161,18 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         });
         addRenderableWidget(clearTrackedButton);
 
-        int scaleWidth = 70;
+        int scaleWidth = 40;
         currentX -= (scaleWidth + 6);
-        LucidButton scaleButton = new LucidButton(currentX, 16, scaleWidth, 16,
-                Component.translatable(Constants.MOD_ID + ".gui.scale.label", scaleModeLabel(LucidConfig.customGuiScale)), btn -> {
-            int nextScale = LucidConfig.customGuiScale >= 4 ? 0 : LucidConfig.customGuiScale + 1;
-            LucidConfig.updateAndSave("customGuiScale", nextScale);
-            btn.setMessage(Component.translatable(Constants.MOD_ID + ".gui.scale.label", scaleModeLabel(nextScale)));
-
+        List<Integer> scaleOptions = minecraft != null ? GuiScale.supportedScaleOptions(minecraft) : List.of(0);
+        int initialScale = scaleOptions.contains(LucidConfig.customGuiScale) ? LucidConfig.customGuiScale : 0;
+        scaleDropdown = new LucidDropdown<>(currentX, 16, scaleWidth, 16, initialScale, scaleOptions,
+                this::scaleModeLabel, scale -> {
+            LucidConfig.updateAndSave("customGuiScale", scale);
             if (minecraft != null) {
                 init(minecraft, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight());
             }
         });
-        addRenderableWidget(scaleButton);
+        addRenderableWidget(scaleDropdown);
     }
 
     private String scaleModeLabel(int customScale) {
@@ -567,6 +571,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         renderMainScrollbar(guiGraphics, viewportY, viewportHeight);
 
         filterDropdown.renderOptions(guiGraphics, scaledMouseX, scaledMouseY);
+        scaleDropdown.renderOptions(guiGraphics, scaledMouseX, scaledMouseY);
 
         guiGraphics.pose().popPose();
 
@@ -752,10 +757,12 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         int scissorY2 = (int) Math.round((viewportY + viewportHeight) / scaleFactor);
         guiGraphics.enableScissor(scissorX1, scissorY1, scissorX2, scissorY2);
 
+        boolean isBlocked = isDropdownOpen();
+
         int cardY = viewportY - (int) scrollOffset;
         for (AdvancementCard card : cachedCards) {
             if (isCardVisible(cardY, card, viewportY, viewportHeight)) {
-                card.renderBackgroundAndText(guiGraphics, font, contentX, cardY, contentWidth, scaledMouseX, scaledMouseY, viewportY, viewportHeight, filterDropdown.isOpen());
+                card.renderBackgroundAndText(guiGraphics, font, contentX, cardY, contentWidth, scaledMouseX, scaledMouseY, viewportY, viewportHeight, isBlocked);
             }
             cardY += card.getHeight() + ScreenMetrics.cardSpacing();
         }
@@ -768,12 +775,12 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             if (isCardVisible(cardY, card, viewportY, viewportHeight)) {
                 card.renderIcon(guiGraphics, contentX, cardY);
 
-                ItemStack possibleHover = card.getHoveredIcon(scaledMouseX, scaledMouseY, contentX, cardY, viewportY, viewportHeight, filterDropdown.isOpen());
+                ItemStack possibleHover = card.getHoveredIcon(scaledMouseX, scaledMouseY, contentX, cardY, viewportY, viewportHeight, isBlocked);
                 if (possibleHover != null) {
                     hoveredIcon = possibleHover;
                 }
 
-                String possibleTag = card.getHoveredCriterionTag(font, scaledMouseX, scaledMouseY, contentX, cardY, viewportY, viewportHeight, filterDropdown.isOpen());
+                String possibleTag = card.getHoveredCriterionTag(font, scaledMouseX, scaledMouseY, contentX, cardY, viewportY, viewportHeight, isBlocked);
                 if (possibleTag != null) {
                     hoveredCriterionTag = possibleTag;
                 }
@@ -823,6 +830,11 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
         if (filterDropdown.isOpen()) {
             filterDropdown.mouseClickedOptions(mouseX, mouseY);
+            return true;
+        }
+
+        if (scaleDropdown.isOpen()) {
+            scaleDropdown.mouseClickedOptions(mouseX, mouseY);
             return true;
         }
 
@@ -897,7 +909,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private boolean handleCardInteraction(AdvancementCard card, double mouseX, double mouseY, int contentX, int contentWidth,
                                           int cardY, int viewportY, int viewportHeight) {
-        if (card.isTrackIconHovered(mouseX, mouseY, contentX, cardY, contentWidth, viewportY, viewportHeight, filterDropdown.isOpen())) {
+        if (card.isTrackIconHovered(mouseX, mouseY, contentX, cardY, contentWidth, viewportY, viewportHeight, isDropdownOpen())) {
             toggleTracked(card);
             return true;
         }
@@ -982,8 +994,9 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         double scaleFactor = getScaleFactor();
         mouseX *= scaleFactor;
 
-        if (filterDropdown.isOpen()) {
+        if (isDropdownOpen()) {
             filterDropdown.close();
+            scaleDropdown.close();
             return true;
         }
 

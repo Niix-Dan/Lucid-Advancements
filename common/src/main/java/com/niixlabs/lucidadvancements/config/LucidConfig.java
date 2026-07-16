@@ -3,7 +3,7 @@ package com.niixlabs.lucidadvancements.config;
 public final class LucidConfig {
     private LucidConfig() {}
 
-    @ConfigOption(comment = "Interface scale behavior. 0 = Auto/Vanilla, 1-4 = Fixed Custom Scale Factor")
+    @ConfigOption(comment = "Interface scale behavior. 0 = Auto/Vanilla, 1-8 = Fixed Custom Scale Factor")
     public static int customGuiScale = 0;
 
     @ConfigOption(comment = "Minimum virtual width used to compute the maximum safe auto scale")
