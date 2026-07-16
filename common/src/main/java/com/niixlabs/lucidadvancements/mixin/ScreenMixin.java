@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-@Mixin(Screen.class)
+@Mixin(value = Screen.class, priority = 500)
 public class ScreenMixin {
     @Inject(method = "handleComponentClicked", at = @At("HEAD"), cancellable = true)
     private void onHandleComponentClicked(Style style, CallbackInfoReturnable<Boolean> cir) {
