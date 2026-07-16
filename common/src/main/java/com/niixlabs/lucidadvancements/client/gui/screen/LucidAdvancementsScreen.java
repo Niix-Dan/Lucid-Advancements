@@ -108,8 +108,8 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     protected void init() {
         if (minecraft != null) {
             double targetScale = getTargetScale();
-            this.width = (int) (minecraft.getWindow().getScreenWidth() / targetScale);
-            this.height = (int) (minecraft.getWindow().getScreenHeight() / targetScale);
+            this.width = (int) Math.ceil(minecraft.getWindow().getScreenWidth() / targetScale);
+            this.height = (int) Math.ceil(minecraft.getWindow().getScreenHeight() / targetScale);
             TrackedAdvancementsCache.syncIfNeeded(minecraft);
         }
 

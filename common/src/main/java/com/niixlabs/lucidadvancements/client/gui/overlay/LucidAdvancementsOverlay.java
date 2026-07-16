@@ -47,8 +47,8 @@ public final class LucidAdvancementsOverlay {
         double targetScale = GuiScale.targetScale(mc);
         float scaleMod = GuiScale.scaleModifier(mc);
 
-        int screenWidth = (int) (mc.getWindow().getScreenWidth() / targetScale);
-        int screenHeight = (int) (mc.getWindow().getScreenHeight() / targetScale);
+        int screenWidth = (int) Math.ceil(mc.getWindow().getScreenWidth() / targetScale);
+        int screenHeight = (int) Math.ceil(mc.getWindow().getScreenHeight() / targetScale);
 
         Font font = mc.font;
         int startX = screenWidth - LucidConfig.overlayBoxWidth - LucidConfig.overlayRightMargin;
