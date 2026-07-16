@@ -37,6 +37,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     public static @Nullable ResourceLocation advancementToFocusOnOpen = null;
     public static @Nullable ResourceLocation lastSelectedTabId = null;
+    public static String lastSearchQuery = "";
     public static final Set<String> TRACKED_ADVANCEMENTS = new HashSet<>();
     private static boolean configLoaded = false;
 
@@ -135,7 +136,9 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         int searchWidth = 120;
         currentX -= searchWidth;
         searchBox = new EditBox(font, currentX, 16, searchWidth, 16, Component.translatable(Constants.MOD_ID + ".gui.search.placeholder"));
+        searchBox.setValue(lastSearchQuery);
         searchBox.setResponder(text -> {
+            lastSearchQuery = text;
             scrollOffset = 0;
             needsRecalculation = true;
         });
