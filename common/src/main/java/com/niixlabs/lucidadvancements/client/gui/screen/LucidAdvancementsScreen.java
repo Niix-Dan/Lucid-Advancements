@@ -9,6 +9,7 @@ import com.niixlabs.lucidadvancements.client.gui.sidebar.SidebarNodeCache;
 import com.niixlabs.lucidadvancements.client.gui.util.GuiScale;
 import com.niixlabs.lucidadvancements.client.gui.util.LucidScrollHandler;
 import com.niixlabs.lucidadvancements.config.LucidConfig;
+import com.niixlabs.lucidadvancements.translation.TranslationExporter;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
@@ -132,12 +133,14 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         addRenderableWidget(configButton);
 
         int clearWidth = 16;
-        currentX -= (clearWidth + 6);
+        currentX -= (clearWidth + 3);
         LucidButton clearTrackedButton = new LucidButton(currentX, 16, clearWidth, 16,
                 Component.literal(LucidConfig.cardIconTracked), btn -> {
             TRACKED_ADVANCEMENTS.clear();
             TrackedAdvancementsCache.persist();
             needsRecalculation = true;
+
+            //TranslationExporter.exportCurrentAdvancements(progressMap);
         });
         addRenderableWidget(clearTrackedButton);
 
