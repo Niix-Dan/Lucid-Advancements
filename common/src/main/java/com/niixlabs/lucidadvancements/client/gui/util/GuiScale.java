@@ -1,4 +1,4 @@
-package com.niixlabs.lucidadvancements.client.gui.screen;
+package com.niixlabs.lucidadvancements.client.gui.util;
 
 import com.niixlabs.lucidadvancements.config.LucidConfig;
 import net.minecraft.client.Minecraft;

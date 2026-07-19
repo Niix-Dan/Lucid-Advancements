@@ -1,0 +1,31 @@
+{
+  "lucidadvancements.gui.title": "进度",
+
+  "lucidadvancements.gui.global_category.tab_name": "总览",
+  "lucidadvancements.gui.global_category.title": "全局总览",
+  "lucidadvancements.gui.global_category.desc": "追踪您在所有模组和分类中的进度。",
+
+  "lucidadvancements.gui.search.placeholder": "搜索...",
+
+  "lucidadvancements.gui.filter.all": "过滤器: 全部",
+  "lucidadvancements.gui.filter.completed": "过滤器: 已完成",
+  "lucidadvancements.gui.filter.incomplete": "过滤器: 未完成",
+  "lucidadvancements.gui.filter.challenges": "过滤器: 挑战",
+  "lucidadvancements.gui.filter.partial": "过滤器: 部分完成",
+  "lucidadvancements.gui.filter.tracked": "过滤器: 已追踪",
+
+  "lucidadvancements.gui.scale.mode.vanilla": "自动",
+  "lucidadvancements.gui.scale.mode.custom": "%s",
+
+  "lucidadvancements.gui.progress_text": "%s / %s",
+  "lucidadvancements.gui.progressbar.tracked.prefix": "已追踪: ",
+
+  "lucidadvancements.gui.card.requirements": "要求:",
+  "lucidadvancements.gui.card.no_requirements": "• 没有可见的要求...",
+
+  "lucidadvancements.overlay.hidden_count": "  + 还有 %s 个...",
+
+  "lucidadvancements.gui.config.save_and_exit": "⬅ 保存并返回",
+  "lucidadvancements.gui.config.section.general": "常规",
+  "lucidadvancements.gui.config.title": "Lucid Advancements 配置"
+}

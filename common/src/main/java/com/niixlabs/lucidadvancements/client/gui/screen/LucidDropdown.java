@@ -21,7 +21,7 @@ final class LucidDropdown<T> extends AbstractWidget {
     private boolean open = false;
 
     LucidDropdown(int x, int y, int minWidth, int height, T initial, List<T> options,
-                  Function<T, String> labelProvider, Consumer<T> onSelect) {
+                         Function<T, String> labelProvider, Consumer<T> onSelect) {
         super(x, y, minWidth, height, Component.empty());
         this.options = options;
         this.labelProvider = labelProvider;

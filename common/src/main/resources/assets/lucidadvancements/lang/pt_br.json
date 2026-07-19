@@ -3,11 +3,9 @@
 
   "lucidadvancements.gui.global_category.tab_name": "Geral",
   "lucidadvancements.gui.global_category.title": "Visão Geral",
-  "lucidadvancements.gui.global_category.desc": "Veja todas as conquistas adicionadas ao jogo.",
+  "lucidadvancements.gui.global_category.desc": "Veja o seu progresso em todas as categorias e mods.",
 
   "lucidadvancements.gui.search.placeholder": "Buscar...",
-
-  "lucidadvancements.gui.clear_tracked.label": "Desmarcar",
 
   "lucidadvancements.gui.filter.all": "Filtro: Todos",
   "lucidadvancements.gui.filter.completed": "Filtro: Concluídos",
@@ -16,16 +14,18 @@
   "lucidadvancements.gui.filter.partial": "Filtro: Parcial",
   "lucidadvancements.gui.filter.tracked": "Filtro: Marcados",
 
-
-  "lucidadvancements.gui.scale.label": "Escala: %s",
   "lucidadvancements.gui.scale.mode.vanilla": "Auto",
   "lucidadvancements.gui.scale.mode.custom": "%s",
 
   "lucidadvancements.gui.progress_text": "%s / %s",
-  "lucidadvancements.gui.progressbar.tracked.prefix": "Tracked: ",
+  "lucidadvancements.gui.progressbar.tracked.prefix": "Marcado: ",
 
   "lucidadvancements.gui.card.requirements": "Requisitos:",
   "lucidadvancements.gui.card.no_requirements": "• Nenhum requisito visível...",
 
-  "lucidadvancements.overlay.hidden_count": "  + %s outros..."
+  "lucidadvancements.overlay.hidden_count": "  + %s outros...",
+
+  "lucidadvancements.gui.config.save_and_exit": "⬅ Salvar e Voltar",
+  "lucidadvancements.gui.config.section.general": "GERAL",
+  "lucidadvancements.gui.config.title": "Configuração do Lucid Advancements"
 }

@@ -4,8 +4,12 @@ import com.niixlabs.lucidadvancements.Constants;
 import com.niixlabs.lucidadvancements.client.cache.TrackedAdvancementsCache;
 import com.niixlabs.lucidadvancements.client.gui.card.AdvancementCard;
 import com.niixlabs.lucidadvancements.client.gui.card.FilterMode;
+import com.niixlabs.lucidadvancements.client.gui.config.LucidConfigScreen;
 import com.niixlabs.lucidadvancements.client.gui.sidebar.SidebarNodeCache;
+import com.niixlabs.lucidadvancements.client.gui.util.GuiScale;
+import com.niixlabs.lucidadvancements.client.gui.util.LucidScrollHandler;
 import com.niixlabs.lucidadvancements.config.LucidConfig;
+import com.niixlabs.lucidadvancements.translation.TranslationExporter;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
@@ -20,7 +24,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientAdvancements;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,16 +52,11 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     private AdvancementNode expandedNode = null;
     private AdvancementNode selectedRoot = null;
 
-    private double scrollOffset = 0;
-    private double maxScroll = 0;
-    private double sidebarScroll = 0;
-    private double maxSidebarScroll = 0;
-    private double dragClickOffset = 0;
+    private final LucidScrollHandler mainScroll = new LucidScrollHandler();
+    private final LucidScrollHandler sidebarScroll = new LucidScrollHandler();
 
     private int totalAdvancements = 0;
     private int completedAdvancements = 0;
-
-    private boolean draggingMainScrollbar = false;
     private boolean needsRecalculation = true;
 
     public LucidAdvancementsScreen(ClientAdvancements clientAdvancements) {
@@ -84,15 +82,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private int viewportHeight(int viewportY) {
         return height - viewportY - ScreenMetrics.viewportBottomMargin();
-    }
-
-    private int scrollThumbHeight(int viewportHeight) {
-        return Math.max(ScreenMetrics.minScrollThumbHeight(),
-                (int) ((viewportHeight / (float) (viewportHeight + maxScroll)) * viewportHeight));
-    }
-
-    private int scrollThumbY(int viewportY, int viewportHeight, int thumbHeight) {
-        return viewportY + (int) ((scrollOffset / maxScroll) * (viewportHeight - thumbHeight));
     }
 
     private boolean isDropdownOpen() {
@@ -133,19 +122,39 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     private void initTopBarWidgets() {
         int currentX = width - ScreenMetrics.contentMargin();
 
+        int configWidth = 16;
+        currentX -= configWidth;
+        LucidButton configButton = new LucidButton(currentX, 16, configWidth, 16,
+                Component.literal("⚙"), btn -> {
+            if (minecraft != null) {
+                minecraft.setScreen(new LucidConfigScreen(this));
+            }
+        });
+        addRenderableWidget(configButton);
+
+        int clearWidth = 16;
+        currentX -= (clearWidth + 3);
+        LucidButton clearTrackedButton = new LucidButton(currentX, 16, clearWidth, 16,
+                Component.literal(LucidConfig.cardIconTracked), btn -> {
+            TRACKED_ADVANCEMENTS.clear();
+            TrackedAdvancementsCache.persist();
+            needsRecalculation = true;
+
+            //TranslationExporter.exportCurrentAdvancements(progressMap);
+        });
+        addRenderableWidget(clearTrackedButton);
+
+        if (!LucidConfig.keepSearchQuery) lastSearchQuery = "";
+
         int searchWidth = 120;
-        currentX -= searchWidth;
+        currentX -= (searchWidth + 6);
         searchBox = new EditBox(font, currentX, 16, searchWidth, 16, Component.translatable(Constants.MOD_ID + ".gui.search.placeholder"));
         searchBox.setValue(lastSearchQuery);
-        searchBox.setSuggestion(lastSearchQuery.isEmpty()
-                ? Component.translatable(Constants.MOD_ID + ".gui.search.placeholder").getString()
-                : null);
+        searchBox.setSuggestion(lastSearchQuery.isEmpty() ? Component.translatable(Constants.MOD_ID + ".gui.search.placeholder").getString() : null);
         searchBox.setResponder(text -> {
             lastSearchQuery = text;
-            searchBox.setSuggestion(text.isEmpty()
-                    ? Component.translatable(Constants.MOD_ID + ".gui.search.placeholder").getString()
-                    : null);
-            scrollOffset = 0;
+            searchBox.setSuggestion(text.isEmpty() ? Component.translatable(Constants.MOD_ID + ".gui.search.placeholder").getString() : null);
+            mainScroll.setScrollOffset(0);
             needsRecalculation = true;
         });
         addRenderableWidget(searchBox);
@@ -155,20 +164,10 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         filterDropdown = new LucidDropdown<>(currentX, 16, filterWidth, 16, currentFilter,
                 List.of(FilterMode.values()), FilterMode::getDisplayName, mode -> {
             currentFilter = mode;
-            scrollOffset = 0;
+            mainScroll.setScrollOffset(0);
             needsRecalculation = true;
         });
         addRenderableWidget(filterDropdown);
-
-        int clearWidth = 95;
-        currentX -= (clearWidth + 6);
-        LucidButton clearTrackedButton = new LucidButton(currentX, 16, clearWidth, 16,
-                Component.translatable(Constants.MOD_ID + ".gui.clear_tracked.label"), btn -> {
-            TRACKED_ADVANCEMENTS.clear();
-            TrackedAdvancementsCache.persist();
-            needsRecalculation = true;
-        });
-        addRenderableWidget(clearTrackedButton);
 
         int scaleWidth = 40;
         currentX -= (scaleWidth + 6);
@@ -204,9 +203,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return;
         }
 
-        AdvancementNode targetNode = targetId.equals(targetRoot.holder().id())
-                ? targetRoot
-                : findNode(targetRoot, targetId);
+        AdvancementNode targetNode = targetId.equals(targetRoot.holder().id()) ? targetRoot : findNode(targetRoot, targetId);
 
         searchBox.setValue("");
         currentFilter = FilterMode.ALL;
@@ -257,7 +254,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private void scrollToCard(AdvancementNode targetNode, AdvancementNode targetRoot) {
         if (targetNode == targetRoot) {
-            scrollOffset = 0;
+            mainScroll.setScrollOffset(0);
             return;
         }
 
@@ -268,7 +265,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
                 int viewportHeight = viewportHeight(viewportY);
                 int halfCard = card.getHeight() / 2;
                 int halfViewport = viewportHeight / 2;
-                scrollOffset = Mth.clamp(yOffset + halfCard - halfViewport, 0, maxScroll);
+                mainScroll.setScrollOffset(yOffset + halfCard - halfViewport);
                 return;
             }
             yOffset += card.getHeight() + ScreenMetrics.cardSpacing();
@@ -282,10 +279,10 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         }
 
         int sidebarViewport = height - ScreenMetrics.sidebarProgressHeight() - 24;
-        maxSidebarScroll = Math.max(0, (cachedSidebarNodes.size() * ScreenMetrics.sidebarRowHeight()) - sidebarViewport);
+        sidebarScroll.updateMaxScroll(Math.max(0, (cachedSidebarNodes.size() * ScreenMetrics.sidebarRowHeight()) - sidebarViewport));
 
         int targetScroll = (rootIndex * ScreenMetrics.sidebarRowHeight()) + (ScreenMetrics.sidebarRowHeight() / 2) - (sidebarViewport / 2);
-        sidebarScroll = Mth.clamp(targetScroll, 0, maxSidebarScroll);
+        sidebarScroll.setScrollOffset(targetScroll);
     }
 
     private void rebuildSidebarCache() {
@@ -386,7 +383,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             }
         }
 
-        scrollOffset = 0;
+        mainScroll.setScrollOffset(0);
         expandedNode = null;
         needsRecalculation = true;
     }
@@ -443,13 +440,12 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         cachedCards.clear();
 
         if (rootNodes.isEmpty()) {
-            maxScroll = 0;
+            mainScroll.updateMaxScroll(0);
             needsRecalculation = false;
             return;
         }
 
         int contentWidth = ScreenMetrics.contentWidth(width);
-
         String query = searchBox.getValue().toLowerCase();
         boolean searching = !query.isEmpty();
 
@@ -465,7 +461,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         }
 
         String textFilter = textFilterBuilder.toString().trim();
-
         List<AdvancementNode> nodesToDisplay = collectNodesToDisplay(searching);
 
         for (AdvancementNode child : nodesToDisplay) {
@@ -503,8 +498,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         }
 
         int viewportY = ScreenMetrics.viewportY(searching);
-        maxScroll = Math.max(0, totalCardsHeight - viewportHeight(viewportY));
-        scrollOffset = Mth.clamp(scrollOffset, 0, maxScroll);
+        mainScroll.updateMaxScroll(totalCardsHeight - viewportHeight(viewportY));
 
         needsRecalculation = false;
     }
@@ -531,7 +525,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             case ALL -> true;
         };
     }
-
 
     private boolean matchesSearch(AdvancementNode child, AdvancementCard card, Set<String> modIdFilters, String textFilter) {
         if (!modIdFilters.isEmpty()) {
@@ -586,7 +579,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         renderContentHeader(guiGraphics, contentX, searching);
 
         HoverResult hover = renderCardList(guiGraphics, scaleFactor, contentX, contentWidth, viewportY, viewportHeight, scaledMouseX, scaledMouseY);
-        renderMainScrollbar(guiGraphics, viewportY, viewportHeight);
+        mainScroll.renderScrollbar(guiGraphics, width, viewportY, viewportHeight);
 
         filterDropdown.renderOptions(guiGraphics, scaledMouseX, scaledMouseY);
         scaleDropdown.renderOptions(guiGraphics, scaledMouseX, scaledMouseY);
@@ -605,28 +598,25 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private void renderSidebar(GuiGraphics guiGraphics, double scaleFactor, int scaledMouseX, int scaledMouseY) {
         int sidebarWidth = ScreenMetrics.sidebarWidth();
+        int viewportBottom = height - ScreenMetrics.sidebarProgressHeight();
 
         guiGraphics.fillGradient(0, 0, sidebarWidth, height, LucidConfig.screenSidebarGradientStart, LucidConfig.screenSidebarGradientEnd);
         guiGraphics.fill(sidebarWidth - 1, 0, sidebarWidth, height, LucidConfig.screenSidebarBorder);
 
-        maxSidebarScroll = Math.max(0, (cachedSidebarNodes.size() * ScreenMetrics.sidebarRowHeight())
-                - (height - ScreenMetrics.sidebarProgressHeight() - 24));
-        sidebarScroll = Mth.clamp(sidebarScroll, 0, maxSidebarScroll);
+        sidebarScroll.updateMaxScroll((cachedSidebarNodes.size() * ScreenMetrics.sidebarRowHeight()) - (viewportBottom - ScreenMetrics.sidebarTopPadding()));
 
         int scissorX2 = (int) Math.round(sidebarWidth / scaleFactor);
         int scissorY2 = (int) Math.round((height - ScreenMetrics.sidebarProgressHeight()) / scaleFactor);
         guiGraphics.enableScissor(0, 0, scissorX2, scissorY2);
 
-        int sidebarViewportBottom = height - ScreenMetrics.sidebarProgressHeight();
-        int rowY = ScreenMetrics.sidebarTopPadding() - (int) sidebarScroll;
-        for (SidebarNodeCache cache : cachedSidebarNodes) {
-            renderSidebarRow(guiGraphics, cache, rowY, sidebarWidth, scaledMouseX, scaledMouseY, sidebarViewportBottom);
-            rowY += ScreenMetrics.sidebarRowHeight();
-        }
+        int rowY = ScreenMetrics.sidebarTopPadding() - (int) sidebarScroll.getScrollOffset();
 
-        rowY = ScreenMetrics.sidebarTopPadding() - (int) sidebarScroll;
         for (SidebarNodeCache cache : cachedSidebarNodes) {
-            guiGraphics.renderItem(cache.icon, 8, rowY + 9);
+            if (rowY + ScreenMetrics.sidebarRowHeight() > 0 && rowY < viewportBottom) {
+                renderSidebarRow(guiGraphics, cache, rowY, sidebarWidth, scaledMouseX, scaledMouseY, viewportBottom);
+                int iconOffsetY = (ScreenMetrics.sidebarRowHeight() - 16) / 2;
+                guiGraphics.renderItem(cache.icon, 8, rowY + iconOffsetY);
+            }
             rowY += ScreenMetrics.sidebarRowHeight();
         }
 
@@ -636,21 +626,26 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     private void renderSidebarRow(GuiGraphics guiGraphics, SidebarNodeCache cache, int rowY, int sidebarWidth, int scaledMouseX, int scaledMouseY, int sidebarViewportBottom) {
         boolean selected = cache.node == selectedRoot;
 
+        int itemOffsetY = (ScreenMetrics.sidebarRowHeight() - ScreenMetrics.sidebarItemHeight()) / 2;
+        int itemStartY = rowY + itemOffsetY;
+        int itemEndY = itemStartY + ScreenMetrics.sidebarItemHeight();
+
         if (selected) {
-            guiGraphics.fill(4, rowY, sidebarWidth - 4, rowY + ScreenMetrics.sidebarItemHeight(), LucidConfig.screenSidebarSelectedFill);
-            guiGraphics.fill(4, rowY, 6, rowY + ScreenMetrics.sidebarItemHeight(), LucidConfig.screenSidebarSelectedAccent);
+            guiGraphics.fill(4, itemStartY, sidebarWidth - 4, itemEndY, LucidConfig.screenSidebarSelectedFill);
+            guiGraphics.fill(4, itemStartY, 6, itemEndY, LucidConfig.screenSidebarSelectedAccent);
         } else if (scaledMouseY <= sidebarViewportBottom && scaledMouseX >= 4 && scaledMouseX <= sidebarWidth - 4
-                && scaledMouseY >= rowY && scaledMouseY <= rowY + ScreenMetrics.sidebarItemHeight()) {
-            guiGraphics.fill(4, rowY, sidebarWidth - 4, rowY + ScreenMetrics.sidebarItemHeight(), LucidConfig.screenSidebarHoverFill);
+                && scaledMouseY >= itemStartY && scaledMouseY <= itemEndY) {
+            guiGraphics.fill(4, itemStartY, sidebarWidth - 4, itemEndY, LucidConfig.screenSidebarHoverFill);
         }
 
+        int textOffsetY = (ScreenMetrics.sidebarRowHeight() - 8) / 2;
+
         guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(28, rowY + 14, 0);
+        guiGraphics.pose().translate(28, rowY + textOffsetY, 0);
         guiGraphics.pose().scale(0.85f, 0.85f, 1.0f);
         guiGraphics.drawString(font, cache.displayTitle, 0, 0, selected ? LucidConfig.screenSidebarTextSelected : LucidConfig.screenSidebarTextIdle, true);
         guiGraphics.pose().popPose();
     }
-
 
     private void renderProgressBar(GuiGraphics guiGraphics) {
         int sidebarWidth = ScreenMetrics.sidebarWidth();
@@ -777,7 +772,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
         boolean isBlocked = isDropdownOpen();
 
-        int cardY = viewportY - (int) scrollOffset;
+        int cardY = viewportY - (int) mainScroll.getScrollOffset();
         for (AdvancementCard card : cachedCards) {
             if (isCardVisible(cardY, card, viewportY, viewportHeight)) {
                 card.renderBackgroundAndText(guiGraphics, font, contentX, cardY, contentWidth, scaledMouseX, scaledMouseY, viewportY, viewportHeight, isBlocked);
@@ -788,7 +783,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         ItemStack hoveredIcon = null;
         String hoveredCriterionTag = null;
 
-        cardY = viewportY - (int) scrollOffset;
+        cardY = viewportY - (int) mainScroll.getScrollOffset();
         for (AdvancementCard card : cachedCards) {
             if (isCardVisible(cardY, card, viewportY, viewportHeight)) {
                 card.renderIcon(guiGraphics, contentX, cardY);
@@ -812,20 +807,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private boolean isCardVisible(int cardY, AdvancementCard card, int viewportY, int viewportHeight) {
         return cardY + card.getHeight() > viewportY && cardY < viewportY + viewportHeight;
-    }
-
-    private void renderMainScrollbar(GuiGraphics guiGraphics, int viewportY, int viewportHeight) {
-        if (maxScroll <= 0) {
-            return;
-        }
-
-        int scrollbarX = width - ScreenMetrics.scrollbarRightMargin();
-        int thumbHeight = scrollThumbHeight(viewportHeight);
-        int thumbY = scrollThumbY(viewportY, viewportHeight, thumbHeight);
-
-        guiGraphics.fill(scrollbarX, viewportY, scrollbarX + ScreenMetrics.scrollbarWidth(), viewportY + viewportHeight, LucidConfig.screenScrollbarTrackColor);
-        int thumbColor = draggingMainScrollbar ? LucidConfig.screenScrollbarThumbActive : LucidConfig.screenScrollbarThumbIdle;
-        guiGraphics.fill(scrollbarX, thumbY, scrollbarX + ScreenMetrics.scrollbarWidth(), thumbY + thumbHeight, thumbColor);
     }
 
     private void renderHoverTooltip(GuiGraphics guiGraphics, HoverResult hover, int mouseX, int mouseY) {
@@ -873,7 +854,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return false;
         }
 
-        int rowY = ScreenMetrics.sidebarTopPadding() - (int) sidebarScroll;
+        int rowY = ScreenMetrics.sidebarTopPadding() - (int) sidebarScroll.getScrollOffset();
         for (SidebarNodeCache cache : cachedSidebarNodes) {
             if (mouseY >= rowY && mouseY <= rowY + ScreenMetrics.sidebarItemHeight()) {
                 selectSidebarNode(cache);
@@ -895,7 +876,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             lastSelectedTabId = cache.node.holder().id();
         }
 
-        scrollOffset = 0;
+        mainScroll.setScrollOffset(0);
         needsRecalculation = true;
     }
 
@@ -911,11 +892,11 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             return true;
         }
 
-        return handleScrollbarGrab(mouseX, mouseY, viewportY, viewportHeight);
+        return mainScroll.handleMouseDown(mouseX, mouseY, width, viewportY, viewportHeight);
     }
 
     private boolean handleCardClick(double mouseX, double mouseY, int contentX, int contentWidth, int viewportY, int viewportHeight) {
-        int cardY = viewportY - (int) scrollOffset;
+        int cardY = viewportY - (int) mainScroll.getScrollOffset();
         for (AdvancementCard card : cachedCards) {
             if (mouseY >= cardY && mouseY <= cardY + card.getHeight()) {
                 return handleCardInteraction(card, mouseX, mouseY, contentX, contentWidth, cardY, viewportY, viewportHeight);
@@ -955,46 +936,19 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         needsRecalculation = true;
     }
 
-    private boolean handleScrollbarGrab(double mouseX, double mouseY, int viewportY, int viewportHeight) {
-        if (maxScroll <= 0) {
-            return false;
-        }
-
-        int scrollbarX = width - ScreenMetrics.scrollbarRightMargin();
-        if (mouseX < scrollbarX - 2 || mouseX > scrollbarX + 5) {
-            return false;
-        }
-
-        int thumbHeight = scrollThumbHeight(viewportHeight);
-        int thumbY = scrollThumbY(viewportY, viewportHeight, thumbHeight);
-
-        if (mouseY >= thumbY && mouseY <= thumbY + thumbHeight) {
-            draggingMainScrollbar = true;
-            dragClickOffset = mouseY - thumbY;
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         double scaleFactor = getScaleFactor();
         mouseY *= scaleFactor;
 
-        if (draggingMainScrollbar && maxScroll > 0) {
-            boolean searching = isSearching();
-            int viewportY = ScreenMetrics.viewportY(searching);
-            int viewportHeight = viewportHeight(viewportY);
-            int thumbHeight = scrollThumbHeight(viewportHeight);
-            int trackHeight = viewportHeight - thumbHeight;
+        boolean searching = isSearching();
+        int viewportY = ScreenMetrics.viewportY(searching);
+        int viewportHeight = viewportHeight(viewportY);
 
-            if (trackHeight > 0) {
-                double targetThumbY = mouseY - dragClickOffset;
-                double scrollPercentage = Mth.clamp((targetThumbY - viewportY) / trackHeight, 0.0, 1.0);
-                scrollOffset = scrollPercentage * maxScroll;
-            }
+        if (mainScroll.handleMouseDragged(mouseY, viewportY, viewportHeight)) {
             return true;
         }
+
         return super.mouseDragged(mouseX * scaleFactor, mouseY, button, dragX * scaleFactor, dragY * scaleFactor);
     }
 
@@ -1002,7 +956,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         double scaleFactor = getScaleFactor();
         if (button == 0) {
-            draggingMainScrollbar = false;
+            mainScroll.setDragging(false);
         }
         return super.mouseReleased(mouseX * scaleFactor, mouseY * scaleFactor, button);
     }
@@ -1019,11 +973,10 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         }
 
         if (mouseX <= ScreenMetrics.sidebarWidth()) {
-            sidebarScroll = Mth.clamp(sidebarScroll - (scrollY * 20), 0.0, maxSidebarScroll);
+            sidebarScroll.handleMouseScrolled(scrollY, 20);
             return true;
         }
-        if (maxScroll > 0) {
-            scrollOffset = Mth.clamp(scrollOffset - (scrollY * 30), 0.0, maxScroll);
+        if (mainScroll.handleMouseScrolled(scrollY, 30)) {
             return true;
         }
         return super.mouseScrolled(mouseX, mouseY * scaleFactor, scrollX, scrollY);

@@ -1,0 +1,31 @@
+{
+  "lucidadvancements.gui.title": "Progrès",
+
+  "lucidadvancements.gui.global_category.tab_name": "Aperçu",
+  "lucidadvancements.gui.global_category.title": "Aperçu Global",
+  "lucidadvancements.gui.global_category.desc": "Suivez votre progression dans chaque mod et catégorie.",
+
+  "lucidadvancements.gui.search.placeholder": "Rechercher...",
+
+  "lucidadvancements.gui.filter.all": "Filtre: Tous",
+  "lucidadvancements.gui.filter.completed": "Filtre: Terminés",
+  "lucidadvancements.gui.filter.incomplete": "Filtre: Incomplets",
+  "lucidadvancements.gui.filter.challenges": "Filtre: Défis",
+  "lucidadvancements.gui.filter.partial": "Filtre: Partiels",
+  "lucidadvancements.gui.filter.tracked": "Filtre: Suivis",
+
+  "lucidadvancements.gui.scale.mode.vanilla": "Auto",
+  "lucidadvancements.gui.scale.mode.custom": "%s",
+
+  "lucidadvancements.gui.progress_text": "%s / %s",
+  "lucidadvancements.gui.progressbar.tracked.prefix": "Suivi: ",
+
+  "lucidadvancements.gui.card.requirements": "Prérequis:",
+  "lucidadvancements.gui.card.no_requirements": "• Aucun prérequis visible...",
+
+  "lucidadvancements.overlay.hidden_count": "  + %s de plus...",
+
+  "lucidadvancements.gui.config.save_and_exit": "⬅ Sauvegarder & Retour",
+  "lucidadvancements.gui.config.section.general": "GÉNÉRAL",
+  "lucidadvancements.gui.config.title": "Configuration de Lucid Advancements"
+}

@@ -7,8 +7,6 @@
 
   "lucidadvancements.gui.search.placeholder": "Search...",
 
-  "lucidadvancements.gui.clear_tracked.label": "Clear Tracked",
-
   "lucidadvancements.gui.filter.all": "Filter: All",
   "lucidadvancements.gui.filter.completed": "Filter: Completed",
   "lucidadvancements.gui.filter.incomplete": "Filter: Incomplete",
@@ -16,7 +14,6 @@
   "lucidadvancements.gui.filter.partial": "Filter: Partial",
   "lucidadvancements.gui.filter.tracked": "Filter: Tracked",
 
-  "lucidadvancements.gui.scale.label": "Scale: %s",
   "lucidadvancements.gui.scale.mode.vanilla": "Auto",
   "lucidadvancements.gui.scale.mode.custom": "%s",
 
@@ -26,5 +23,9 @@
   "lucidadvancements.gui.card.requirements": "Requirements:",
   "lucidadvancements.gui.card.no_requirements": "• No visible requirements...",
 
-  "lucidadvancements.overlay.hidden_count": "  + %s more..."
+  "lucidadvancements.overlay.hidden_count": "  + %s more...",
+
+  "lucidadvancements.gui.config.save_and_exit": "⬅ Save & Back",
+  "lucidadvancements.gui.config.section.general": "GENERAL",
+  "lucidadvancements.gui.config.title": "Lucid Advancements Configuration"
 }

@@ -45,18 +45,6 @@ public final class ScreenMetrics {
         return LucidConfig.screenHeaderHeight;
     }
 
-    public static int minScrollThumbHeight() {
-        return LucidConfig.screenMinScrollThumbHeight;
-    }
-
-    public static int scrollbarWidth() {
-        return LucidConfig.screenScrollbarWidth;
-    }
-
-    public static int scrollbarRightMargin() {
-        return LucidConfig.screenScrollbarRightMargin;
-    }
-
     public static int contentX() {
         return sidebarWidth() + contentMargin();
     }

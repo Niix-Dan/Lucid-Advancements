@@ -3,7 +3,7 @@ package com.niixlabs.lucidadvancements.client.gui.overlay;
 import com.niixlabs.lucidadvancements.Constants;
 import com.niixlabs.lucidadvancements.client.cache.TrackedAdvancementsCache;
 import com.niixlabs.lucidadvancements.client.gui.access.AdvancementProgressAccess;
-import com.niixlabs.lucidadvancements.client.gui.screen.GuiScale;
+import com.niixlabs.lucidadvancements.client.gui.util.GuiScale;
 import com.niixlabs.lucidadvancements.client.gui.screen.LucidAdvancementsScreen;
 import com.niixlabs.lucidadvancements.config.LucidConfig;
 import com.niixlabs.lucidadvancements.translation.CriterionTranslator;
