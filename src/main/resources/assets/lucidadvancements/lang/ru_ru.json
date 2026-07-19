@@ -1,0 +1,31 @@
+{
+  "lucidadvancements.gui.title": "Достижения",
+
+  "lucidadvancements.gui.global_category.tab_name": "Обзор",
+  "lucidadvancements.gui.global_category.title": "Глобальный обзор",
+  "lucidadvancements.gui.global_category.desc": "Отслеживайте свой прогресс во всех модах и категориях.",
+
+  "lucidadvancements.gui.search.placeholder": "Поиск...",
+
+  "lucidadvancements.gui.filter.all": "Фильтр: Все",
+  "lucidadvancements.gui.filter.completed": "Фильтр: Завершенные",
+  "lucidadvancements.gui.filter.incomplete": "Фильтр: Незавершенные",
+  "lucidadvancements.gui.filter.challenges": "Фильтр: Испытания",
+  "lucidadvancements.gui.filter.partial": "Фильтр: Частично",
+  "lucidadvancements.gui.filter.tracked": "Фильтр: Отслеживаемые",
+
+  "lucidadvancements.gui.scale.mode.vanilla": "Авто",
+  "lucidadvancements.gui.scale.mode.custom": "%s",
+
+  "lucidadvancements.gui.progress_text": "%s / %s",
+  "lucidadvancements.gui.progressbar.tracked.prefix": "Отслеживается: ",
+
+  "lucidadvancements.gui.card.requirements": "Требования:",
+  "lucidadvancements.gui.card.no_requirements": "• Нет видимых требований...",
+
+  "lucidadvancements.overlay.hidden_count": "  + еще %s...",
+
+  "lucidadvancements.gui.config.save_and_exit": "⬅ Сохранить и назад",
+  "lucidadvancements.gui.config.section.general": "ОБЩИЕ",
+  "lucidadvancements.gui.config.title": "Настройки"
+}
