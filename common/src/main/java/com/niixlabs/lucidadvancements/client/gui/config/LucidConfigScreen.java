@@ -414,11 +414,14 @@ public class LucidConfigScreen extends Screen {
         }
 
         public void renderLabel(GuiGraphics guiGraphics, Font font) {
-            guiGraphics.drawString(font, name, x + 10, y + 6, LucidConfig.widgetTextIdle, true);
-            if (!comment.isEmpty()) {
+            String formattedName = Component.translatable(Constants.MOD_ID + ".gui.config." + name + ".name").getString();
+            String formattedDesc = Component.translatable(Constants.MOD_ID + ".gui.config." + name + ".desc").getString();
+
+            guiGraphics.drawString(font, formattedName, x + 10, y + 6, LucidConfig.widgetTextIdle, true);
+            if (!formattedDesc.isEmpty()) {
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().scale(0.8f, 0.8f, 1.0f);
-                guiGraphics.drawString(font, comment, (int) ((x + 10) / 0.8f), (int) ((y + 18) / 0.8f), 0xFFAAAAAA, true);
+                guiGraphics.drawString(font, formattedDesc, (int) ((x + 10) / 0.8f), (int) ((y + 18) / 0.8f), 0xFFAAAAAA, true);
                 guiGraphics.pose().popPose();
             }
         }
