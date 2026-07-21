@@ -6,7 +6,7 @@ on:
       - 26.1.2
     paths-ignore:
       - '**.md'
-      - '.github'
+      - '.github/*'
       - 'LICENSE'
   pull_request:
     branches:
@@ -34,3 +34,9 @@ jobs:
 
     - name: Build with Gradle
       run: ./gradlew build --build-cache --parallel
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Build-Files
+        path: build/libs/
