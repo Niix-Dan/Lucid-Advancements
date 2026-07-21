@@ -2,12 +2,10 @@
 
 ![Lucid Advancements](https://cdn.modrinth.com/data/cached_images/240930d0420c6d769f1d90835582819310b4d6bb.png)
 
-![Minecraft Version](https://img.shields.io/badge/Minecraft-1.21%2B-blue?style=for-the-badge)
+![Minecraft Version](https://img.shields.io/badge/Minecraft-26%2B-blue?style=for-the-badge)
 ![Side](https://img.shields.io/badge/Side-Client-green?style=for-the-badge)
 
 ![NeoForge](https://img.shields.io/badge/NeoForge-red?style=for-the-badge)
-![Forge](https://img.shields.io/badge/Forge-orange?style=for-the-badge)
-![Fabric](https://img.shields.io/badge/Fabric-gray?style=for-the-badge)
 
 **Browse, track, and complete your goals without the visual chaos.**
 
