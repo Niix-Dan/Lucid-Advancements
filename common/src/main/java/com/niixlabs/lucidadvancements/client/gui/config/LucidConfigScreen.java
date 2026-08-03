@@ -32,6 +32,7 @@ public class LucidConfigScreen extends Screen {
 
     private final List<ConfigEntry> entries = new ArrayList<>();
     private final List<SidebarSection> sidebarSections = new ArrayList<>();
+    private final List<Integer> sectionOffsets = new ArrayList<>();
     private SidebarSection selectedSection = null;
     private boolean needsRecalculation = true;
 
@@ -98,10 +99,17 @@ public class LucidConfigScreen extends Screen {
     }
 
     private void recalculateLayout() {
+        sectionOffsets.clear();
         int totalHeight = 0;
+        int sectionIndex = 0;
         for (ConfigEntry entry : entries) {
+            if (sectionIndex < sidebarSections.size() && entry == sidebarSections.get(sectionIndex).header) {
+                sectionOffsets.add(totalHeight);
+                sectionIndex++;
+            }
             totalHeight += entry.getHeight();
         }
+
         int viewportY = LucidConfig.screenTopBarHeight;
         int viewportHeight = height - viewportY - LucidConfig.screenViewportBottomMargin;
 
@@ -109,6 +117,25 @@ public class LucidConfigScreen extends Screen {
         sidebarScroll.updateMaxScroll((sidebarSections.size() * 18) - (height - LucidConfig.screenTopBarHeight - 24));
 
         needsRecalculation = false;
+    }
+
+    private void updateSelectedSectionFromScroll() {
+        if (sectionOffsets.isEmpty()) {
+            return;
+        }
+
+        int scrollOffset = (int) mainScroll.getScrollOffset();
+        int activeIndex = 0;
+
+        for (int i = 0; i < sectionOffsets.size(); i++) {
+            if (sectionOffsets.get(i) <= scrollOffset) {
+                activeIndex = i;
+            } else {
+                break;
+            }
+        }
+
+        selectedSection = sidebarSections.get(activeIndex);
     }
 
     @Override
@@ -128,6 +155,7 @@ public class LucidConfigScreen extends Screen {
         if (needsRecalculation) {
             recalculateLayout();
         }
+        updateSelectedSectionFromScroll();
 
         renderTopBar(guiGraphics, scaledMouseX, scaledMouseY);
         renderSidebar(guiGraphics, scaleFactor, scaledMouseX, scaledMouseY);

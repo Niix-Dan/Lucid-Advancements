@@ -1,3 +1,10 @@
+## v1.2.1
+
+* Added ScrollSpeed Options to the Config Screen #32
+* 
+
+---
+
 ## v1.2.0.1
 
 * Hotfix > Fixed categories not following their respective data file
