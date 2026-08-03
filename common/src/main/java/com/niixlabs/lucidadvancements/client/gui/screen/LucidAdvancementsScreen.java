@@ -1028,10 +1028,10 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         }
 
         if (mouseX <= ScreenMetrics.sidebarWidth()) {
-            sidebarScroll.handleMouseScrolled(scrollY, 20);
+            sidebarScroll.handleMouseScrolled(scrollY, LucidConfig.sidebarScrollSpeed);
             return true;
         }
-        if (mainScroll.handleMouseScrolled(scrollY, 30)) {
+        if (mainScroll.handleMouseScrolled(scrollY, LucidConfig.mainScrollSpeed)) {
             return true;
         }
         return super.mouseScrolled(mouseX, mouseY * scaleFactor, scrollX, scrollY);

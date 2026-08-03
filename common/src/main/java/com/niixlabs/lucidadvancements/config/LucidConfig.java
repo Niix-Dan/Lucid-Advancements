@@ -15,6 +15,12 @@ public final class LucidConfig {
     @ConfigOption(comment = "Keep search query across menu reopens")
     public static boolean keepSearchQuery = true;
 
+    @ConfigOption(comment = "Scroll speed of the categories sidebar")
+    public static int sidebarScrollSpeed = 20;
+
+    @ConfigOption(comment = "Scroll speed of the advancements cards")
+    public static int mainScrollSpeed = 30;
+
     @ConfigOption(comment = "Config watcher (Needs Restart)")
     public static boolean useConfigWatcher = false;
 
