@@ -29,6 +29,9 @@
   "lucidadvancements.gui.config.reload": "Reload",
   "lucidadvancements.gui.config.section.general": "GENERAL",
   "lucidadvancements.gui.config.title": "Lucid Advancements Configuration",
+  "lucidadvancements.gui.config.color_picker.title": "Color Picker",
+  "lucidadvancements.gui.config.color_picker.cancel": "Cancel",
+  "lucidadvancements.gui.config.color_picker.apply": "Apply",
 
   "lucidadvancements.gui.config.customGuiScale.name": "Custom GUI Scale",
   "lucidadvancements.gui.config.customGuiScale.desc": "GUI scale. 0 = Auto, 1-8 = Fixed Scale",

@@ -1,7 +1,8 @@
 ## v1.2.1
 
 * Added ScrollSpeed Options to the Config Screen #32
-* 
+* Fixed Configs Sidebar Category Selection not Updating While Scrolling Through Content #32
+* Added Color Picker to the Config Screen #32
 
 ---
 
