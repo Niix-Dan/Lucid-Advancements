@@ -8,11 +8,14 @@ import com.niixlabs.lucidadvancements.config.ConfigOption;
 import com.niixlabs.lucidadvancements.config.ConfigSection;
 import com.niixlabs.lucidadvancements.config.LucidConfig;
 import com.niixlabs.lucidadvancements.config.category.CategoryConfigManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -288,11 +291,13 @@ public class LucidConfigScreen extends Screen {
         if (activeColorPicker != null) {
             if (button == 0) {
                 if (activeColorPicker.isApplyClicked(mouseX, mouseY)) {
+                    playClickSound();
                     activeColorPicker.commit();
                     activeColorPicker = null;
                     return true;
                 }
                 if (activeColorPicker.isCancelClicked(mouseX, mouseY) || activeColorPicker.isOutsideModal(mouseX, mouseY)) {
+                    playClickSound();
                     activeColorPicker = null;
                     return true;
                 }
@@ -309,6 +314,7 @@ public class LucidConfigScreen extends Screen {
 
         int backX = width - LucidConfig.screenContentMargin - BACK_BUTTON_WIDTH;
         if (mouseX >= backX && mouseX <= backX + BACK_BUTTON_WIDTH && mouseY >= BACK_BUTTON_Y && mouseY <= BACK_BUTTON_Y + BACK_BUTTON_HEIGHT) {
+            playClickSound();
             saveAll();
             if (minecraft != null) minecraft.setScreen(previousScreen);
             return true;
@@ -316,6 +322,7 @@ public class LucidConfigScreen extends Screen {
 
         int reloadX = backX - RELOAD_BUTTON_GAP - RELOAD_BUTTON_WIDTH;
         if (mouseX >= reloadX && mouseX <= reloadX + RELOAD_BUTTON_WIDTH && mouseY >= BACK_BUTTON_Y && mouseY <= BACK_BUTTON_Y + BACK_BUTTON_HEIGHT) {
+            playClickSound();
             reloadEverything();
             return true;
         }
@@ -324,6 +331,7 @@ public class LucidConfigScreen extends Screen {
             int rowY = LucidConfig.screenSidebarTopPadding - (int) sidebarScroll.getScrollOffset();
             for (SidebarSection section : sidebarSections) {
                 if (mouseY >= rowY && mouseY <= rowY + 14) {
+                    playClickSound();
                     selectedSection = section;
                     scrollToSection(section);
                     return true;
@@ -347,6 +355,7 @@ public class LucidConfigScreen extends Screen {
             if (currentY + entry.getHeight() > viewportY && currentY < viewportY + viewportHeight) {
                 entry.updatePosition(contentX, currentY, contentWidth);
                 if (entry instanceof TextOptionEntry textEntry && textEntry.isSwatchClicked(mouseX, mouseY)) {
+                    playClickSound();
                     openColorPicker(textEntry);
                     return true;
                 }
@@ -704,6 +713,7 @@ public class LucidConfigScreen extends Screen {
 
             if (mouseX >= boxX && mouseX <= boxX + boxSize && mouseY >= boxY && mouseY <= boxY + boxSize) {
                 value = !value;
+                playClickSound();
                 return true;
             }
             return false;
@@ -1033,5 +1043,9 @@ public class LucidConfigScreen extends Screen {
         if (minecraft != null) {
             minecraft.setScreen(new LucidConfigScreen(previousScreen));
         }
+    }
+
+    static void playClickSound() {
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F));
     }
 }

@@ -386,6 +386,9 @@ public final class LucidConfig {
     public static String dropdownArrowOpen = "\u25B4";
 
     @ConfigSection("SIDEBAR")
+    @ConfigOption(comment = "Category organization. 0 = Default, 1 = Alphabetical")
+    public static int sidebarOrganization = 0;
+
     @ConfigOption(comment = "Suffix for truncated sidebar titles")
     public static String sidebarTruncationEllipsis = "...";
 
