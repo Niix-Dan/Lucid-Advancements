@@ -6,6 +6,8 @@
 * Add Haptic Feedback to Config Screen Interactions #32
 * Added Alphabetical Sorting to the Categories Sidebar #31
 
+* Updated NeoForge version from `21.1.230` to `21.1.245`.
+
 ---
 
 ## v1.2.0.1
