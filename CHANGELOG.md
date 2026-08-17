@@ -3,6 +3,8 @@
 * Added ScrollSpeed Options to the Config Screen #32
 * Fixed Configs Sidebar Category Selection not Updating While Scrolling Through Content #32
 * Added Color Picker to the Config Screen #32
+* Add Haptic Feedback to Config Screen Interactions #32
+* Added Alphabetical Sorting to the Categories Sidebar #31
 
 ---
 

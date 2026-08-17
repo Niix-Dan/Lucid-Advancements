@@ -301,21 +301,7 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
         int maxTextWidth = (int) ((ScreenMetrics.sidebarWidth() - 28 - SIDEBAR_SCROLLBAR_GUTTER) / 0.85f);
 
-        rootNodes.sort((a, b) -> {
-            String namespaceA = a.holder().id().getNamespace();
-            String namespaceB = b.holder().id().getNamespace();
-
-            if (namespaceA.equals("minecraft") && !namespaceB.equals("minecraft")) {
-                return -1;
-            }
-            if (!namespaceA.equals("minecraft") && namespaceB.equals("minecraft")) {
-                return 1;
-            }
-
-            String titleA = a.holder().value().display().map(d -> d.getTitle().getString()).orElse("");
-            String titleB = b.holder().value().display().map(d -> d.getTitle().getString()).orElse("");
-            return titleA.compareToIgnoreCase(titleB);
-        });
+        rootNodes.sort(sidebarComparator());
 
         cachedSidebarNodes.add(new SidebarNodeCache(null, font, maxTextWidth));
         for (AdvancementNode root : rootNodes) {
@@ -324,6 +310,33 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             }
             cachedSidebarNodes.add(new SidebarNodeCache(root, font, maxTextWidth));
         }
+    }
+
+    private Comparator<AdvancementNode> sidebarComparator() {
+        Comparator<AdvancementNode> byTitle = Comparator.comparing(
+                this::resolvedTitle,
+                String.CASE_INSENSITIVE_ORDER
+        );
+
+        if (LucidConfig.sidebarOrganization == 1) {
+            return byTitle;
+        }
+
+        Comparator<AdvancementNode> minecraftFirst = Comparator.comparing(
+                node -> !node.holder().id().getNamespace().equals("minecraft")
+        );
+
+        return minecraftFirst.thenComparing(byTitle);
+    }
+
+    private String resolvedTitle(AdvancementNode node) {
+        CategoryDefinition def = CategoryConfigManager.resolve(node.holder().id()).orElse(null);
+        if (def != null && def.title != null && !def.title.isEmpty()) {
+            return def.title.contains("%")
+                    ? def.title
+                    : Component.translatable(def.title).getString();
+        }
+        return node.holder().value().display().map(d -> d.getTitle().getString()).orElse("");
     }
 
     @Override
