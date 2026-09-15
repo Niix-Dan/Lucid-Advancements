@@ -3,7 +3,7 @@
 
   "lucidadvancements.gui.global_category.tab_name": "总览",
   "lucidadvancements.gui.global_category.title": "全局总览",
-  "lucidadvancements.gui.global_category.desc": "追踪您在所有模组和分类中的进度。",
+  "lucidadvancements.gui.global_category.desc": "追踪您在所有模组和分类中的进度",
 
   "lucidadvancements.gui.search.placeholder": "搜索...",
 
@@ -26,19 +26,34 @@
   "lucidadvancements.overlay.hidden_count": "  + 还有 %s 个...",
 
   "lucidadvancements.gui.config.save_and_exit": "⬅ 保存并返回",
+  "lucidadvancements.gui.config.reload": "重新加载",
   "lucidadvancements.gui.config.section.general": "常规",
+  "lucidadvancements.gui.config.section.hud_overlay": "悬浮窗",
+  "lucidadvancements.gui.config.section.locked_normal": "锁定普通",
+  "lucidadvancements.gui.config.section.locked_challenge": "锁定挑战",
+  "lucidadvancements.gui.config.section.completed_normal": "已完成普通",
+  "lucidadvancements.gui.config.section.completed_challenge": "已完成挑战",
+  "lucidadvancements.gui.config.section.card_colors": "卡片颜色",
+  "lucidadvancements.gui.config.section.card_layout": "卡片布局",
+  "lucidadvancements.gui.config.section.screen_layout": "屏幕布局",
+  "lucidadvancements.gui.config.section.screen_colors": "屏幕颜色",
+  "lucidadvancements.gui.config.section.widgets": "组件",
+  "lucidadvancements.gui.config.section.sidebar": "侧边栏",
   "lucidadvancements.gui.config.title": "Lucid Advancements 配置",
+  "lucidadvancements.gui.config.color_picker.title": "颜色选择器",
+  "lucidadvancements.gui.config.color_picker.cancel": "取消",
+  "lucidadvancements.gui.config.color_picker.apply": "应用",
 
   "lucidadvancements.gui.config.customGuiScale.name": "自定义界面缩放",
-  "lucidadvancements.gui.config.customGuiScale.desc": "界面缩放。0 = 自动，1-8 = 固定缩放",
+  "lucidadvancements.gui.config.customGuiScale.desc": "界面缩放，0 = 自动，1-8 = 固定缩放",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "最小虚拟宽度",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.desc": "自动缩放的最小虚拟宽度",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.name": "最小虚拟高度",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.desc": "自动缩放的最小虚拟高度",
   "lucidadvancements.gui.config.sidebarScrollSpeed.name": "侧边栏滚动速度",
-  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "调整类别侧边栏的鼠标滚轮滚动速度。",
+  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "调整类别侧边栏的鼠标滚轮滚动速度",
   "lucidadvancements.gui.config.mainScrollSpeed.name": "主画布滚动速度",
-  "lucidadvancements.gui.config.mainScrollSpeed.desc": "调整进度区域的鼠标滚轮滚动速度。",
+  "lucidadvancements.gui.config.mainScrollSpeed.desc": "调整进度区域的鼠标滚轮滚动速度",
   "lucidadvancements.gui.config.keepSearchQuery.name": "保留搜索内容",
   "lucidadvancements.gui.config.keepSearchQuery.desc": "重新打开菜单时保留搜索内容",
   "lucidadvancements.gui.config.useConfigWatcher.name": "使用配置监视器",
@@ -282,6 +297,8 @@
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "下拉展开箭头符号",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "展开状态下拉菜单的箭头符号",
 
+  "lucidadvancements.gui.config.sidebarOrganization.name": "侧边栏排序",
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "分类排序，0 = 默认，1 = 按字母顺序",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "侧边栏截断省略号",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "侧边栏截断标题的后缀"
 }

@@ -3,7 +3,7 @@
 
   "lucidadvancements.gui.global_category.tab_name": "Overview",
   "lucidadvancements.gui.global_category.title": "Global Overview",
-  "lucidadvancements.gui.global_category.desc": "Track your progress across every mod and category.",
+  "lucidadvancements.gui.global_category.desc": "Track your progress across every mod and category",
 
   "lucidadvancements.gui.search.placeholder": "Search...",
 
@@ -34,15 +34,15 @@
   "lucidadvancements.gui.config.color_picker.apply": "Apply",
 
   "lucidadvancements.gui.config.customGuiScale.name": "Custom GUI Scale",
-  "lucidadvancements.gui.config.customGuiScale.desc": "GUI scale. 0 = Auto, 1-8 = Fixed Scale",
+  "lucidadvancements.gui.config.customGuiScale.desc": "GUI scale, 0 = Auto, 1-8 = Fixed Scale",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "Minimum Virtual Width",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.desc": "Min virtual width for auto-scaling",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.name": "Minimum Virtual Height",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.desc": "Min virtual height for auto-scaling",
   "lucidadvancements.gui.config.sidebarScrollSpeed.name": "Sidebar Scroll Speed",
-  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Adjusts the mouse wheel scroll speed for the categories sidebar.",
+  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Adjusts the mouse wheel scroll speed for the categories sidebar",
   "lucidadvancements.gui.config.mainScrollSpeed.name": "Main Canvas Scroll Speed",
-  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Adjusts the mouse wheel scroll speed for the advancements area.",
+  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Adjusts the mouse wheel scroll speed for the advancements area",
   "lucidadvancements.gui.config.keepSearchQuery.name": "Keep Search Query",
   "lucidadvancements.gui.config.keepSearchQuery.desc": "Keep search query across menu reopens",
   "lucidadvancements.gui.config.useConfigWatcher.name": "Use Config Watcher",
@@ -286,6 +286,8 @@
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "Dropdown Open Arrow Glyph",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "Open dropdown arrow glyph",
 
+  "lucidadvancements.gui.config.sidebarOrganization.name": "Sidebar Organization",
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "Category organization, 0 = Default, 1 = Alphabetical",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Sidebar Truncation Ellipsis",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Suffix for truncated sidebar titles"
 }

@@ -1,44 +1,50 @@
 {
   "lucidadvancements.gui.title": "Достижения",
-
   "lucidadvancements.gui.global_category.tab_name": "Обзор",
   "lucidadvancements.gui.global_category.title": "Глобальный обзор",
-  "lucidadvancements.gui.global_category.desc": "Отслеживайте свой прогресс во всех модах и категориях.",
-
+  "lucidadvancements.gui.global_category.desc": "Отслеживайте свой прогресс во всех модах и категориях",
   "lucidadvancements.gui.search.placeholder": "Поиск...",
-
   "lucidadvancements.gui.filter.all": "Фильтр: Все",
   "lucidadvancements.gui.filter.completed": "Фильтр: Завершенные",
   "lucidadvancements.gui.filter.incomplete": "Фильтр: Незавершенные",
   "lucidadvancements.gui.filter.challenges": "Фильтр: Испытания",
   "lucidadvancements.gui.filter.partial": "Фильтр: Частично",
   "lucidadvancements.gui.filter.tracked": "Фильтр: Отслеживаемые",
-
   "lucidadvancements.gui.scale.mode.vanilla": "Авто",
   "lucidadvancements.gui.scale.mode.custom": "%s",
-
   "lucidadvancements.gui.progress_text": "%s / %s",
   "lucidadvancements.gui.progressbar.tracked.prefix": "Отслеживается: ",
-
   "lucidadvancements.gui.card.requirements": "Требования:",
   "lucidadvancements.gui.card.no_requirements": "• Нет видимых требований...",
-
   "lucidadvancements.overlay.hidden_count": "  + еще %s...",
-
   "lucidadvancements.gui.config.save_and_exit": "⬅ Сохранить и назад",
+  "lucidadvancements.gui.config.reload": "Перезагрузить",
   "lucidadvancements.gui.config.section.general": "ОБЩИЕ",
+  "lucidadvancements.gui.config.section.hud_overlay": "HUD ОВЕРЛЕЙ",
+  "lucidadvancements.gui.config.section.locked_normal": "ЗАБЛОКИРОВАНО ОБЫЧНОЕ",
+  "lucidadvancements.gui.config.section.locked_challenge": "ЗАБЛОКИРОВАНО ИСПЫТАНИЕ",
+  "lucidadvancements.gui.config.section.completed_normal": "ЗАВЕРШЕНО ОБЫЧНОЕ",
+  "lucidadvancements.gui.config.section.completed_challenge": "ЗАВЕРШЕНО ИСПЫТАНИЕ",
+  "lucidadvancements.gui.config.section.card_colors": "ЦВЕТА КАРТОЧКИ",
+  "lucidadvancements.gui.config.section.card_layout": "МАКЕТ КАРТОЧКИ",
+  "lucidadvancements.gui.config.section.screen_layout": "МАКЕТ ЭКРАНА",
+  "lucidadvancements.gui.config.section.screen_colors": "ЦВЕТА ЭКРАНА",
+  "lucidadvancements.gui.config.section.widgets": "ВИДЖЕТЫ",
+  "lucidadvancements.gui.config.section.sidebar": "БОКОВАЯ ПАНЕЛЬ",
   "lucidadvancements.gui.config.title": "Настройки",
-
+  "lucidadvancements.gui.config.color_picker.title": "Выбор цвета",
+  "lucidadvancements.gui.config.color_picker.cancel": "Отмена",
+  "lucidadvancements.gui.config.color_picker.apply": "Применить",
   "lucidadvancements.gui.config.customGuiScale.name": "Пользовательский Масштаб Интерфейса",
-  "lucidadvancements.gui.config.customGuiScale.desc": "Масштаб интерфейса. 0 = Авто, 1-8 = Фиксированный Масштаб",
+  "lucidadvancements.gui.config.customGuiScale.desc": "Масштаб интерфейса, 0 = Авто, 1-8 = Фиксированный Масштаб",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "Минимальная Виртуальная Ширина",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.desc": "Минимальная виртуальная ширина для автомасштабирования",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.name": "Минимальная Виртуальная Высота",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.desc": "Минимальная виртуальная высота для автомасштабирования",
   "lucidadvancements.gui.config.sidebarScrollSpeed.name": "Скорость прокрутки боковой панели",
-  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Настраивает скорость прокрутки колесом мыши для боковой панели категорий.",
+  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Настраивает скорость прокрутки колесом мыши для боковой панели категорий",
   "lucidadvancements.gui.config.mainScrollSpeed.name": "Скорость прокрутки основной области",
-  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Настраивает скорость прокрутки колесом мыши для области достижений.",
+  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Настраивает скорость прокрутки колесом мыши для области достижений",
   "lucidadvancements.gui.config.keepSearchQuery.name": "Сохранять Поисковый Запрос",
   "lucidadvancements.gui.config.keepSearchQuery.desc": "Сохраняет поисковый запрос при повторном открытии меню",
   "lucidadvancements.gui.config.useConfigWatcher.name": "Использовать Config Watcher",
@@ -95,7 +101,6 @@
   "lucidadvancements.gui.config.overlayCriterionXOffset.desc": "Смещение критериев по оси X",
   "lucidadvancements.gui.config.overlayCriterionMaxWidthPadding.name": "Отступ Максимальной Ширины Критерия Оверлея",
   "lucidadvancements.gui.config.overlayCriterionMaxWidthPadding.desc": "Отступ, вычитаемый из ширины для обрезки критериев",
-
   "lucidadvancements.gui.config.cardNormalBg1.name": "Начало Градиента Фона Обычной Карточки",
   "lucidadvancements.gui.config.cardNormalBg1.desc": "Начало градиента фона",
   "lucidadvancements.gui.config.cardNormalBg2.name": "Конец Градиента Фона Обычной Карточки",
@@ -168,7 +173,6 @@
   "lucidadvancements.gui.config.cardTrackIconXOffset.desc": "Смещение значка отслеживания по оси X (от правого края)",
   "lucidadvancements.gui.config.cardStatusIconXOffset.name": "Смещение X Значка Статуса Карточки",
   "lucidadvancements.gui.config.cardStatusIconXOffset.desc": "Смещение значка статуса по оси X (от правого края)",
-
   "lucidadvancements.gui.config.screenSidebarWidth.name": "Ширина Боковой Панели Экрана",
   "lucidadvancements.gui.config.screenSidebarWidth.desc": "Ширина боковой панели",
   "lucidadvancements.gui.config.screenTopBarHeight.name": "Высота Верхней Панели Экрана",
@@ -255,7 +259,6 @@
   "lucidadvancements.gui.config.screenScrollbarThumbActive.desc": "Цвет активного ползунка полосы прокрутки",
   "lucidadvancements.gui.config.screenScrollbarThumbIdle.name": "Цвет Неактивного Ползунка Полосы Прокрутки Экрана",
   "lucidadvancements.gui.config.screenScrollbarThumbIdle.desc": "Цвет неактивного ползунка полосы прокрутки",
-
   "lucidadvancements.gui.config.widgetBackgroundHovered.name": "Фон Виджета При Наведении",
   "lucidadvancements.gui.config.widgetBackgroundHovered.desc": "Фон виджета при наведении курсора",
   "lucidadvancements.gui.config.widgetBackgroundIdle.name": "Фон Неактивного Виджета",
@@ -268,7 +271,6 @@
   "lucidadvancements.gui.config.widgetTextHovered.desc": "Текст виджета при наведении курсора",
   "lucidadvancements.gui.config.widgetTextIdle.name": "Текст Неактивного Виджета",
   "lucidadvancements.gui.config.widgetTextIdle.desc": "Текст неактивного виджета",
-
   "lucidadvancements.gui.config.dropdownOptionBackground.name": "Фон Опции Выпадающего Списка",
   "lucidadvancements.gui.config.dropdownOptionBackground.desc": "Фон выпадающего списка",
   "lucidadvancements.gui.config.dropdownOptionHover.name": "Заливка При Наведении на Опцию Выпадающего Списка",
@@ -281,7 +283,8 @@
   "lucidadvancements.gui.config.dropdownArrowClosed.desc": "Символ стрелки для закрытого выпадающего меню",
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "Символ Стрелки Открытого Меню",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "Символ стрелки для открытого выпадающего меню",
-
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Многоточие Обрезки Боковой Панели",
-  "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Суффикс для обрезанных заголовков боковой панели"
+  "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Суффикс для обрезанных заголовков боковой панели",
+  "lucidadvancements.gui.config.sidebarOrganization.name": "Организация боковой панели",
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "Организация категорий, 0 = По умолчанию, 1 = По алфавиту"
 }

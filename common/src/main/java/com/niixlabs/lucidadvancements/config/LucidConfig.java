@@ -24,7 +24,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Config watcher (Needs Restart)")
     public static boolean useConfigWatcher = false;
 
-    @ConfigSection("HUD OVERLAY")
+    @ConfigSection("hud_overlay")
     @ConfigOption(comment = "Background color for pinned boxes", hex = true)
     public static int overlayBgColor = 0x880A0A0A;
 
@@ -103,7 +103,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Padding subtracted from width to truncate criteria")
     public static int overlayCriterionMaxWidthPadding = 10;
 
-    @ConfigSection("LOCKED NORMAL")
+    @ConfigSection("locked_normal")
     @ConfigOption(comment = "Background gradient start", hex = true)
     public static int cardNormalBg1 = 0xAA1A1A1A;
 
@@ -116,14 +116,14 @@ public final class LucidConfig {
     @ConfigOption(comment = "Title text color", hex = true)
     public static int cardNormalTitle = 0xFFFFFFFF;
 
-    @ConfigSection("LOCKED CHALLENGE")
+    @ConfigSection("locked_challenge")
     @ConfigOption(comment = "Border color", hex = true)
     public static int cardRareBorder = 0xAA440077;
 
     @ConfigOption(comment = "Title text color", hex = true)
     public static int cardRareTitle = 0xFFCC77FF;
 
-    @ConfigSection("COMPLETED NORMAL")
+    @ConfigSection("completed_normal")
     @ConfigOption(comment = "Background gradient start", hex = true)
     public static int cardObtainedBg1 = 0xBB142E1F;
 
@@ -136,7 +136,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Title text color", hex = true)
     public static int cardObtainedTitle = 0xFF77FFAA;
 
-    @ConfigSection("COMPLETED CHALLENGE")
+    @ConfigSection("completed_challenge")
     @ConfigOption(comment = "Background gradient start", hex = true)
     public static int cardObtainedRareBg1 = 0xBB2D1438;
 
@@ -149,7 +149,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Title text color", hex = true)
     public static int cardObtainedRareTitle = 0xFFFF77FF;
 
-    @ConfigSection("CARD COLORS")
+    @ConfigSection("card_colors")
     @ConfigOption(comment = "Accent color for tracked cards", hex = true)
     public static int cardTrackedActiveColor = 0xFF00FFAA;
 
@@ -189,7 +189,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Text replacing hidden titles/descriptions")
     public static String cardHiddenLabel = "???";
 
-    @ConfigSection("CARD LAYOUT")
+    @ConfigSection("card_layout")
     @ConfigOption(comment = "Minimum card height")
     public static int cardBaseHeightMin = 46;
 
@@ -217,7 +217,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Status icon X offset (from right edge)")
     public static int cardStatusIconXOffset = 30;
 
-    @ConfigSection("SCREEN LAYOUT")
+    @ConfigSection("screen_layout")
     @ConfigOption(comment = "Sidebar width")
     public static int screenSidebarWidth = 100;
 
@@ -257,7 +257,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Scrollbar right margin")
     public static int screenScrollbarRightMargin = 12;
 
-    @ConfigSection("SCREEN COLORS")
+    @ConfigSection("screen_colors")
     @ConfigOption(comment = "Screen backdrop color", hex = true)
     public static int screenBackdropColor = 0xD0101010;
 
@@ -348,7 +348,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Idle scrollbar thumb color", hex = true)
     public static int screenScrollbarThumbIdle = 0xAA00FFAA;
 
-    @ConfigSection("WIDGETS")
+    @ConfigSection("widgets")
     @ConfigOption(comment = "Hovered widget background", hex = true)
     public static int widgetBackgroundHovered = 0xEE1E1E1E;
 
@@ -385,7 +385,7 @@ public final class LucidConfig {
     @ConfigOption(comment = "Open dropdown arrow glyph")
     public static String dropdownArrowOpen = "\u25B4";
 
-    @ConfigSection("SIDEBAR")
+    @ConfigSection("sidebar")
     @ConfigOption(comment = "Category organization. 0 = Default, 1 = Alphabetical")
     public static int sidebarOrganization = 0;
 

@@ -1,44 +1,50 @@
 {
   "lucidadvancements.gui.title": "Fortschritte",
-
   "lucidadvancements.gui.global_category.tab_name": "Übersicht",
   "lucidadvancements.gui.global_category.title": "Globale Übersicht",
-  "lucidadvancements.gui.global_category.desc": "Verfolge deinen Fortschritt in allen Mods und Kategorien.",
-
+  "lucidadvancements.gui.global_category.desc": "Verfolge deinen Fortschritt in allen Mods und Kategorien",
   "lucidadvancements.gui.search.placeholder": "Suchen...",
-
   "lucidadvancements.gui.filter.all": "Filter: Alle",
   "lucidadvancements.gui.filter.completed": "Filter: Abgeschlossen",
   "lucidadvancements.gui.filter.incomplete": "Filter: Unvollständig",
   "lucidadvancements.gui.filter.challenges": "Filter: Herausforderungen",
   "lucidadvancements.gui.filter.partial": "Filter: Teilweise",
   "lucidadvancements.gui.filter.tracked": "Filter: Verfolgt",
-
   "lucidadvancements.gui.scale.mode.vanilla": "Auto",
   "lucidadvancements.gui.scale.mode.custom": "%s",
-
   "lucidadvancements.gui.progress_text": "%s / %s",
   "lucidadvancements.gui.progressbar.tracked.prefix": "Verfolgt: ",
-
   "lucidadvancements.gui.card.requirements": "Anforderungen:",
   "lucidadvancements.gui.card.no_requirements": "• Keine sichtbaren Anforderungen...",
-
   "lucidadvancements.overlay.hidden_count": "  + %s weitere...",
-
   "lucidadvancements.gui.config.save_and_exit": "⬅ Speichern & Zurück",
+  "lucidadvancements.gui.config.reload": "Neu laden",
   "lucidadvancements.gui.config.section.general": "ALLGEMEIN",
+  "lucidadvancements.gui.config.section.hud_overlay": "HUD OVERLAY",
+  "lucidadvancements.gui.config.section.locked_normal": "LOCKED NORMAL",
+  "lucidadvancements.gui.config.section.locked_challenge": "LOCKED CHALLENGE",
+  "lucidadvancements.gui.config.section.completed_normal": "COMPLETED NORMAL",
+  "lucidadvancements.gui.config.section.completed_challenge": "COMPLETED CHALLENGE",
+  "lucidadvancements.gui.config.section.card_colors": "CARD COLORS",
+  "lucidadvancements.gui.config.section.card_layout": "CARD LAYOUT",
+  "lucidadvancements.gui.config.section.screen_layout": "SCREEN LAYOUT",
+  "lucidadvancements.gui.config.section.screen_colors": "SCREEN COLORS",
+  "lucidadvancements.gui.config.section.widgets": "WIDGETS",
+  "lucidadvancements.gui.config.section.sidebar": "SEITENLEISTE",
   "lucidadvancements.gui.config.title": "Lucid Advancements Konfiguration",
-
+  "lucidadvancements.gui.config.color_picker.title": "Farbwähler",
+  "lucidadvancements.gui.config.color_picker.cancel": "Abbrechen",
+  "lucidadvancements.gui.config.color_picker.apply": "Anwenden",
   "lucidadvancements.gui.config.customGuiScale.name": "Benutzerdefinierte GUI-Skalierung",
-  "lucidadvancements.gui.config.customGuiScale.desc": "GUI-Skalierung. 0 = Automatisch, 1-8 = Feste Skalierung",
+  "lucidadvancements.gui.config.customGuiScale.desc": "GUI-Skalierung, 0 = Automatisch, 1-8 = Feste Skalierung",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "Minimale Virtuelle Breite",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.desc": "Minimale virtuelle Breite für automatische Skalierung",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.name": "Minimale Virtuelle Höhe",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.desc": "Minimale virtuelle Höhe für automatische Skalierung",
   "lucidadvancements.gui.config.sidebarScrollSpeed.name": "Seitenleisten-Scrollgeschwindigkeit",
-  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Passt die Scrollgeschwindigkeit des Mausrads für die Kategorien-Seitenleiste an.",
+  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Passt die Scrollgeschwindigkeit des Mausrads für die Kategorien-Seitenleiste an",
   "lucidadvancements.gui.config.mainScrollSpeed.name": "Hauptbereich-Scrollgeschwindigkeit",
-  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Passt die Scrollgeschwindigkeit des Mausrads für den Fortschrittsbereich an.",
+  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Passt die Scrollgeschwindigkeit des Mausrads für den Fortschrittsbereich an",
   "lucidadvancements.gui.config.keepSearchQuery.name": "Suchanfrage Beibehalten",
   "lucidadvancements.gui.config.keepSearchQuery.desc": "Behält die Suchanfrage beim erneuten Öffnen des Menüs bei",
   "lucidadvancements.gui.config.useConfigWatcher.name": "Config Watcher Verwenden",
@@ -95,7 +101,6 @@
   "lucidadvancements.gui.config.overlayCriterionXOffset.desc": "X-Versatz der Kriterien",
   "lucidadvancements.gui.config.overlayCriterionMaxWidthPadding.name": "Overlay Kriterium Max. Breitenabstand",
   "lucidadvancements.gui.config.overlayCriterionMaxWidthPadding.desc": "Von der Breite abgezogener Abstand zum Abschneiden von Kriterien",
-
   "lucidadvancements.gui.config.cardNormalBg1.name": "Karte Normal Hintergrundverlauf Start",
   "lucidadvancements.gui.config.cardNormalBg1.desc": "Start des Hintergrundverlaufs",
   "lucidadvancements.gui.config.cardNormalBg2.name": "Karte Normal Hintergrundverlauf Ende",
@@ -168,7 +173,6 @@
   "lucidadvancements.gui.config.cardTrackIconXOffset.desc": "X-Versatz des Verfolgungssymbols (vom rechten Rand)",
   "lucidadvancements.gui.config.cardStatusIconXOffset.name": "Karte Statussymbol X-Versatz",
   "lucidadvancements.gui.config.cardStatusIconXOffset.desc": "X-Versatz des Statussymbols (vom rechten Rand)",
-
   "lucidadvancements.gui.config.screenSidebarWidth.name": "Bildschirm Seitenleistenbreite",
   "lucidadvancements.gui.config.screenSidebarWidth.desc": "Breite der Seitenleiste",
   "lucidadvancements.gui.config.screenTopBarHeight.name": "Bildschirm Obere Leiste Höhe",
@@ -255,7 +259,6 @@
   "lucidadvancements.gui.config.screenScrollbarThumbActive.desc": "Farbe des aktiven Scrollleistengriffs",
   "lucidadvancements.gui.config.screenScrollbarThumbIdle.name": "Bildschirm Scrollleiste Griff Inaktiv Farbe",
   "lucidadvancements.gui.config.screenScrollbarThumbIdle.desc": "Farbe des inaktiven Scrollleistengriffs",
-
   "lucidadvancements.gui.config.widgetBackgroundHovered.name": "Widget Hintergrund Bei Hover",
   "lucidadvancements.gui.config.widgetBackgroundHovered.desc": "Widget-Hintergrund beim Überfahren mit der Maus",
   "lucidadvancements.gui.config.widgetBackgroundIdle.name": "Widget Hintergrund Inaktiv",
@@ -268,7 +271,6 @@
   "lucidadvancements.gui.config.widgetTextHovered.desc": "Widget-Text beim Überfahren mit der Maus",
   "lucidadvancements.gui.config.widgetTextIdle.name": "Widget Text Inaktiv",
   "lucidadvancements.gui.config.widgetTextIdle.desc": "Text des inaktiven Widgets",
-
   "lucidadvancements.gui.config.dropdownOptionBackground.name": "Dropdown-Option Hintergrund",
   "lucidadvancements.gui.config.dropdownOptionBackground.desc": "Hintergrund der Dropdown-Liste",
   "lucidadvancements.gui.config.dropdownOptionHover.name": "Dropdown-Option Hover-Füllung",
@@ -281,7 +283,8 @@
   "lucidadvancements.gui.config.dropdownArrowClosed.desc": "Pfeilsymbol für geschlossenes Dropdown-Menü",
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "Dropdown Pfeilsymbol Geöffnet",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "Pfeilsymbol für geöffnetes Dropdown-Menü",
-
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Seitenleiste Kürzungspunkte",
-  "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Suffix für gekürzte Seitenleistentitel"
+  "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Suffix für gekürzte Seitenleistentitel",
+  "lucidadvancements.gui.config.sidebarOrganization.name": "Seitenleisten-Anordnung",
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "Kategorien-Anordnung, 0 = Standard, 1 = Alphabetisch"
 }
