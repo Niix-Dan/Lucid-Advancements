@@ -1,22 +1,30 @@
 {
   "lucidadvancements.gui.title": "Conquistas",
+
   "lucidadvancements.gui.global_category.tab_name": "Geral",
   "lucidadvancements.gui.global_category.title": "Visão Geral",
   "lucidadvancements.gui.global_category.desc": "Veja o seu progresso em todas as categorias e mods",
+
   "lucidadvancements.gui.search.placeholder": "Buscar...",
+
   "lucidadvancements.gui.filter.all": "Filtro: Todos",
   "lucidadvancements.gui.filter.completed": "Filtro: Concluídos",
   "lucidadvancements.gui.filter.incomplete": "Filtro: Incompletos",
   "lucidadvancements.gui.filter.challenges": "Filtro: Desafios",
   "lucidadvancements.gui.filter.partial": "Filtro: Parcial",
   "lucidadvancements.gui.filter.tracked": "Filtro: Marcados",
+
   "lucidadvancements.gui.scale.mode.vanilla": "Auto",
   "lucidadvancements.gui.scale.mode.custom": "%s",
+
   "lucidadvancements.gui.progress_text": "%s / %s",
   "lucidadvancements.gui.progressbar.tracked.prefix": "Marcado: ",
+
   "lucidadvancements.gui.card.requirements": "Requisitos:",
   "lucidadvancements.gui.card.no_requirements": "• Nenhum requisito visível...",
+
   "lucidadvancements.overlay.hidden_count": "  + %s outros...",
+
   "lucidadvancements.gui.config.save_and_exit": "⬅ Salvar e Voltar",
   "lucidadvancements.gui.config.reload": "Recarregar",
   "lucidadvancements.gui.config.section.general": "GERAL",
@@ -35,6 +43,7 @@
   "lucidadvancements.gui.config.color_picker.title": "Seletor de cor",
   "lucidadvancements.gui.config.color_picker.cancel": "Cancelar",
   "lucidadvancements.gui.config.color_picker.apply": "Aplicar",
+
   "lucidadvancements.gui.config.customGuiScale.name": "Escala de Interface Personalizada",
   "lucidadvancements.gui.config.customGuiScale.desc": "Escala da interface, 0 = Automático, 1-8 = Escala Fixa",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "Largura Virtual Mínima",
@@ -101,6 +110,7 @@
   "lucidadvancements.gui.config.overlayCriterionXOffset.desc": "Deslocamento X dos critérios",
   "lucidadvancements.gui.config.overlayCriterionMaxWidthPadding.name": "Espaçamento de Largura Máxima do Critério do Overlay",
   "lucidadvancements.gui.config.overlayCriterionMaxWidthPadding.desc": "Espaçamento subtraído da largura para truncar critérios",
+
   "lucidadvancements.gui.config.cardNormalBg1.name": "Início do Gradiente de Fundo do Card Normal",
   "lucidadvancements.gui.config.cardNormalBg1.desc": "Início do gradiente de fundo",
   "lucidadvancements.gui.config.cardNormalBg2.name": "Fim do Gradiente de Fundo do Card Normal",
@@ -173,6 +183,7 @@
   "lucidadvancements.gui.config.cardTrackIconXOffset.desc": "Deslocamento X do ícone de rastreamento (a partir da borda direita)",
   "lucidadvancements.gui.config.cardStatusIconXOffset.name": "Deslocamento X do Ícone de Status do Card",
   "lucidadvancements.gui.config.cardStatusIconXOffset.desc": "Deslocamento X do ícone de status (a partir da borda direita)",
+
   "lucidadvancements.gui.config.screenSidebarWidth.name": "Largura da Barra Lateral da Tela",
   "lucidadvancements.gui.config.screenSidebarWidth.desc": "Largura da barra lateral",
   "lucidadvancements.gui.config.screenTopBarHeight.name": "Altura da Barra Superior da Tela",
@@ -259,6 +270,7 @@
   "lucidadvancements.gui.config.screenScrollbarThumbActive.desc": "Cor do cursor ativo da barra de rolagem",
   "lucidadvancements.gui.config.screenScrollbarThumbIdle.name": "Cor do Cursor Inativo da Barra de Rolagem da Tela",
   "lucidadvancements.gui.config.screenScrollbarThumbIdle.desc": "Cor do cursor inativo da barra de rolagem",
+
   "lucidadvancements.gui.config.widgetBackgroundHovered.name": "Fundo do Widget ao Passar o Mouse",
   "lucidadvancements.gui.config.widgetBackgroundHovered.desc": "Fundo do widget ao passar o mouse",
   "lucidadvancements.gui.config.widgetBackgroundIdle.name": "Fundo do Widget Inativo",
@@ -271,6 +283,7 @@
   "lucidadvancements.gui.config.widgetTextHovered.desc": "Texto do widget ao passar o mouse",
   "lucidadvancements.gui.config.widgetTextIdle.name": "Texto do Widget Inativo",
   "lucidadvancements.gui.config.widgetTextIdle.desc": "Texto do widget inativo",
+
   "lucidadvancements.gui.config.dropdownOptionBackground.name": "Fundo da Opção do Menu Suspenso",
   "lucidadvancements.gui.config.dropdownOptionBackground.desc": "Fundo da lista suspensa",
   "lucidadvancements.gui.config.dropdownOptionHover.name": "Preenchimento ao Passar o Mouse na Opção do Menu Suspenso",
@@ -283,8 +296,9 @@
   "lucidadvancements.gui.config.dropdownArrowClosed.desc": "Glifo de seta para o menu suspenso fechado",
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "Glifo da Seta do Menu Aberto",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "Glifo de seta para o menu suspenso aberto",
-  "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Reticências de Truncamento da Barra Lateral",
-  "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Sufixo para os títulos truncados da barra lateral",
+
   "lucidadvancements.gui.config.sidebarOrganization.name": "Organização da barra lateral",
-  "lucidadvancements.gui.config.sidebarOrganization.desc": "Organização das categorias, 0 = Padrão, 1 = Alfabético"
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "Organização das categorias, 0 = Padrão, 1 = Alfabético",
+  "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Reticências de Truncamento da Barra Lateral",
+  "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Sufixo para os títulos truncados da barra lateral"
 }
