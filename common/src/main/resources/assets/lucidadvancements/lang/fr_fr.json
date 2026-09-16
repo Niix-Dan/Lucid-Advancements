@@ -3,7 +3,7 @@
 
   "lucidadvancements.gui.global_category.tab_name": "Aperçu",
   "lucidadvancements.gui.global_category.title": "Aperçu Global",
-  "lucidadvancements.gui.global_category.desc": "Suivez votre progression dans chaque mod et catégorie.",
+  "lucidadvancements.gui.global_category.desc": "Suivez votre progression dans chaque mod et catégorie",
 
   "lucidadvancements.gui.search.placeholder": "Rechercher...",
 
@@ -26,19 +26,34 @@
   "lucidadvancements.overlay.hidden_count": "  + %s de plus...",
 
   "lucidadvancements.gui.config.save_and_exit": "⬅ Sauvegarder & Retour",
+  "lucidadvancements.gui.config.reload": "Recharger",
   "lucidadvancements.gui.config.section.general": "GÉNÉRAL",
+  "lucidadvancements.gui.config.section.hud_overlay": "OVERLAY HUD",
+  "lucidadvancements.gui.config.section.locked_normal": "VERROUILLÉ NORMAL",
+  "lucidadvancements.gui.config.section.locked_challenge": "VERROUILLÉ DÉFI",
+  "lucidadvancements.gui.config.section.completed_normal": "TERMINÉ NORMAL",
+  "lucidadvancements.gui.config.section.completed_challenge": "TERMINÉ DÉFI",
+  "lucidadvancements.gui.config.section.card_colors": "COULEURS DE CARTE",
+  "lucidadvancements.gui.config.section.card_layout": "MISE EN PAGE DE CARTE",
+  "lucidadvancements.gui.config.section.screen_layout": "MISE EN PAGE D'ÉCRAN",
+  "lucidadvancements.gui.config.section.screen_colors": "COULEURS D'ÉCRAN",
+  "lucidadvancements.gui.config.section.widgets": "WIDGETS",
+  "lucidadvancements.gui.config.section.sidebar": "BARRE LATÉRALE",
   "lucidadvancements.gui.config.title": "Configuration de Lucid Advancements",
+  "lucidadvancements.gui.config.color_picker.title": "Sélecteur de couleur",
+  "lucidadvancements.gui.config.color_picker.cancel": "Annuler",
+  "lucidadvancements.gui.config.color_picker.apply": "Appliquer",
 
   "lucidadvancements.gui.config.customGuiScale.name": "Échelle de l'Interface Personnalisée",
-  "lucidadvancements.gui.config.customGuiScale.desc": "Échelle de l'interface. 0 = Auto, 1-8 = Échelle Fixe",
+  "lucidadvancements.gui.config.customGuiScale.desc": "Échelle de l'interface, 0 = Auto, 1-8 = Échelle Fixe",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "Largeur Virtuelle Minimale",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.desc": "Largeur virtuelle minimale pour la mise à l'échelle automatique",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.name": "Hauteur Virtuelle Minimale",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.desc": "Hauteur virtuelle minimale pour la mise à l'échelle automatique",
   "lucidadvancements.gui.config.sidebarScrollSpeed.name": "Vitesse de défilement de la barre latérale",
-  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Ajuste la vitesse de défilement de la molette de la souris pour la barre latérale des catégories.",
+  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Ajuste la vitesse de défilement de la molette de la souris pour la barre latérale des catégories",
   "lucidadvancements.gui.config.mainScrollSpeed.name": "Vitesse de défilement de la zone principale",
-  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Ajuste la vitesse de défilement de la molette de la souris pour la zone des avancements.",
+  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Ajuste la vitesse de défilement de la molette de la souris pour la zone des avancements",
   "lucidadvancements.gui.config.keepSearchQuery.name": "Conserver la Recherche",
   "lucidadvancements.gui.config.keepSearchQuery.desc": "Conserve la recherche à la réouverture du menu",
   "lucidadvancements.gui.config.useConfigWatcher.name": "Utiliser le Config Watcher",
@@ -282,6 +297,8 @@
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "Glyphe de la Flèche du Menu Ouvert",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "Glyphe de flèche pour le menu déroulant ouvert",
 
+  "lucidadvancements.gui.config.sidebarOrganization.name": "Organisation de la barre latérale",
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "Organisation des catégories, 0 = Par défaut, 1 = Alphabétique",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Points de Suspension de Troncature de la Barre Latérale",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Suffixe pour les titres tronqués de la barre latérale"
 }

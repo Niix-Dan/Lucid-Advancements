@@ -3,7 +3,7 @@
 
   "lucidadvancements.gui.global_category.tab_name": "Обзор",
   "lucidadvancements.gui.global_category.title": "Глобальный обзор",
-  "lucidadvancements.gui.global_category.desc": "Отслеживайте свой прогресс во всех модах и категориях.",
+  "lucidadvancements.gui.global_category.desc": "Отслеживайте свой прогресс во всех модах и категориях",
 
   "lucidadvancements.gui.search.placeholder": "Поиск...",
 
@@ -26,19 +26,34 @@
   "lucidadvancements.overlay.hidden_count": "  + еще %s...",
 
   "lucidadvancements.gui.config.save_and_exit": "⬅ Сохранить и назад",
+  "lucidadvancements.gui.config.reload": "Перезагрузить",
   "lucidadvancements.gui.config.section.general": "ОБЩИЕ",
+  "lucidadvancements.gui.config.section.hud_overlay": "HUD ОВЕРЛЕЙ",
+  "lucidadvancements.gui.config.section.locked_normal": "ЗАБЛОКИРОВАНО ОБЫЧНОЕ",
+  "lucidadvancements.gui.config.section.locked_challenge": "ЗАБЛОКИРОВАНО ИСПЫТАНИЕ",
+  "lucidadvancements.gui.config.section.completed_normal": "ЗАВЕРШЕНО ОБЫЧНОЕ",
+  "lucidadvancements.gui.config.section.completed_challenge": "ЗАВЕРШЕНО ИСПЫТАНИЕ",
+  "lucidadvancements.gui.config.section.card_colors": "ЦВЕТА КАРТОЧКИ",
+  "lucidadvancements.gui.config.section.card_layout": "МАКЕТ КАРТОЧКИ",
+  "lucidadvancements.gui.config.section.screen_layout": "МАКЕТ ЭКРАНА",
+  "lucidadvancements.gui.config.section.screen_colors": "ЦВЕТА ЭКРАНА",
+  "lucidadvancements.gui.config.section.widgets": "ВИДЖЕТЫ",
+  "lucidadvancements.gui.config.section.sidebar": "БОКОВАЯ ПАНЕЛЬ",
   "lucidadvancements.gui.config.title": "Настройки",
+  "lucidadvancements.gui.config.color_picker.title": "Выбор цвета",
+  "lucidadvancements.gui.config.color_picker.cancel": "Отмена",
+  "lucidadvancements.gui.config.color_picker.apply": "Применить",
 
   "lucidadvancements.gui.config.customGuiScale.name": "Пользовательский Масштаб Интерфейса",
-  "lucidadvancements.gui.config.customGuiScale.desc": "Масштаб интерфейса. 0 = Авто, 1-8 = Фиксированный Масштаб",
+  "lucidadvancements.gui.config.customGuiScale.desc": "Масштаб интерфейса, 0 = Авто, 1-8 = Фиксированный Масштаб",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "Минимальная Виртуальная Ширина",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.desc": "Минимальная виртуальная ширина для автомасштабирования",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.name": "Минимальная Виртуальная Высота",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.desc": "Минимальная виртуальная высота для автомасштабирования",
   "lucidadvancements.gui.config.sidebarScrollSpeed.name": "Скорость прокрутки боковой панели",
-  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Настраивает скорость прокрутки колесом мыши для боковой панели категорий.",
+  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Настраивает скорость прокрутки колесом мыши для боковой панели категорий",
   "lucidadvancements.gui.config.mainScrollSpeed.name": "Скорость прокрутки основной области",
-  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Настраивает скорость прокрутки колесом мыши для области достижений.",
+  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Настраивает скорость прокрутки колесом мыши для области достижений",
   "lucidadvancements.gui.config.keepSearchQuery.name": "Сохранять Поисковый Запрос",
   "lucidadvancements.gui.config.keepSearchQuery.desc": "Сохраняет поисковый запрос при повторном открытии меню",
   "lucidadvancements.gui.config.useConfigWatcher.name": "Использовать Config Watcher",
@@ -282,6 +297,8 @@
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "Символ Стрелки Открытого Меню",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "Символ стрелки для открытого выпадающего меню",
 
+  "lucidadvancements.gui.config.sidebarOrganization.name": "Организация боковой панели",
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "Организация категорий, 0 = По умолчанию, 1 = По алфавиту",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Многоточие Обрезки Боковой Панели",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Суффикс для обрезанных заголовков боковой панели"
 }
