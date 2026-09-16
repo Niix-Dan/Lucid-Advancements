@@ -10,6 +10,7 @@ import net.minecraft.server.packs.resources.Resource;
 
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ public final class CriterionTranslator {
     private static final String[] REGISTRY_PREFIXES = {
             "biome", "entity", "item", "block", "cat_variant", "frog_variant", "wolf_variant", "painting"
     };
+    private static final String TRIM_TEMPLATE_SUFFIX = "_armor_trim_smithing_template_smithing_trim";
 
     private static final Map<String, Map<String, String>> MOD_TRANSLATIONS = new HashMap<>();
     private static final Map<String, String> RESOLVED_CRITERIA = new HashMap<>();
@@ -77,6 +79,29 @@ public final class CriterionTranslator {
 
         for (String prefix : REGISTRY_PREFIXES) {
             String key = prefix + "." + namespace + "." + path;
+            if (I18n.exists(key)) {
+                return I18n.get(key);
+            }
+        }
+
+        return findTrimPattern(rawCriterion);
+    }
+
+    private static String findTrimPattern(String rawCriterion) {
+        String lower = rawCriterion.toLowerCase(Locale.ROOT);
+        if (!lower.endsWith(TRIM_TEMPLATE_SUFFIX)) {
+            return null;
+        }
+
+        int colon = lower.indexOf(':');
+        if (colon < 0) {
+            return null;
+        }
+
+        String pattern = lower.substring(colon + 1, lower.length() - TRIM_TEMPLATE_SUFFIX.length());
+        String wrappedNamespace = lower.substring(0, colon);
+        for (int i = wrappedNamespace.indexOf('_'); i >= 0; i = wrappedNamespace.indexOf('_', i + 1)) {
+            String key = "trim_pattern." + wrappedNamespace.substring(i + 1) + "." + pattern;
             if (I18n.exists(key)) {
                 return I18n.get(key);
             }

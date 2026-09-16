@@ -3,7 +3,7 @@
 
   "lucidadvancements.gui.global_category.tab_name": "Geral",
   "lucidadvancements.gui.global_category.title": "Visão Geral",
-  "lucidadvancements.gui.global_category.desc": "Veja o seu progresso em todas as categorias e mods.",
+  "lucidadvancements.gui.global_category.desc": "Veja o seu progresso em todas as categorias e mods",
 
   "lucidadvancements.gui.search.placeholder": "Buscar...",
 
@@ -28,18 +28,32 @@
   "lucidadvancements.gui.config.save_and_exit": "⬅ Salvar e Voltar",
   "lucidadvancements.gui.config.reload": "Recarregar",
   "lucidadvancements.gui.config.section.general": "GERAL",
+  "lucidadvancements.gui.config.section.hud_overlay": "OVERLAY HUD",
+  "lucidadvancements.gui.config.section.locked_normal": "BLOQUEADO NORMAL",
+  "lucidadvancements.gui.config.section.locked_challenge": "BLOQUEADO DESAFIO",
+  "lucidadvancements.gui.config.section.completed_normal": "COMPLETADO NORMAL",
+  "lucidadvancements.gui.config.section.completed_challenge": "COMPLETADO DESAFIO",
+  "lucidadvancements.gui.config.section.card_colors": "CORES DO CARTÃO",
+  "lucidadvancements.gui.config.section.card_layout": "LAYOUT DO CARTÃO",
+  "lucidadvancements.gui.config.section.screen_layout": "LAYOUT DA TELA",
+  "lucidadvancements.gui.config.section.screen_colors": "CORES DA TELA",
+  "lucidadvancements.gui.config.section.widgets": "WIDGETS",
+  "lucidadvancements.gui.config.section.sidebar": "BARRA LATERAL",
   "lucidadvancements.gui.config.title": "Configuração do Lucid Advancements",
+  "lucidadvancements.gui.config.color_picker.title": "Seletor de cor",
+  "lucidadvancements.gui.config.color_picker.cancel": "Cancelar",
+  "lucidadvancements.gui.config.color_picker.apply": "Aplicar",
 
   "lucidadvancements.gui.config.customGuiScale.name": "Escala de Interface Personalizada",
-  "lucidadvancements.gui.config.customGuiScale.desc": "Escala da interface. 0 = Automático, 1-8 = Escala Fixa",
+  "lucidadvancements.gui.config.customGuiScale.desc": "Escala da interface, 0 = Automático, 1-8 = Escala Fixa",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "Largura Virtual Mínima",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.desc": "Largura virtual mínima para o dimensionamento automático",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.name": "Altura Virtual Mínima",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.desc": "Altura virtual mínima para o dimensionamento automático",
   "lucidadvancements.gui.config.sidebarScrollSpeed.name": "Velocidade de rolagem da barra lateral",
-  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Ajusta a velocidade de rolagem da roda do mouse para a barra lateral de categorias.",
+  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Ajusta a velocidade de rolagem da roda do mouse para a barra lateral de categorias",
   "lucidadvancements.gui.config.mainScrollSpeed.name": "Velocidade de rolagem da área principal",
-  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Ajusta a velocidade de rolagem da roda do mouse para a área de avanços.",
+  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Ajusta a velocidade de rolagem da roda do mouse para a área de avanços",
   "lucidadvancements.gui.config.keepSearchQuery.name": "Manter Pesquisa",
   "lucidadvancements.gui.config.keepSearchQuery.desc": "Mantém a pesquisa ao reabrir o menu",
   "lucidadvancements.gui.config.useConfigWatcher.name": "Usar Config Watcher",
@@ -283,6 +297,8 @@
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "Glifo da Seta do Menu Aberto",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "Glifo de seta para o menu suspenso aberto",
 
+  "lucidadvancements.gui.config.sidebarOrganization.name": "Organização da barra lateral",
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "Organização das categorias, 0 = Padrão, 1 = Alfabético",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Reticências de Truncamento da Barra Lateral",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Sufixo para os títulos truncados da barra lateral"
 }

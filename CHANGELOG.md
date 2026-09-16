@@ -1,3 +1,12 @@
+## v1.2.2
+
+* Add multilingual support for config section titles #36
+* Fix category titles and descriptions not following the selected language by storing keys instead of resolved text #36
+* Add vanilla advancement criteria translations for all supported languages #36
+* Resolve armor trim criteria via trim_pattern.* and add names for animal variants #36
+
+---
+
 ## v1.2.1
 
 * Added ScrollSpeed Options to the Config Screen #32

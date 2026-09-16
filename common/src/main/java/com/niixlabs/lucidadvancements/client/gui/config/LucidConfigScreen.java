@@ -70,9 +70,10 @@ public class LucidConfigScreen extends Screen {
         for (Field field : LucidConfig.class.getDeclaredFields()) {
             ConfigSection sectionAnn = field.getAnnotation(ConfigSection.class);
             if (sectionAnn != null) {
-                currentHeader = new SectionHeaderEntry(sectionAnn.value());
+                String sectionTitle = Component.translatable(Constants.MOD_ID + ".gui.config.section." + sectionAnn.value()).getString();
+                currentHeader = new SectionHeaderEntry(sectionTitle);
                 entries.add(currentHeader);
-                sidebarSections.add(new SidebarSection(sectionAnn.value(), currentHeader));
+                sidebarSections.add(new SidebarSection(sectionTitle, currentHeader));
             }
 
             ConfigOption optionAnn = field.getAnnotation(ConfigOption.class);

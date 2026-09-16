@@ -3,7 +3,7 @@
 
   "lucidadvancements.gui.global_category.tab_name": "Übersicht",
   "lucidadvancements.gui.global_category.title": "Globale Übersicht",
-  "lucidadvancements.gui.global_category.desc": "Verfolge deinen Fortschritt in allen Mods und Kategorien.",
+  "lucidadvancements.gui.global_category.desc": "Verfolge deinen Fortschritt in allen Mods und Kategorien",
 
   "lucidadvancements.gui.search.placeholder": "Suchen...",
 
@@ -26,19 +26,34 @@
   "lucidadvancements.overlay.hidden_count": "  + %s weitere...",
 
   "lucidadvancements.gui.config.save_and_exit": "⬅ Speichern & Zurück",
+  "lucidadvancements.gui.config.reload": "Neu laden",
   "lucidadvancements.gui.config.section.general": "ALLGEMEIN",
+  "lucidadvancements.gui.config.section.hud_overlay": "HUD OVERLAY",
+  "lucidadvancements.gui.config.section.locked_normal": "LOCKED NORMAL",
+  "lucidadvancements.gui.config.section.locked_challenge": "LOCKED CHALLENGE",
+  "lucidadvancements.gui.config.section.completed_normal": "COMPLETED NORMAL",
+  "lucidadvancements.gui.config.section.completed_challenge": "COMPLETED CHALLENGE",
+  "lucidadvancements.gui.config.section.card_colors": "CARD COLORS",
+  "lucidadvancements.gui.config.section.card_layout": "CARD LAYOUT",
+  "lucidadvancements.gui.config.section.screen_layout": "SCREEN LAYOUT",
+  "lucidadvancements.gui.config.section.screen_colors": "SCREEN COLORS",
+  "lucidadvancements.gui.config.section.widgets": "WIDGETS",
+  "lucidadvancements.gui.config.section.sidebar": "SEITENLEISTE",
   "lucidadvancements.gui.config.title": "Lucid Advancements Konfiguration",
+  "lucidadvancements.gui.config.color_picker.title": "Farbwähler",
+  "lucidadvancements.gui.config.color_picker.cancel": "Abbrechen",
+  "lucidadvancements.gui.config.color_picker.apply": "Anwenden",
 
   "lucidadvancements.gui.config.customGuiScale.name": "Benutzerdefinierte GUI-Skalierung",
-  "lucidadvancements.gui.config.customGuiScale.desc": "GUI-Skalierung. 0 = Automatisch, 1-8 = Feste Skalierung",
+  "lucidadvancements.gui.config.customGuiScale.desc": "GUI-Skalierung, 0 = Automatisch, 1-8 = Feste Skalierung",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.name": "Minimale Virtuelle Breite",
   "lucidadvancements.gui.config.scaleMinVirtualWidth.desc": "Minimale virtuelle Breite für automatische Skalierung",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.name": "Minimale Virtuelle Höhe",
   "lucidadvancements.gui.config.scaleMinVirtualHeight.desc": "Minimale virtuelle Höhe für automatische Skalierung",
   "lucidadvancements.gui.config.sidebarScrollSpeed.name": "Seitenleisten-Scrollgeschwindigkeit",
-  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Passt die Scrollgeschwindigkeit des Mausrads für die Kategorien-Seitenleiste an.",
+  "lucidadvancements.gui.config.sidebarScrollSpeed.desc": "Passt die Scrollgeschwindigkeit des Mausrads für die Kategorien-Seitenleiste an",
   "lucidadvancements.gui.config.mainScrollSpeed.name": "Hauptbereich-Scrollgeschwindigkeit",
-  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Passt die Scrollgeschwindigkeit des Mausrads für den Fortschrittsbereich an.",
+  "lucidadvancements.gui.config.mainScrollSpeed.desc": "Passt die Scrollgeschwindigkeit des Mausrads für den Fortschrittsbereich an",
   "lucidadvancements.gui.config.keepSearchQuery.name": "Suchanfrage Beibehalten",
   "lucidadvancements.gui.config.keepSearchQuery.desc": "Behält die Suchanfrage beim erneuten Öffnen des Menüs bei",
   "lucidadvancements.gui.config.useConfigWatcher.name": "Config Watcher Verwenden",
@@ -282,6 +297,8 @@
   "lucidadvancements.gui.config.dropdownArrowOpen.name": "Dropdown Pfeilsymbol Geöffnet",
   "lucidadvancements.gui.config.dropdownArrowOpen.desc": "Pfeilsymbol für geöffnetes Dropdown-Menü",
 
+  "lucidadvancements.gui.config.sidebarOrganization.name": "Seitenleisten-Anordnung",
+  "lucidadvancements.gui.config.sidebarOrganization.desc": "Kategorien-Anordnung, 0 = Standard, 1 = Alphabetisch",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.name": "Seitenleiste Kürzungspunkte",
   "lucidadvancements.gui.config.sidebarTruncationEllipsis.desc": "Suffix für gekürzte Seitenleistentitel"
 }
