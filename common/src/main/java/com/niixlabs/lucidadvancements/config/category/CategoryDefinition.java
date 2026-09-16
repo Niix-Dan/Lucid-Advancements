@@ -7,6 +7,7 @@ public final class CategoryDefinition {
     public String description;
     public CategoryIcon icon;
     public boolean enabled = true;
+    public boolean localized = true;
 
     public CategoryDefinition(String id, String advancementRoot, String title, String description, CategoryIcon icon) {
         this.id = id;
