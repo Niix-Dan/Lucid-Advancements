@@ -39,7 +39,7 @@ public final class CategoryConfigManager {
     public static void ensureCategoryFor(AdvancementNode rootNode) {
         String rootId = rootNode.holder().id().toString();
         CategoryDefinition cached = ROOT_INDEX.get(rootId);
-        if (cached != null && cached.localized) {
+        if (cached != null) {
             return;
         }
 
@@ -48,11 +48,6 @@ public final class CategoryConfigManager {
 
         CategoryDefinition existing = findByRoot(data, rootId);
         if (existing != null) {
-            if (!existing.localized) {
-                localizeFields(existing, rootNode);
-                existing.localized = true;
-                save(modId, data);
-            }
             ROOT_INDEX.put(rootId, existing);
             return;
         }
@@ -102,23 +97,10 @@ public final class CategoryConfigManager {
     }
 
     private static String toConfigText(Component component) {
-        return localizeField(component.getString(), component);
-    }
-
-    private static void localizeFields(CategoryDefinition definition, AdvancementNode rootNode) {
-        Optional<DisplayInfo> display = rootNode.holder().value().display();
-        if (display.isEmpty()) {
-            return;
-        }
-        definition.title = localizeField(definition.title, display.get().getTitle());
-        definition.description = localizeField(definition.description, display.get().getDescription());
-    }
-
-    private static String localizeField(String stored, Component component) {
         if (component.getContents() instanceof TranslatableContents translatable && translatable.getArgs().length == 0) {
             return translatable.getKey();
         }
-        return stored;
+        return component.getString();
     }
 
     private static ModCategoryData loadOrCreate(String modId) {

@@ -1,3 +1,9 @@
+## v1.2.21
+
+* Hotfix: Fixed a bug on the data config files with localized flag.
+
+---
+
 ## v1.2.2
 
 * Add multilingual support for config section titles #36
