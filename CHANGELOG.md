@@ -1,3 +1,27 @@
+## v1.3.0
+
+* Removed the manual tracked/untracked state. The overlay now automatically displays every incomplete, visible advancement.
+* Overlay entries use the advancement tree's iteration order.
+* The overlay shows up to four advancements per page, reduced automatically to fit the overlay height; press `Ctrl` plus your configured advancements key to cycle pages, with an `x/y` page indicator.
+* Press `Alt` plus your configured advancements key to toggle overlay visibility.
+* Removed the Tracked filter, track toggles, the separate Tracked progress bar, and the per-world tracking cache.
+* Category data is preloaded when advancements are received instead of during the first overlay render.
+* Overlay boxes now refresh immediately after config changes or hot reloads.
+* Pressing the advancements key again now closes the advancements screen.
+* Toggling the overlay now shows or hides it instantly.
+* Replaced advancement completion and recipe unlock toasts with centered top notifications styled like the overlay.
+* Notifications render above container screens while other screens, including pause/ESC, draw over them.
+* Each notification now keeps its own timer and disappears independently.
+* Recipe notifications remain for one second after cycling through all unlocked recipe icons; normal notifications use the vanilla display duration.
+* Moved persistent active effect icons to a left-side grid and restyled them to match the overlay.
+* The effect grid keeps clear of centered notifications and the right pinned overlay.
+* Effect cards now use a dedicated configurable width and place their accent strip on the left.
+* Container screens no longer show the vanilla effect list; custom effect cards are drawn underneath the screen instead.
+* Added separate effect accent colors for beneficial, harmful, and neutral effects (green, red, and yellow by default).
+* Added clamping for new notification and effect settings to prevent invalid layouts or crashes.
+
+---
+
 ## v1.2.2
 
 * Add multilingual support for config section titles #36

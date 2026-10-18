@@ -1,10 +1,13 @@
 package com.niixlabs.lucidadvancements.mixin;
 
 import com.niixlabs.lucidadvancements.client.gui.access.AdvancementProgressAccess;
+import com.niixlabs.lucidadvancements.client.gui.overlay.LucidNotificationOverlay;
 import com.niixlabs.lucidadvancements.client.gui.screen.LucidAdvancementsScreen;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.advancements.AdvancementsScreen;
 import net.minecraft.network.chat.Component;
@@ -14,12 +17,27 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
 @Mixin(value = Screen.class, priority = 500)
 public class ScreenMixin {
+    @Inject(method = "renderWithTooltip", at = @At("HEAD"))
+    private void lucid$renderUnderScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+        if (!((Object) this instanceof AbstractContainerScreen<?>)) {
+            LucidNotificationOverlay.render(guiGraphics);
+        }
+    }
+
+    @Inject(method = "renderWithTooltip", at = @At("TAIL"))
+    private void lucid$renderNotifications(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+        if ((Object) this instanceof AbstractContainerScreen<?>) {
+            LucidNotificationOverlay.render(guiGraphics);
+        }
+    }
+
     @Inject(method = "handleComponentClicked", at = @At("HEAD"), cancellable = true)
     private void onHandleComponentClicked(Style style, CallbackInfoReturnable<Boolean> cir) {
         if (style != null && style.getHoverEvent() != null) {

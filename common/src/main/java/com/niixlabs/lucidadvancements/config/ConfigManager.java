@@ -12,7 +12,6 @@ import java.util.Map;
 public final class ConfigManager {
     private static final String FILE_NAME = "config/lucid-advancements/lucidadvancements.properties";
     private static final String HEADER = "# Lucid Advancements Configuration File\n# Colors use ARGB Hexadecimal format (e.g., 0xAARRGGBB)\n\n";
-
     private static long lastKnownModified = 0;
     private static Thread watcherThread;
 
@@ -148,6 +147,10 @@ public final class ConfigManager {
     }
 
     public static void startWatcher(Class<?> configClass) {
+        startWatcher(configClass, null);
+    }
+
+    public static void startWatcher(Class<?> configClass, Runnable onReload) {
         if (watcherThread != null && watcherThread.isAlive()) return;
 
         watcherThread = new Thread(() -> {
@@ -167,6 +170,13 @@ public final class ConfigManager {
                         Thread.sleep(150);
                         if (Files.getLastModifiedTime(path).toMillis() > lastKnownModified) {
                             load(configClass);
+                            if (onReload != null) {
+                                try {
+                                    onReload.run();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                     }
                     if (!key.reset()) break;

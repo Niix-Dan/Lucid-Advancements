@@ -30,7 +30,6 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
     private final List<CriterionEntry> criteria = new ArrayList<>();
 
     private final boolean expanded;
-    private final boolean tracked;
     private final int baseHeight;
     private final int totalHeight;
     private final Component title;
@@ -40,12 +39,11 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
     public final String cachedSearchCategory;
 
     public AdvancementCard(AdvancementNode node, DisplayInfo display, @Nullable AdvancementProgress progress,
-                           boolean expanded, boolean tracked, Font font, int maxWidth) {
+                           boolean expanded, Font font, int maxWidth) {
         this.node = node;
         this.display = display;
         this.expanded = expanded;
         this.done = progress != null && progress.isDone();
-        this.tracked = tracked;
         this.hidden = display.isHidden() && !this.done;
         this.rare = display.getType() == AdvancementType.CHALLENGE;
         this.state = resolveState(this.done, this.rare);
@@ -150,11 +148,6 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
         guiGraphics.drawString(font, done ? LucidConfig.cardIconDone : LucidConfig.cardIconLocked, x + width - LucidConfig.cardStatusIconXOffset,
                 y + (baseHeight / 2) - 4, palette.status(), true);
 
-        if (!hidden) {
-            guiGraphics.drawString(font, LucidConfig.cardIconTracked, x + width - LucidConfig.cardTrackIconXOffset,
-                    y + (baseHeight / 2) - 4, palette.tracked(), true);
-        }
-
         if (expanded && !hidden) {
             renderCriteriaSection(guiGraphics, font, x, y, width);
         }
@@ -188,19 +181,19 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
             return rare
                     ? new CardPalette(LucidConfig.cardObtainedRareBg1, LucidConfig.cardObtainedRareBg2,
                     LucidConfig.cardObtainedRareBorder, LucidConfig.cardObtainedRareTitle,
-                    LucidConfig.cardObtainedRareBorder, tracked ? LucidConfig.cardTrackedActiveColor : LucidConfig.cardInactiveColor)
+                    LucidConfig.cardObtainedRareBorder)
                     : new CardPalette(LucidConfig.cardObtainedBg1, LucidConfig.cardObtainedBg2,
                     LucidConfig.cardObtainedBorder, LucidConfig.cardObtainedTitle,
-                    LucidConfig.cardObtainedBorder, tracked ? LucidConfig.cardTrackedActiveColor : LucidConfig.cardInactiveColor);
+                    LucidConfig.cardObtainedBorder);
         }
         if (rare) {
             return new CardPalette(LucidConfig.cardNormalBg1, LucidConfig.cardNormalBg2,
                     LucidConfig.cardRareBorder, LucidConfig.cardRareTitle,
-                    LucidConfig.cardInactiveColor, tracked ? LucidConfig.cardTrackedActiveColor : LucidConfig.cardInactiveColor);
+                    LucidConfig.cardInactiveColor);
         }
         return new CardPalette(LucidConfig.cardNormalBg1, LucidConfig.cardNormalBg2,
                 LucidConfig.cardNormalBorder, LucidConfig.cardNormalTitle,
-                LucidConfig.cardInactiveColor, tracked ? LucidConfig.cardTrackedActiveColor : LucidConfig.cardInactiveColor);
+                LucidConfig.cardInactiveColor);
     }
 
     private boolean isHovered(int mouseX, int mouseY, int x, int y, int width, int viewportY, int viewportHeight) {
@@ -245,20 +238,6 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
         guiGraphics.pose().popPose();
     }
 
-    public boolean isTrackIconHovered(double mouseX, double mouseY, int x, int y, int width, int viewportY, int viewportHeight, boolean isBlocked) {
-        if (isBlocked || hidden) {
-            return false;
-        }
-        if (mouseY < viewportY || mouseY > viewportY + viewportHeight) {
-            return false;
-        }
-
-        int iconX = x + width - LucidConfig.cardTrackIconXOffset;
-        int iconY = y + (baseHeight / 2) - 4;
-
-        return mouseX >= iconX - 4 && mouseX <= iconX + 12 && mouseY >= iconY - 4 && mouseY <= iconY + 10;
-    }
-
     @Nullable
     public ItemStack getHoveredIcon(int mouseX, int mouseY, int x, int y, int viewportY, int viewportHeight, boolean isBlocked) {
         if (isBlocked || hidden) {
@@ -276,6 +255,6 @@ public final class AdvancementCard implements Comparable<AdvancementCard> {
         return stateComparison != 0 ? stateComparison : title.getString().compareTo(other.title.getString());
     }
 
-    private record CardPalette(int background1, int background2, int border, int title, int status, int tracked) {
+    private record CardPalette(int background1, int background2, int border, int title, int status) {
     }
 }

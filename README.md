@@ -37,23 +37,35 @@ The vanilla advancement tree can become entirely unreadable when playing with mu
 Finding a specific advancement among thousands is now instant. The top navigation bar includes powerful tools to narrow down your search:
 
 *   **Global Search Bar:** Search for advancements by Title, Description, or Category. **You can also combine `@modid` filters with free text** for pinpoint accuracy! > **Examples:** `@minecraft`, `@farmersdelight diamond`, `@create`
-*   **Smart Dropdown Filtering:** Use the top Filter dropdown to easily switch between displaying _All_, _Partial_, _Completed_, _Uncompleted_, _Challenges_, or your currently _Tracked_ advancements.
+*   **Smart Dropdown Filtering:** Use the top Filter dropdown to easily switch between displaying _All_, _Partial_, _Completed_, _Uncompleted_, or _Challenges_ advancements.
 *   **Dynamic Progress Updates:** When searching or filtering within a section, the progress bar updates in real-time to show your completion rate *only* for the matching advancements!
 
 ***
 
-## ON-SCREEN TRACKING
+## ON-SCREEN PROGRESS TRACKING
 
-Keep your current goals in sight at all times. Lucid Advancements features a highly integrated HUD element for tracked advancements, allowing you to monitor your progress in real-time directly from your screen without constantly reopening the menu.
+Keep your current goals in sight at all times. Lucid Advancements automatically lists every incomplete advancement on a clean overlay, so you can monitor your progress without constantly reopening the menu.
 
-*   **Persistent Tracking:** Tracked advancements are now saved automatically! You will no longer lose your pinned goals when reloading the game or switching worlds.
-*   **Dynamic HUD Progress Bar:** Easily visualize your completion steps directly on the HUD with the newly integrated dynamic tracker bar.
+*   **Automatic Display:** Every incomplete, visible advancement is shown by default — no manual setup required.
+*   **Paged Overlay:** Up to four advancements are shown per page in the advancement tree's iteration order, reduced automatically to fit the overlay height; press `Ctrl` plus your configured advancements key (default `Ctrl + L`) to cycle pages, with the current page displayed as `x/y`.
+*   **Overlay Toggle:** Press `Alt` plus your configured advancements key (default `Alt + L`) to hide or show the overlay.
+*   **Quick Access:** Pressing the configured advancements key alone still opens or closes the advancements screen.
 
 <div align="center">
   
-![HUD Tracking](https://cdn.modrinth.com/data/cached_images/f5d4915d3e47b6f9b7032437ce26780dbd777a64.png)
+![Overlay Tracking](https://cdn.modrinth.com/data/cached_images/f5d4915d3e47b6f9b7032437ce26780dbd777a64.png)
 
 </div>
+
+***
+
+## UNIFIED NOTIFICATIONS & EFFECTS
+
+Advancement completion and recipe unlocks now share the overlay style in centered top notifications, while active effects are displayed on the left in the same visual language.
+
+*   **Unified Popups:** Advancement and recipe notifications appear at the top center with the same background, accent, icon, and text styling as the overlay. Each notification keeps its own timer and disappears independently; recipe notifications stay visible for one second after their icons finish cycling. Notifications render above container screens; other screens, including pause/ESC, draw over them.
+*   **Effect Display:** Active effects are displayed in a left-side grid with matching cards, names including amplifier levels, and optional multi-column overflow. Column count depends on screen width and visible overlay elements; extra effects show a hidden-count hint. The effect display is drawn underneath open screens, like the right-side achievement overlay. Disabling the custom effect display restores vanilla effect rendering.
+*   **Compatibility Note:** NeoForge-specific custom effect extensions are not adapted yet; effect visibility follows vanilla `showIcon()` rules.
 
 ***
 
@@ -74,7 +86,7 @@ Keep your current goals in sight at all times. Lucid Advancements features a hig
 
 ***
 
-**Lucid Advancements** is entirely **Client-Side**. It alters only the graphical interface and tracking mechanics, meaning it is perfectly safe to drop into any existing modpack or server. It reads standard vanilla and modded advancement data seamlessly without altering core mechanics.
+**Lucid Advancements** is entirely **Client-Side**. It alters only the graphical interface and progress display, meaning it is perfectly safe to drop into any existing modpack or server. It reads standard vanilla and modded advancement data seamlessly without altering core mechanics.
 
 ## Special Thanks
 

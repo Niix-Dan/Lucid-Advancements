@@ -1,7 +1,6 @@
 package com.niixlabs.lucidadvancements.client.gui.screen;
 
 import com.niixlabs.lucidadvancements.Constants;
-import com.niixlabs.lucidadvancements.client.cache.TrackedAdvancementsCache;
 import com.niixlabs.lucidadvancements.client.gui.card.AdvancementCard;
 import com.niixlabs.lucidadvancements.client.gui.card.FilterMode;
 import com.niixlabs.lucidadvancements.client.gui.config.LucidConfigScreen;
@@ -13,7 +12,6 @@ import com.niixlabs.lucidadvancements.config.category.CategoryAssetInitializer;
 import com.niixlabs.lucidadvancements.config.category.CategoryConfigManager;
 import com.niixlabs.lucidadvancements.config.category.CategoryDefinition;
 import com.niixlabs.lucidadvancements.config.category.ResolvedIcon;
-import com.niixlabs.lucidadvancements.translation.TranslationExporter;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
@@ -30,6 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
@@ -45,7 +44,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
     public static @Nullable ResourceLocation advancementToFocusOnOpen = null;
     public static @Nullable ResourceLocation lastSelectedTabId = null;
     public static String lastSearchQuery = "";
-    public static final Set<String> TRACKED_ADVANCEMENTS = new HashSet<>();
     private static boolean configLoaded = false;
 
     private EditBox searchBox;
@@ -108,7 +106,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             double targetScale = getTargetScale();
             this.width = (int) Math.ceil(minecraft.getWindow().getScreenWidth() / targetScale);
             this.height = (int) Math.ceil(minecraft.getWindow().getScreenHeight() / targetScale);
-            TrackedAdvancementsCache.syncIfNeeded(minecraft);
         }
 
         super.init();
@@ -139,18 +136,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             }
         });
         addRenderableWidget(configButton);
-
-        int clearWidth = 16;
-        currentX -= (clearWidth + 3);
-        LucidButton clearTrackedButton = new LucidButton(currentX, 16, clearWidth, 16,
-                Component.literal(LucidConfig.cardIconTracked), btn -> {
-            TRACKED_ADVANCEMENTS.clear();
-            TrackedAdvancementsCache.persist();
-            needsRecalculation = true;
-
-            //TranslationExporter.exportCurrentAdvancements(progressMap);
-        });
-        addRenderableWidget(clearTrackedButton);
 
         if (!LucidConfig.keepSearchQuery) lastSearchQuery = "";
 
@@ -413,21 +398,6 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         needsRecalculation = true;
     }
 
-    private int calculateTrackedCompleted() {
-        int completed = 0;
-        for (AdvancementNode root : rootNodes) {
-            for (AdvancementNode node : collectTasks(root)) {
-                if (TRACKED_ADVANCEMENTS.contains(node.holder().id().toString())) {
-                    AdvancementProgress progress = progressMap.get(node);
-                    if (progress != null && progress.isDone()) {
-                        completed++;
-                    }
-                }
-            }
-        }
-        return completed;
-    }
-
     private void recalculateGlobalStats() {
         totalAdvancements = 0;
         completedAdvancements = 0;
@@ -499,13 +469,12 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
             AdvancementProgress progress = progressMap.get(child);
             boolean done = progress != null && progress.isDone();
 
-            if (!matchesFilterMode(child, done, display, progress)) {
+            if (!matchesFilterMode(done, display, progress)) {
                 continue;
             }
 
             boolean expanded = expandedNode == child;
-            boolean tracked = TRACKED_ADVANCEMENTS.contains(child.holder().id().toString());
-            AdvancementCard card = new AdvancementCard(child, display, progress, expanded, tracked, font, contentWidth);
+            AdvancementCard card = new AdvancementCard(child, display, progress, expanded, font, contentWidth);
 
             if (searching && !matchesSearch(child, card, modIdFilters, textFilter)) {
                 continue;
@@ -546,13 +515,12 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         return nodes;
     }
 
-    private boolean matchesFilterMode(AdvancementNode node, boolean done, DisplayInfo display, @Nullable AdvancementProgress progress) {
+    private boolean matchesFilterMode(boolean done, DisplayInfo display, @Nullable AdvancementProgress progress) {
         return switch (currentFilter) {
             case COMPLETED -> done;
             case INCOMPLETE -> !done;
             case CHALLENGES -> display.getType() == AdvancementType.CHALLENGE;
             case PARTIAL -> !done && progress != null && progress.getPercent() > 0f;
-            case TRACKED -> TRACKED_ADVANCEMENTS.contains(node.holder().id().toString());
             case ALL -> true;
         };
     }
@@ -768,53 +736,34 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
         guiGraphics.pose().popPose();
 
         int barY = ScreenMetrics.topBarHeight() + 18;
-        int currentRightX = width - ScreenMetrics.contentMargin();
 
         if (total > 0) {
-            currentRightX = renderHeaderProgressBar(guiGraphics, completed, total, currentRightX, barY, false);
-        }
-
-        int trackedTotal = TRACKED_ADVANCEMENTS.size();
-        if (trackedTotal >= 2) {
-            int trackedCompleted = calculateTrackedCompleted();
-            if (total > 0) currentRightX -= 24;
-            renderHeaderProgressBar(guiGraphics, trackedCompleted, trackedTotal, currentRightX, barY, true);
+            renderHeaderProgressBar(guiGraphics, completed, total, width - ScreenMetrics.contentMargin(), barY);
         }
 
         guiGraphics.drawString(font, headerDescription, contentX, ScreenMetrics.topBarHeight() + 28, LucidConfig.screenHeaderDescriptionColor, true);
         guiGraphics.fill(contentX, ScreenMetrics.topBarHeight() + 44, width - ScreenMetrics.contentMargin(), ScreenMetrics.topBarHeight() + 45, LucidConfig.screenHeaderDividerColor);
     }
 
-    private int renderHeaderProgressBar(GuiGraphics guiGraphics, int completed, int total, int rightX, int barY, boolean isTracked) {
+    private int renderHeaderProgressBar(GuiGraphics guiGraphics, int completed, int total, int rightX, int barY) {
         float percentage = total > 0 ? (float) completed / total : 0f;
 
         int barWidth = 80;
         int barHeight = 7;
         int barX = rightX - barWidth;
 
-        String progressText;
-        if (isTracked) {
-            String prefix = Component.translatable(Constants.MOD_ID + ".gui.progressbar.tracked.prefix").getString();
-            progressText = prefix + formatProgress(completed, total);
-        } else {
-            progressText = formatProgress(completed, total);
-        }
-
+        String progressText = formatProgress(completed, total);
         int textWidth = font.width(progressText);
         int textX = barX + barWidth - textWidth;
         int textY = barY - 2 - barHeight;
 
-        int percentColor = isTracked ? LucidConfig.screenTrackedPercentageColor : LucidConfig.screenHeaderPercentageColor;
-        int fillStart = isTracked ? LucidConfig.screenTrackedFillStart : LucidConfig.screenProgressFillStart;
-        int fillEnd = isTracked ? LucidConfig.screenTrackedFillEnd : LucidConfig.screenProgressFillEnd;
-
-        guiGraphics.drawString(font, progressText, textX, textY, percentColor, true);
+        guiGraphics.drawString(font, progressText, textX, textY, LucidConfig.screenHeaderPercentageColor, true);
         guiGraphics.fill(barX - 1, barY - 1, barX + barWidth + 1, barY + barHeight + 1, LucidConfig.screenProgressTrackBorder);
         guiGraphics.fill(barX, barY, barX + barWidth, barY + barHeight, LucidConfig.screenProgressTrackFill);
 
         if (completed > 0) {
             int fillWidth = (int) (barWidth * percentage);
-            guiGraphics.fillGradient(barX, barY, barX + fillWidth, barY + barHeight, fillStart, fillEnd);
+            guiGraphics.fillGradient(barX, barY, barX + fillWidth, barY + barHeight, LucidConfig.screenProgressFillStart, LucidConfig.screenProgressFillEnd);
         }
 
         return barX;
@@ -971,32 +920,25 @@ public final class LucidAdvancementsScreen extends Screen implements ClientAdvan
 
     private boolean handleCardInteraction(AdvancementCard card, double mouseX, double mouseY, int contentX, int contentWidth,
                                           int cardY, int viewportY, int viewportHeight) {
-        if (card.isTrackIconHovered(mouseX, mouseY, contentX, cardY, contentWidth, viewportY, viewportHeight, isDropdownOpen())) {
-            toggleTracked(card);
-            return true;
-        }
-
-        if (card.isExpanded()) {
-            int trackButtonX = contentX + 40;
-            int trackButtonY = cardY + card.getBaseHeight() + 4;
-            if (mouseX >= trackButtonX && mouseX <= trackButtonX + 70 && mouseY >= trackButtonY && mouseY <= trackButtonY + 12) {
-                toggleTracked(card);
-                return true;
-            }
-        }
-
         expandedNode = (expandedNode == card.getNode()) ? null : card.getNode();
         needsRecalculation = true;
         return true;
     }
 
-    private void toggleTracked(AdvancementCard card) {
-        String id = card.getNode().holder().id().toString();
-        if (!TRACKED_ADVANCEMENTS.remove(id)) {
-            TRACKED_ADVANCEMENTS.add(id);
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
         }
-        TrackedAdvancementsCache.persist();
-        needsRecalculation = true;
+
+        boolean modified = (modifiers & (GLFW.GLFW_MOD_CONTROL | GLFW.GLFW_MOD_ALT)) != 0;
+        if (!modified && minecraft != null && minecraft.options.keyAdvancements.matches(keyCode, scanCode)) {
+            minecraft.setScreen(null);
+            minecraft.mouseHandler.grabMouse();
+            return true;
+        }
+
+        return false;
     }
 
     @Override

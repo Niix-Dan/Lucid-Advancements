@@ -67,6 +67,12 @@ public final class CategoryConfigManager {
         return resolve(rootId).map(def -> def.enabled).orElse(true);
     }
 
+    public static void preloadCategories(Iterable<AdvancementNode> roots) {
+        for (AdvancementNode root : roots) {
+            MOD_DATA.computeIfAbsent(root.holder().id().getNamespace(), CategoryConfigManager::loadOrCreate);
+        }
+    }
+
     private static CategoryDefinition findByRoot(ModCategoryData data, String rootId) {
         for (CategoryDefinition def : data.categories) {
             if (rootId.equals(def.advancement_root)) {
@@ -187,5 +193,21 @@ public final class CategoryConfigManager {
         ROOT_INDEX.clear();
         CategoryTextureManager.clearCache();
         CategoryAssetInitializer.ensureGlobalCategoryIcon();
+
+        Path dir = dataDir();
+        if (!Files.isDirectory(dir)) {
+            return;
+        }
+
+        try (var files = Files.list(dir)) {
+            files.filter(path -> path.getFileName().toString().endsWith(".json"))
+                    .forEach(path -> {
+                        String fileName = path.getFileName().toString();
+                        String modId = fileName.substring(0, fileName.length() - ".json".length());
+                        MOD_DATA.computeIfAbsent(modId, CategoryConfigManager::loadOrCreate);
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
